@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://formax.cz/ns/header" xmlns="http://formax.cz/ns/header"
+    elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace"
+        schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+
+    <xs:element name="header">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="home">
+                    <xs:complexType mixed="true">
+                        <xs:attribute name="href"/>
+                        <xs:attribute name="title"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="slogan"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="xml:specialAttrs"/>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

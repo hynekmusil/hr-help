@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:in="http://www.w3.org/2001/XInclude"
+    xmlns="http://formax.cz/ns/page" targetNamespace="http://formax.cz/ns/page"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace"
+        schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+    <xs:import namespace="http://www.w3.org/2001/XInclude"
+        schemaLocation="http://www.w3.org/2001/XInclude"/>
+    <xs:element name="page">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="style" minOccurs="0">
+                    <xs:complexType>
+                        <xs:attribute name="href" type="xs:anyURI"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="title" type="xs:string"/>
+                <xs:element ref="layout"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="xml:specialAttrs"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="layout" type="Layout"/>
+    <xs:element name="field" type="Field"/>
+    <xs:element name="column" type="Column"/>
+    <xs:attributeGroup name="width">
+        <xs:attribute name="width"/>
+        <xs:attribute name="min-width"/>
+        <xs:attribute name="max-width"/>
+    </xs:attributeGroup>
+    <xs:attributeGroup name="height">
+        <xs:attribute name="height"/>
+        <xs:attribute name="min-height"/>
+        <xs:attribute name="max-height"/>
+    </xs:attributeGroup>
+    <xs:attributeGroup name="unit">
+        <xs:attribute name="unit">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="%"/>
+                    <xs:enumeration value="em"/>
+                    <xs:enumeration value="px"/>
+                    <xs:enumeration value="pt"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+    <xs:complexType name="Layout">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="field"/>
+            <xs:element ref="column"/>
+        </xs:choice>
+        <xs:attribute name="align" default="center">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="center"/>
+                    <xs:enumeration value="left"/>
+                    <xs:enumeration value="right"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attributeGroup ref="height"/>
+        <xs:attributeGroup ref="width"/>
+        <xs:attributeGroup ref="unit"/>
+    </xs:complexType>
+
+    <xs:complexType name="Field">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element ref="field"/>
+            <xs:element ref="column"/>
+            <xs:choice minOccurs="0">
+                <xs:element name="c">
+                    <xs:complexType>
+                        <xs:attribute name="href" type="xs:anyURI"/>
+                        <xs:attribute ref="xml:id"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element ref="in:include"/>
+            </xs:choice>
+        </xs:choice>
+        <xs:attribute ref="xml:id" use="required"/>
+        <xs:attributeGroup ref="height"/>
+        <xs:attributeGroup ref="width"/>
+        <xs:attributeGroup ref="unit"/>
+    </xs:complexType>
+
+    <xs:complexType name="Column">
+        <xs:sequence>
+            <xs:element ref="field" minOccurs="2" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute ref="xml:id"/>
+        <xs:attributeGroup ref="height"/>
+        <xs:attributeGroup ref="unit"/>
+    </xs:complexType>
+</xs:schema>

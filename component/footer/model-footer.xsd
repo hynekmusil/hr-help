@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://formax.cz/ns/footer"
+    xmlns="http://formax.cz/ns/footer"
+    elementFormDefault="qualified"    
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" 
+        schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+    
+    <xs:element name="footer">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="copyright"/>
+                <xs:element ref="poweredBy" minOccurs="0"/>
+                <xs:element ref="designBy" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="xml:specialAttrs"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="copyright">
+        <xs:complexType mixed="true">
+            <xs:attribute name="from" type="xs:gYear"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="poweredBy" type="By"/>
+    
+    <xs:element name="designBy" type="By"/>
+    
+    <xs:complexType name="By" mixed="true">
+        <xs:attribute name="href"/>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<footer xmlns="http://formax.cz/ns/footer"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://formax.cz/ns/footer ../component/footer/model-footer.xsd"
+>
+    <copyright from="2009">All Rights Reserved.</copyright>
+    <designBy href="http://www.formax-design.cz/">Free CSS Templates</designBy>
+</footer>

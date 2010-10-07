@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article xmlns="http://formax.cz/ns/aricle" 
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://formax.cz/ns/aricle ../component/article/model-article.xsd"
+>
+ <h>Jak začít</h>
+ <p>Aplikace je připravena tak, aby veškeré ovládaní a nastavení mohli provádět sami za použití svého přihlašovacího jména a hesla.<br/><br/>
+  Tyto údaje si nastavíte při <a href="/account/">registraci</a>. V rámci registrace budete mít i přednastavené služby, které jsou v současné době aktivní a u některých možnost změnit jejich nastavení pod Vaším administrátorským účtem.<br/>
+   Kompletní příručka, jak zaregistrovat účet, zaktivovat služby a vytvořit první průzkum spokojenosti bude v krátké době k nalezení <a href="/sluzby/pruzkum-spokojenosti-zamestnancu/prirucka/">zde</a>.
+ </p>
+</article>
