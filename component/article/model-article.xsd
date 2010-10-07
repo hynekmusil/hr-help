@@ -1,40 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema targetNamespace="http://formax.cz/ns/aricle"
-    xmlns="http://formax.cz/ns/aricle"
-    elementFormDefault="qualified"    
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
->
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace" 
+<xs:schema targetNamespace="http://formax.cz/ns/article" 
+    xmlns="http://formax.cz/ns/article"
+    elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace"
         schemaLocation="http://www.w3.org/2001/xml.xsd"/>
-    
+
     <xs:element name="article" type="block"/>
-    
+
     <xs:complexType name="block">
         <xs:sequence>
             <xs:element ref="h" minOccurs="0"/>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element ref="p"/>
+                <xs:element ref="article"/>
+                <xs:element ref="l"/>
+                <xs:group ref="inline"/>
             </xs:choice>
         </xs:sequence>
     </xs:complexType>
-    
-    <xs:group name="block">
-        <xs:choice>
-            <xs:element ref="p"/>
-        </xs:choice>
-    </xs:group>
-    
+
     <xs:element name="h" type="xs:string"/>
     
+    <xs:element name="l">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="li" type="block"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
     <xs:element name="p">
         <xs:complexType mixed="true">
             <xs:choice minOccurs="0" maxOccurs="unbounded">
-               <xs:group ref="inline"/>
+                <xs:group ref="inline"/>
             </xs:choice>
             <xs:attribute name="class"/>
         </xs:complexType>
     </xs:element>
-    
+
     <xs:group name="inline">
         <xs:choice>
             <xs:element ref="br"/>
@@ -44,30 +47,30 @@
             <xs:element ref="strong"/>
         </xs:choice>
     </xs:group>
-    
+
     <xs:element name="br">
         <xs:complexType/>
     </xs:element>
-    
+
     <xs:element name="a">
         <xs:complexType mixed="true">
             <xs:attribute name="href"/>
         </xs:complexType>
     </xs:element>
-    
+
     <xs:element name="email">
         <xs:complexType mixed="true">
             <xs:attribute name="href"/>
         </xs:complexType>
     </xs:element>
-    
+
     <xs:element name="img">
         <xs:complexType>
             <xs:attribute name="href"/>
             <xs:attribute name="src"/>
         </xs:complexType>
     </xs:element>
-    
+
     <xs:element name="strong" type="xs:string"/>
-    
+
 </xs:schema>

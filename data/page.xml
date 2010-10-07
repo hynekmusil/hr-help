@@ -18,7 +18,7 @@
                 <c href="../article/article-jak_zacit.xml"/>
             </field>
             <field xml:id="sidebar">
-                <c href="../news/news-novinky.xml"/>
+                <c href="../news/news.xml"/>
                 <c href="../article/article-sluzby.xml"/>
             </field>
         </column>

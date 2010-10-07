@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<news xmlns="http://formax.cz/ns/news"
+ xmlns:a="http://formax.cz/ns/article"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://formax.cz/ns/news ../component/news/model-news.xsd"
+>
+    <h>Novinky</h>
+</news>
