@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Created with Liquid XML Studio Developer Edition (Trial) 8.0.1.1926 (http://www.liquid-technologies.com)-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:annotation>
+		<xsd:documentation>
+                         XML Schema datatypes for SCXML
+
+                        Defines containers for the SCXML datatypes, many of these
+                        imported from other specifications and standards.
+
+                </xsd:documentation>
+		<xsd:documentation source="scxml-copyright.xsd" />
+	</xsd:annotation>
+	<xsd:simpleType name="Exmode.datatype">
+		<xsd:annotation>
+			<xsd:documentation>
+                               execution mode     
+                        </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:NMTOKEN">
+			<xsd:enumeration value="lax" />
+			<xsd:enumeration value="strict" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="Profile.datatype">
+		<xsd:annotation>
+			<xsd:documentation>
+                               profile 
+                        </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:NMTOKEN">
+			<xsd:enumeration value="minimal" />
+			<xsd:enumeration value="xpath" />
+			<xsd:enumeration value="ecmascript" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="HistoryType.datatype">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="shallow" />
+			<xsd:enumeration value="deep" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="Boolean.datatype">
+		<xsd:annotation>
+			<xsd:documentation>
+                                Boolean: true or false only
+                        </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:NMTOKENS">
+			<xsd:enumeration value="true" />
+			<xsd:enumeration value="false" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="URI.datatype">
+		<xsd:annotation>
+			<xsd:documentation>
+                                The xsd:anyURI type and thus URI references in SCXML
+                                documents may contain a wide array of international
+                                characters. Implementers should reference RFC 3987 and
+                                the "Character Model for the World Wide Web 1.0:
+                                Resource Identifiers" in order to provide appropriate
+                                support for these characters in VoiceXML documents and
+                                when processing values of this type or mapping them to
+                                URIs.
+                        </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:anyURI" />
+	</xsd:simpleType>
+	<xsd:simpleType name="Integer.datatype">
+		<xsd:annotation>
+			<xsd:documentation>Non-negative integer</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:nonNegativeInteger" />
+	</xsd:simpleType>
+	<xsd:simpleType name="Duration.datatype">
+		<xsd:annotation>
+			<xsd:documentation>
+                                Time designation following Time [CSS2]; negative numbers
+                                not allowed 
+                        </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="(\+)?([0-9]*\.)?[0-9]+(ms|s)" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ContentType.datatype">
+		<xsd:annotation>
+			<xsd:documentation>Content type [RFC2045]</xsd:documentation>
+		</xsd:annotation>
+		<xsd:list itemType="xsd:token" />
+	</xsd:simpleType>
+	<xsd:simpleType name="EventType.datatype">
+		<xsd:annotation>
+			<xsd:documentation>
+             EventType     
+            </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:token">
+			<xsd:pattern value="[\c\*]+" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- Defines the  default CondLang datatype.        -->
+	<xsd:simpleType name="CondLang.datatype">
+		<xsd:annotation>
+			<xsd:documentation>
+                                  Conditional language is expression 
+                                  which must evaluate to Boolean True or False. 
+                                  The expression language must define In(stateID) 
+                                  as a valid expression.
+            </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string" />
+	</xsd:simpleType>
+	<!-- Defines the  default LocLang datatype.         -->
+	<xsd:simpleType name="LocLang.datatype">
+		<xsd:annotation>
+			<xsd:documentation>
+                                  Location language is expression
+                                  identifying a location in the datamodel.  
+                </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string" />
+	</xsd:simpleType>
+	<!-- Defines the default ValueLang datatype.       -->
+	<xsd:simpleType name="ValueLang.datatype">
+		<xsd:annotation>
+			<xsd:documentation>
+                                  Value language is expression
+                                  return a value.
+            </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string" />
+	</xsd:simpleType>
+</xsd:schema>

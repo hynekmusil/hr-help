@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Created with Liquid XML Studio Developer Edition (Trial) 8.0.1.1926 (http://www.liquid-technologies.com)-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:annotation>
+		<xsd:documentation>
+             XML Schema content models for SCXML
+             * scxml.extra.content 
+             * content
+             * scxml.extra.attribs
+             Defines SCXML shared content models.
+        </xsd:documentation>
+		<xsd:documentation source="scxml-copyright.xsd" />
+	</xsd:annotation>
+	<xsd:attributeGroup name="scxml.extra.attribs">
+		<xsd:annotation>
+			<xsd:documentation>group allowing attributes from other namespaces</xsd:documentation>
+		</xsd:annotation>
+		<xsd:anyAttribute namespace="##other" processContents="lax" />
+	</xsd:attributeGroup>
+	<xsd:group name="scxml.extra.content">
+		<xsd:annotation>
+			<xsd:documentation>
+                                group allowing elements from other namespaces
+                        </xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##other" processContents="lax" />
+		</xsd:sequence>
+	</xsd:group>
+	<!-- content -->
+	<xsd:attributeGroup name="scxml.content.attlist">
+		<xsd:attributeGroup ref="scxml.extra.attribs" />
+	</xsd:attributeGroup>
+	<xsd:group name="scxml.content.content">
+		<xsd:sequence>
+			<xsd:group minOccurs="0" maxOccurs="unbounded" ref="scxml.extra.content" />
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:complexType name="scxml.content.type" mixed="true">
+		<xsd:group ref="scxml.content.content" />
+		<xsd:attributeGroup ref="scxml.content.attlist" />
+	</xsd:complexType>
+	<xsd:element name="content" type="scxml.content.type" />
+</xsd:schema>

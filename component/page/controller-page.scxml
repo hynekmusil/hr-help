@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml version="1.0" initial="site"
+    xmlns="http://www.w3.org/2005/07/scxml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.w3.org/2005/07/scxml controller/schema-scxml/scxml-profile-ecma.xsd"
+>
+    <state id="site" initial="homepage">
+        <datamodel>
+            <data id="page" src=""></data>
+        </datamodel>
+        <state id="homepage">
+            
+        </state>
+        <state id="nabidka_sluzeb">
+            
+        </state>
+        <state id="cenik_sluzeb">
+            
+        </state>
+        <state id="registrace">
+            
+        </state>
+        <state id="prihlaseni">
+            
+        </state>
+        
+        <transition event="homepage" target="homepage"/>
+        <transition event="nabidka_sluzeb" target="nabidka_sluzeb"/>
+        <transition event="cenik_sluzeb" target="cenik_sluzeb"/>
+        <transition event="registrace" target="registrace"/>
+        <transition event="prihlaseni" target="prihlaseni"/>
+        
+    </state>
+    
+</scxml>
