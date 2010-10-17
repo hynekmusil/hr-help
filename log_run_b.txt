@@ -1,0 +1,320 @@
+raise: cenik_sluzeb
+raise...
+process...
+externalQueue.length: 1
+status: cenik_sluzeb
+enabledTransitions.length: 1
+microstep...
+enterState: site
+enterState: cenik_sluzeb
+fce: function (_event) {
+    with (this) {
+    }
+}
+start...
+enterState: site
+enterState: homepage
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {f: "content", d: ["../data/article-aktualne.xml", "../data/article-jak_zacit.xml"]});
+    }
+}
+process...
+externalQueue.length: 0
+raise: homepage
+raise...
+process...
+externalQueue.length: 1
+status: homepage
+enabledTransitions.length: 1
+microstep...
+enterState: site
+enterState: homepage
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {f: "content", d: ["../data/article-aktualne.xml", "../data/article-jak_zacit.xml"]});
+    }
+}
+raise: nabidka_sluzeb
+raise...
+process...
+externalQueue.length: 1
+status: nabidka_sluzeb
+enabledTransitions.length: 1
+microstep...
+enterState: site
+enterState: nabidka_sluzeb
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {f: "content", d: ["../data/article-nabidka_sluzeb.xml"]});
+    }
+}
+raise: cenik_sluzeb
+raise...
+process...
+externalQueue.length: 1
+status: cenik_sluzeb
+enabledTransitions.length: 1
+microstep...
+enterState: site
+enterState: cenik_sluzeb
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {f: "content", d: ["../data/priceList.xml"]});
+    }
+}
+raise: registrace
+raise...
+process...
+externalQueue.length: 1
+status: registrace
+enabledTransitions.length: 1
+microstep...
+enterState: site
+enterState: registrace
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {f: "content", d: ["../data/registration.xml"]});
+    }
+}
+raise: prihlaseni
+raise...
+process...
+externalQueue.length: 1
+status: prihlaseni
+enabledTransitions.length: 1
+microstep...
+enterState: site
+enterState: prihlaseni
+fce: function (_event) {
+    with (this) {
+    }
+}
+raise: homepage
+raise...
+process...
+externalQueue.length: 1
+status: homepage
+enabledTransitions.length: 1
+microstep...
+fce: function (_event) {
+    with (this) {
+    }
+}
+enterState: site
+enterState: homepage
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {f: "content", d: ["../data/article-aktualne.xml", "../data/article-jak_zacit.xml"]});
+    }
+}
+start...
+enterState: site
+enterState: homepage
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {f: "content", d: ["../data/article-aktualne.xml", "../data/article-jak_zacit.xml"]});
+    }
+}
+process...
+externalQueue.length: 0
+raise: homepage
+raise...
+process...
+externalQueue.length: 1
+status: homepage
+enabledTransitions.length: 1
+microstep...
+enterState: site
+enterState: homepage
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {f: "content", d: ["../data/article-aktualne.xml", "../data/article-jak_zacit.xml"]});
+    }
+}
+raise: prihlaseni
+raise...
+process...
+externalQueue.length: 1
+status: prihlaseni
+enabledTransitions.length: 1
+microstep...
+enterState: site
+enterState: prihlaseni
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {ch: [{f: "content", d: ["../data/registration.xml"]}, {f: "sidebar", d: ["../data/login.xml"]}]});
+    }
+}
+raise: cenik_sluzeb
+raise...
+process...
+externalQueue.length: 1
+status: cenik_sluzeb
+enabledTransitions.length: 1
+microstep...
+fce: function (_event) {
+    with (this) {
+    }
+}
+enterState: site
+enterState: cenik_sluzeb
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {f: "content", d: ["../data/priceList.xml"]});
+    }
+}
+start...
+enterState: site
+enterState: homepage
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {ch: [{f: "content", d: ["../data/article-aktualne.xml", "../data/article-jak_zacit.xml"]}]});
+    }
+}
+process...
+externalQueue.length: 0
+raise: homepage
+raise...
+process...
+externalQueue.length: 1
+status: homepage
+enabledTransitions.length: 1
+microstep...
+enterState: site
+enterState: homepage
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {ch: [{f: "content", d: ["../data/article-aktualne.xml", "../data/article-jak_zacit.xml"]}]});
+    }
+}
+raise: nabidka_sluzeb
+raise...
+process...
+externalQueue.length: 1
+status: nabidka_sluzeb
+enabledTransitions.length: 1
+microstep...
+enterState: site
+enterState: nabidka_sluzeb
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {ch: [{f: "content", d: ["../data/article-nabidka_sluzeb.xml"]}]});
+    }
+}
+raise: cenik_sluzeb
+raise...
+process...
+externalQueue.length: 1
+status: cenik_sluzeb
+enabledTransitions.length: 1
+microstep...
+enterState: site
+enterState: cenik_sluzeb
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {ch: [{f: "content", d: ["../data/priceList.xml"]}]});
+    }
+}
+raise: registrace
+raise...
+process...
+externalQueue.length: 1
+status: registrace
+enabledTransitions.length: 1
+microstep...
+enterState: site
+enterState: registrace
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {ch: [{f: "content", d: ["../data/registration.xml"]}]});
+    }
+}
+raise: prihlaseni
+raise...
+process...
+externalQueue.length: 1
+status: prihlaseni
+enabledTransitions.length: 1
+microstep...
+enterState: site
+enterState: prihlaseni
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {ch: [{f: "content", d: ["../data/registration.xml"]}, {f: "sidebar", d: ["../data/login.xml"]}]});
+    }
+}
+raise: homepage
+raise...
+process...
+externalQueue.length: 1
+status: homepage
+enabledTransitions.length: 1
+microstep...
+fce: function (_event) {
+    with (this) {
+    }
+}
+enterState: site
+enterState: homepage
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {ch: [{f: "content", d: ["../data/article-aktualne.xml", "../data/article-jak_zacit.xml"]}]});
+    }
+}
+raise: nabidka_sluzeb
+raise...
+process...
+externalQueue.length: 1
+status: nabidka_sluzeb
+enabledTransitions.length: 1
+microstep...
+enterState: site
+enterState: nabidka_sluzeb
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {ch: [{f: "content", d: ["../data/article-nabidka_sluzeb.xml"]}]});
+    }
+}
+raise: cenik_sluzeb
+raise...
+process...
+externalQueue.length: 1
+status: cenik_sluzeb
+enabledTransitions.length: 1
+microstep...
+enterState: site
+enterState: cenik_sluzeb
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {ch: [{f: "content", d: ["../data/priceList.xml"]}]});
+    }
+}
+raise: registrace
+raise...
+process...
+externalQueue.length: 1
+status: registrace
+enabledTransitions.length: 1
+microstep...
+enterState: site
+enterState: registrace
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {ch: [{f: "content", d: ["../data/registration.xml"]}]});
+    }
+}
+raise: prihlaseni
+raise...
+process...
+externalQueue.length: 1
+status: prihlaseni
+enabledTransitions.length: 1
+microstep...
+enterState: site
+enterState: prihlaseni
+fce: function (_event) {
+    with (this) {
+        showContent(_data.page, {ch: [{f: "content", d: ["../data/registration.xml"]}, {f: "sidebar", d: ["../data/login.xml"]}]});
+    }
+}

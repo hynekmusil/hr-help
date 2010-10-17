@@ -6,15 +6,15 @@
 >
     <state id="site" initial="homepage">
         <datamodel>
-            <data id="page" src="../../data/page.xml"/>
+            <data id="page" expr="'../../data/page.xml'"/>
             <data id="isValid" />
         </datamodel>
         <state id="homepage">
             <onentry>
                 <script>
-                    showContent(_data.page,
-                    {['f':'content','d':['../data/article-aktualne.xml',
-                    '../data/article-jak_zacit.xml']});
+                     showContent(_data.page,
+                     {"ch":[{"f":"content","d":["../data/article-aktualne.xml",
+                    "../data/article-jak_zacit.xml"]}]});
                 </script>
             </onentry>
         </state>
@@ -22,31 +22,28 @@
             <onentry>
                 <script>
                     showContent(_data.page,
-                    {['f':'content','d':['../data/article-nabidka_sluzeb.xml']});
+                    {"ch":[{"f":"content","d":["../data/article-nabidka_sluzeb.xml"]}]});
                 </script>
             </onentry>
         </state>
         <state id="cenik_sluzeb">
             <onentry>
                 <script>
-                    showContent(_data.page,
-                    {['f':'content','d':['../data/priceList.xml']});
+                   showContent(_data.page,
+                    {"ch":[{"f":"content","d":["../data/priceList.xml"]}]});
                 </script>
             </onentry>
         </state>
         <state id="registrace">
             <onentry>
                 <script>
-                    changeContent(_data.page,
-                    {['f':'content','d':['../data/registration.xml']});
+                    showContent(_data.page,
+                    {"ch":[{"f":"content","d":["../data/registration.xml"]}]});
                 </script>
             </onentry>
-            <transition>
-                <script>showContent(_data.page);</script>
-            </transition>
             <transition event="send">
                 <script>
-                    fillAndValidate(_data.isValid,{['f':'content','d':_event.value]});
+                  /*  fillAndValidate(_data.isValid,{['f':'content','d':_event.value]});*/
                 </script>
             </transition>
             <transition event="send" cond="_data.isValid = true" target="success"/>
@@ -54,16 +51,16 @@
         <state id="prihlaseni">
             <onentry>
                 <script>
-                    changeContent(_data.page,
-                    {['f':'content','d':['../data/registration.xml'],
-                    ['f':'sidebar','d':['../data/login.xml']});
+                    showContent(_data.page,
+                    {"ch":[{"f":"content","d":["../data/registration.xml"]},
+                    {"f":"sidebar","d":["../data/login.xml"]}]});
                 </script>
             </onentry>
             <onexit>
                 <script>
-                    changeContent(_data.page,
+                   /* changeContent(_data.page,
                     {['f':'sidebar','d':['../data/news.xml',
-                    '../data/article-sluzby.xml']});
+                    '../data/article-sluzby.xml']});*/
                 </script>
             </onexit>
         </state>
@@ -71,7 +68,7 @@
         <state id="success">
             <onentry>
                 <script>
-                    changeTemplateAndShow(_data.page,'content','success.xsl');
+                   /* changeTemplateAndShow(_data.page,'content','success.xsl');*/
                 </script>
             </onentry>
         </state>
