@@ -58,9 +58,9 @@
             </onentry>
             <onexit>
                 <script>
-                   /* changeContent(_data.page,
-                    {['f':'sidebar','d':['../data/news.xml',
-                    '../data/article-sluzby.xml']});*/
+                     showContent(_data.page,
+                     {"ch":[{"f":"sidebar","d":["../data/news.xml",
+                    "../data/article-sluzby.xml"]}]});
                 </script>
             </onexit>
         </state>
