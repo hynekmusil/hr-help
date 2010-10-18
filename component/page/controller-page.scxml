@@ -13,8 +13,8 @@
             <onentry>
                 <script>
                      showContent(_data.page,
-                     {"ch":[{"f":"content","d":["../data/article-aktualne.xml",
-                    "../data/article-jak_zacit.xml"]}]});
+                     {"ch":[{"f":"content","d":["data/article-aktualne.xml",
+                    "data/article-jak_zacit.xml"]}]});
                 </script>
             </onentry>
         </state>

@@ -20,8 +20,6 @@
 				menuProc = new XSLTProcessor();
 				menuProc.importStylesheet(getSource(menuUri));
 				Statechartz.loadFromDocument();
-				document.statechart.raise('homepage');
-				//document.statechart.raise('nabidka_sluzeb');
 			}
 			function showContent(aInLayout,aChange){
 				menuNode.innerHTML = '';
@@ -29,6 +27,13 @@
 				var fragment = menuProc.transformToFragment(Statechartz.doc, document);
 				menuNode.appendChild(fragment);
 				var main = document.getElementById('main');
+				
+				var componentDoc = getSource(aChange.ch[0].d[0]);
+				var styleInstruction = componentDoc.firstChild.data;
+				styleInstruction = styleInstruction.substring(styleInstruction.indexOf('href')+6);
+				styleInstruction = styleInstruction.substring(0,styleInstruction.indexOf('"'));
+				alert(styleInstruction);
+				
 				main.innerHTML = aInLayout + "\n" + JSON.stringify(aChange);
 			}
 			function getSource(aUri){
