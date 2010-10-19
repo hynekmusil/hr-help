@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../component/article/view-article.xsl"?>
+<article xmlns="http://formax.cz/ns/article" 
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://formax.cz/ns/article ../component/article/model-article.xsd"
+>
+ <h>Aktuálně</h>
+ <p>Dne <strong>10.1.2010</strong> spouštíme portál HR-Help.cz, který Vám pomůže řešit některé body z HR problematiky. Nabízíme tímto velmi zajímavá IT řešení na HR procesy.
+  První funkční aplikace pro Vás bude <a href="/sluzby/pruzkum-spokojenosti-zamestnancu/">Průzkum spokojenosti zaměstnanců</a>. Varianta zdarma Vám umožní zadat až 20 otázek a vybrat k nim ze seznamu odpovědí. Zároveň jsou k dispozici další 3 otázky pro kategorizaci odpovědí. Vyhodnocení poté probíhá na sloupcových grafech.</p>
+ <p>Jednotlivé grafy lze uložit jako obrázky, více informací naleznete v <a href="/sluzby/pruzkum-spokojenosti-zamestnancu/priklady/">příkladech</a> k dané službě.</p>
+ <p> Zároveň jsme udělali vzorový výpočet, který by Vám měl usnadnit rozhodování, zda-li je tato služba pro Vás zajímavá. Podrobný výpočet naleznete <a href="/sluzby/pruzkum-spokojenosti-zamestnancu/#vypocet">zde</a>.</p>
+</article>

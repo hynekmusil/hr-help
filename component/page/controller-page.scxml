@@ -6,13 +6,21 @@
 >
     <state id="site" initial="homepage">
         <datamodel>
-            <data id="page" expr="'../../data/page.xml'"/>
+            <data id="layout" expr="''"/>
             <data id="isValid" />
         </datamodel>
+        <onentry>
+            <if cond="_data.layout == ''">
+                <script>
+                    setLayout('data/layout.xml');
+                </script> 
+                <assign location="_data.layout" expr="'layout'"/>
+            </if>
+        </onentry>
         <state id="homepage">
             <onentry>
                 <script>
-                     showContent(_data.page,
+                     showContent(
                      {"ch":[{"f":"content","d":["data/article-aktualne.xml",
                     "data/article-jak_zacit.xml"]}]});
                 </script>
@@ -21,24 +29,24 @@
         <state id="nabidka_sluzeb">
             <onentry>
                 <script>
-                    showContent(_data.page,
-                    {"ch":[{"f":"content","d":["../data/article-nabidka_sluzeb.xml"]}]});
+                    showContent(
+                    {"ch":[{"f":"content","d":["data/article-nabidka_sluzeb.xml"]}]});
                 </script>
             </onentry>
         </state>
         <state id="cenik_sluzeb">
             <onentry>
                 <script>
-                   showContent(_data.page,
-                    {"ch":[{"f":"content","d":["../data/priceList.xml"]}]});
+                   showContent(
+                    {"ch":[{"f":"content","d":["data/priceList.xml"]}]});
                 </script>
             </onentry>
         </state>
         <state id="registrace">
             <onentry>
                 <script>
-                    showContent(_data.page,
-                    {"ch":[{"f":"content","d":["../data/registration.xml"]}]});
+                    showContent(
+                    {"ch":[{"f":"content","d":["data/registration.xml"]}]});
                 </script>
             </onentry>
             <transition event="send">
@@ -51,15 +59,15 @@
         <state id="prihlaseni">
             <onentry>
                 <script>
-                    showContent(_data.page,
-                    {"ch":[{"f":"content","d":["../data/registration.xml"]},
-                    {"f":"sidebar","d":["../data/login.xml"]}]});
+                    showContent(
+                    {"ch":[{"f":"content","d":["data/registration.xml"]},
+                    {"f":"sidebar","d":["data/login.xml"]}]});
                 </script>
             </onentry>
             <onexit>
                 <script>
-                     showContent(_data.page,
-                     {"ch":[{"f":"sidebar","d":["../data/news.xml",
+                     showContent(
+                     {"ch":[{"f":"sidebar","d":["data/news.xml",
                     "../data/article-sluzby.xml"]}]});
                 </script>
             </onexit>

@@ -15,27 +15,102 @@
 			var menuUri = 'component/menu/controller-menu.xsl';
 			var menuNode = null;
 			
+			var presentationCache = new Array();
+			var xsltProcCache = new Array();
+		
 			window.onload = function(){
-				menuNode = document.getElementById("menu");
 				menuProc = new XSLTProcessor();
 				menuProc.importStylesheet(getSource(menuUri));
 				Statechartz.loadFromDocument();
 			}
-			function showContent(aInLayout,aChange){
+			
+			function setLayout(aLayoutURI){
+				document.body.innerHTML = '';
+				var fragment = xsltTransform(aLayoutURI);
+				document.body.appendChild(fragment);
+			}
+			
+			function showContent(aChange){
+				menuNode = document.getElementById("menu");
 				menuNode.innerHTML = '';
 				menuProc.setParameter(null, "stateId", document.statechart._name);
 				var fragment = menuProc.transformToFragment(Statechartz.doc, document);
 				menuNode.appendChild(fragment);
-				var main = document.getElementById('main');
-				
-				var componentDoc = getSource(aChange.ch[0].d[0]);
-				var styleInstruction = componentDoc.firstChild.data;
+				var log = document.getElementById('log');
+				log.innerHTML =JSON.stringify(aChange) + "\n";
+				var dataURI = '';
+				var componentDoc = null;
+				var componentNode = null;
+				var xsltURI = '';
+				for(var i=0; i < aChange.ch.length; i++){
+					componentNode = document.getElementById(aChange.ch[i].f)
+					componentNode.innerHTML = '';
+					log.innerHTML += aChange.ch[i].f + ": \n";
+					for(var j=0; j < aChange.ch[i].d.length; j++){
+						var fragment = xsltTransform(aChange.ch[i].d[j]);
+						componentNode.appendChild(fragment);
+						/*log.innerHTML += "data: " + aChange.ch[i].d[j];
+						dataURI = aChange.ch[i].d[j];
+						componentDoc = getSource(dataURI);
+						xsltURI = getXSLTURI(dataURI,componentDoc);
+						log.innerHTML += "; template: " + xsltURI + "\n";*/
+					}
+				}
+			}
+			
+			function resolveURI(aBaseURI, aURI){
+				var uriArray = aURI.split("/");
+				var baseURIArray = aBaseURI.split("/");
+				var countToParents = 0;
+				var i = 0;
+				for (i in uriArray){
+					if(uriArray[i] == '..') countToParents++;
+					else break;
+				}
+				for(i=0; i<countToParents; i++){
+					uriArray.shift();
+					baseURIArray.shift();
+				}
+				baseURIArray.pop();
+				return baseURIArray.join('/') + uriArray.join('/') ;
+			}
+			
+			function xsltTransform(aDataURI, aDataDoc){
+				var dataDoc = null;
+				if(aDataDoc == undefined){
+					dataDoc = getSource(aDataURI);
+				} else {
+					dataDoc = aDataDoc;
+				}
+				var xsltURI = getXSLTURI(aDataURI,dataDoc);
+				var xsltProc = null;
+				if(xsltProcCache[xsltURI] != undefined){
+					if(xsltProcCache[xsltURI].constructor == XSLTProcessor){
+						xsltProc = xsltProcCache[xsltURI];
+					}
+					else xsltProc = null;
+				}
+				if(xsltProc == null){
+					xsltProc = addToXSLTProcCache(xsltURI);
+				}
+				xsltProc.setParameter(null, "stateId", document.statechart._name);
+				return xsltProc.transformToFragment(dataDoc, document);
+			}
+			
+			function getXSLTURI(aDataURI, aDataDoc){
+				var styleInstruction = aDataDoc.firstChild.data;
 				styleInstruction = styleInstruction.substring(styleInstruction.indexOf('href')+6);
 				styleInstruction = styleInstruction.substring(0,styleInstruction.indexOf('"'));
-				alert(styleInstruction);
-				
-				main.innerHTML = aInLayout + "\n" + JSON.stringify(aChange);
+				return resolveURI(aDataURI, styleInstruction);
 			}
+			
+			function addToXSLTProcCache(aXSLTURI){
+				var xsltProc = new XSLTProcessor();
+				xsltProc.importStylesheet(getSource(aXSLTURI));
+				xsltProcCache[aXSLTURI] = xsltProc;
+				return xsltProc;
+			}
+			
 			function getSource(aUri){
 				var http = new XMLHttpRequest(); 
 				http.open("GET",aUri,false);
@@ -45,10 +120,5 @@
 		</script>
 	</head>
 	<body>
-		<div id="menu">
-		
-		</div>
-		<pre id="main">
-		</pre>
 	</body>
 </html>

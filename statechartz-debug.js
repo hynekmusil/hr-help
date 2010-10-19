@@ -203,6 +203,7 @@ Statechartz = {
         }
     },
     Entry: function (f) {
+		//debug('run','onentry: '+f);
         return {
             onentry: this.resolveFunction(f)
         };
@@ -305,6 +306,7 @@ Statechartz = {
             processing: false,
             doContinue: false,
             raise: function raise(event, external, payload) {
+				debug('run','raise: '+event);
                 if (this.externalQueue == undefined) {
                     start();
                 }
@@ -314,6 +316,7 @@ Statechartz = {
                     data: payload
                 });
                 if (!this.processing){
+					debug('run','raise...');
 					this.process();
 				}
             },
@@ -324,6 +327,7 @@ Statechartz = {
                 this.externalQueue = [];
                 this.internalQueue = [];
                 this.processing = true;
+				debug('run','start...');
                 this.enterStates([{
                     source: this.rootState,
                     targets: [this.rootState.initialState]
@@ -364,16 +368,21 @@ Statechartz = {
                         microstep(this.enabledTransitions);
                     } else break;
                 }
+				debug('run','starttEventLoop...');
                 this.process();
             },
             process: function process() {
+				debug('run','process...');
+				debug('run','externalQueue.length: '+this.externalQueue.length);
                 this.processing = true;
                 while (this.externalQueue.length > 0) {
                     var externalEvent = this.externalQueue.shift();
                     this.event = externalEvent;
                     status = externalEvent.name;
+					debug('run','status: '+status);
                     var enabledTransitions = this.selectTransitions(externalEvent);
                     if (enabledTransitions.length) {
+						debug('run','enabledTransitions.length: '+enabledTransitions.length);
                         this.microstep(enabledTransitions);
                         var macrostepComplete = false;
                         while (!macrostepComplete) {
@@ -435,12 +444,14 @@ Statechartz = {
                 return enabledTransitions;
             },
             microstep: function microstep(enabledTransitions) {
+				debug('run','microstep...');
                 this.exitStates(enabledTransitions);
                 for (var t = 0; t < enabledTransitions.length; ++t)
                 this.func(enabledTransitions[t].ontrigger, this.event);
                 this.enterStates(enabledTransitions);
             },
             exitStates: function exitStates(enabledTransitions) {
+				//debug('run','exitStates...');
                 var statesToExit = new Set();
                 for (x = 0; x < enabledTransitions.length; ++x) {
                     var t = enabledTransitions[x];
@@ -469,8 +480,10 @@ Statechartz = {
                         this.historyValues[h.id] = hconf;
                     }
                 }
+				//debug('run','exitStates.length: '+statesToExit.length);
                 for (var i = 0; i < statesToExit.length; ++i) {
                     var s = statesToExit[i];
+					//debug('run','exitState: '+s.id);
                     this.func(s.onexit);
                     this.configuration = removeFromSet(this.configuration, s);
                     if (s.id != undefined && s.id != "") {
@@ -482,6 +495,7 @@ Statechartz = {
                          */
                     }
                 }
+				//debug('run','...exitStates');
             },
             enterStates: function enterStates(enabledTransitions) {
                 var statesToEnter = new Set();
@@ -501,6 +515,7 @@ Statechartz = {
                     this.configuration.push(s);
                     if (s.id != undefined && s.id != "") {
 						this._name = s.id;
+						debug('run','enterState: '+s.id);
                         this.addCssClass("state_" + s.id);
                         var sel = document.getElementById("screen_" + s.id);
                         if (sel != null) sel.style.visibility = "visible";
@@ -634,6 +649,7 @@ Statechartz = {
             },
             func: function func(f, e) {
                 if (typeof(f) == "function"){
+					debug('run','fce: '+f);
 					return f.call(this, e);
 				}
                 else return true;
@@ -656,11 +672,15 @@ Statechartz = {
         function createFunctionFromExecutionContext(args) {
             if (args.length == 0) return {};
             var f = "function(_event){with(this){" + (args.join(';')) + ";}}";
+			//debug('eval',f);
+			//debug('eval','==========================================');
 			if (window.execScript) {
 				window.execScript('code_evaled = '+f);
+				//debug('eval',dump(code_evaled));
 				return code_evaled;
 			}
 			var result = eval("("+f+")");
+			//debug('eval',dump(result));
             return result;
         }
 
@@ -675,6 +695,10 @@ Statechartz = {
 				var allNodes = el.childNodes;
 				for (var i = 0; i < allNodes.length; i++) {
 					if(allNodes[i].nodeType == 1){
+					/*var m = allNodes[i].tagName;
+					for (var n = 0; n<allNodes[i].attributes.length; n++)
+						if(allNodes[i].attributes[n] != undefined) m += ' '+allNodes[i].attributes[n].nodeName+'='+allNodes[i].attributes[n].nodeValue+'; ';
+					debug('e',m);*/
 						args.push(resolveElement(allNodes[i]));
 					}
 				}
@@ -683,6 +707,7 @@ Statechartz = {
             var tagName;
 			if(el.localName)  tagName = el.localName.toLowerCase();
 			else tagName = el.nodeName.toLowerCase();
+			//debug('tag',tagName);
 			
             if (tagName == 'initial' || ((tagName == 'state' || tagName == 'parallel' || tagName == 'history') && el.parentNode.getAttribute("initial") == el.getAttribute('id'))) args.push(Statechartz.Initial);
             if (tagName == "scxml") {
@@ -726,7 +751,10 @@ Statechartz = {
                 args.push(el.getAttribute("id"));
                 return Statechartz.buildState("H", args);
             } else if (tagName == "onentry") {
+				//debug('build','onentry...');
+				//debug('build','args: '+dump(args));
 				var result = Statechartz.Entry(createFunctionFromExecutionContext(args));
+				//debug('build','result: '+dump(result));
                 return result;
             } else if (tagName == "onexit") {
                 return Statechartz.Exit(createFunctionFromExecutionContext(args));
@@ -742,6 +770,7 @@ Statechartz = {
 					var f= "(function(_event){with (this) { return " + cond + ";}})";
 					if (window.execScript) {
 						window.execScript('code_evaled = '+f);
+						//debug('eval',dump(code_evaled));
 						cond_func = code_evaled;
 					} else {
 						cond_func = eval("(function(_event){with (this) { return " + cond + ";}})");
@@ -819,7 +848,41 @@ Statechartz = {
 
 window.onload = Statechartz.loadFromDocument;
 
+function debug(aLog,aValue){
+	var http = null;
+	if (window.XMLHttpRequest) http = new XMLHttpRequest();
+	else if (window.ActiveXObject) http = new ActiveXObject("Microsoft.XMLHTTP");
+	else return;
+	http.open("POST",'log.php?l='+aLog,false);
+	http.send(aValue);
+}
 function getTextContent(aElement){
 	if(aElement.textContent) return aElement.textContent;
 	if(aElement.text) return aElement.text;
+}
+
+function dump(arr,level) {
+	var dumped_text = "";
+	if(!level) level = 0;
+	if(level == 5) return dumped_text;
+	
+	//The padding given at the beginning of the line.
+	var level_padding = "";
+	for(var j=0;j<level+1;j++) level_padding += "    ";
+	
+	if(typeof(arr) == 'object') { //Array/Hashes/Objects 
+		for(var item in arr) {
+			var value = arr[item];
+			
+			if(typeof(value) == 'object') { //If it is an array,
+				dumped_text += level_padding + "'" + item + "' ...\n";
+				dumped_text += dump(value,level+1);
+			} else {
+				dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
+			}
+		}
+	} else { //Stings/Chars/Numbers etc.
+		dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
+	}
+	return dumped_text;
 }
