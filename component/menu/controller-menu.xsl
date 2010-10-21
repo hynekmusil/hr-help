@@ -7,19 +7,24 @@
     <xsl:param name="stateId" select="'homepage'"/>
     
     <xsl:template match="/sc:scxml">
-        <xsl:apply-templates select=".//sc:state[@id = $stateId]"/>
+        <xsl:apply-templates select=".//*[@id = $stateId]"/>
     </xsl:template>
     
-    <xsl:template match="sc:state">
+    <xsl:template match="sc:state | sc:parallel">
         <xsl:apply-templates 
             select="ancestor-or-self::sc:state[sc:transition[@target and @event and not(@cond)]]" 
             mode="menu"/>
     </xsl:template>
     
-    <xsl:template match="sc:state" mode="menu">
-        <ul>
-            <xsl:apply-templates select="sc:transition[@target and @event and not(@cond)]"/>  
-        </ul>
+    <xsl:template match="sc:state | sc:parallel" mode="menu">
+        <div>
+            <h4 id="stateId"><xsl:value-of select="$stateId"/></h4>
+            <ul>
+                <xsl:apply-templates select="sc:transition[@target and @event and not(@cond)]"/>
+                <li><a href="javascript:document.statechart.raise('preview')">preview</a></li>
+                <li><a href="javascript:document.statechart.raise('edit')">edit</a></li>                     
+            </ul>
+        </div>
     </xsl:template>
     
     <xsl:template match="sc:transition">

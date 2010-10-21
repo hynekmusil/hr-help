@@ -5,6 +5,12 @@
     xsi:schemaLocation="http://www.w3.org/2005/07/scxml controller/schema-scxml/scxml-profile-ecma.xsd"
 >
     <parallel id="cms">
+        <onentry>
+            <script>
+                 alert('cms onentry');
+                 document.getElementById('stateId').innerHTML = document.statechart._name;
+            </script>
+        </onentry>
         <state id="editor" initial="preview">
             <state id="preview">
                 <onentry>
@@ -16,8 +22,7 @@
                     <script>alert('edit');</script>
                 </onentry>
             </state>
-            <transition event="preview" target="preview"/>
-            <transition event="edit" target="edit"/>
+            
         </state>
         <state id="site" initial="homepage">
             <datamodel>
@@ -100,15 +105,17 @@
                     </script>
                 </onentry>
             </state>
-            
-            <transition event="homepage" target="homepage"/>
-            <transition event="nabidka_sluzeb" target="nabidka_sluzeb">
-                <raise event="test"/>
-            </transition>
-            <transition event="cenik_sluzeb" target="cenik_sluzeb"/>
-            <transition event="registrace" target="registrace"/>
-            <transition event="prihlaseni" target="prihlaseni"/>
-            
         </state>
+        
+        <transition event="homepage" target="homepage"/>
+        <transition event="nabidka_sluzeb" target="nabidka_sluzeb">
+            <raise event="test"/>
+        </transition>
+        <transition event="cenik_sluzeb" target="cenik_sluzeb"/>
+        <transition event="registrace" target="registrace"/>
+        <transition event="prihlaseni" target="prihlaseni"/>
+        
+        <transition event="preview" target="preview"/>
+        <transition event="edit" target="edit"/>
     </parallel>
 </scxml>
