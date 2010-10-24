@@ -4,7 +4,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>HR-pomoc</title>
 		<link href="xml.php?x=./component/page/controller-page.scxml" rel="statechart" />
-		<script type="text/javascript" src="statechartz-debug.js"></script>
+		<script type="text/javascript" src="statechartz.js"></script>
 		<!--[if IE]>
 		<script type="text/javascript" src="json2.js"></script>
 		<script type="text/javascript" src="sarissa.js"></script>
@@ -14,6 +14,7 @@
 			var menuProc = null;
 			var menuUri = 'component/menu/controller-menu.xsl';
 			var menuNode = null;
+			var stateIds = '';
 			
 			var presentationCache = new Array();
 			var xsltProcCache = new Array();
@@ -24,18 +25,34 @@
 				Statechartz.loadFromDocument();
 			}
 			
+			function getActiveStateIds(){
+				var result = '';
+				for (var i = 0; i < document.statechart.configuration.length; ++i) {
+					var state = document.statechart.configuration[i];
+					if (state.atomic) {
+						result += ' '+state.id;
+					} 
+				}
+				return result.substring(1);
+			}
+			
 			function setLayout(aLayoutURI){
-				document.body.innerHTML = '';
+				//document.body.innerHTML = '';
 				var fragment = xsltTransform(aLayoutURI);
 				document.body.appendChild(fragment);
 			}
 			
-			function showContent(aChange){
+			function refreshMenu(){
+				stateIds = getActiveStateIds();
 				menuNode = document.getElementById("menu");
 				menuNode.innerHTML = '';
-				menuProc.setParameter(null, "stateId", document.statechart._name);
+				menuProc.setParameter(null, "stateIds", stateIds);
 				var fragment = menuProc.transformToFragment(Statechartz.doc, document);
 				menuNode.appendChild(fragment);
+			}
+			
+			function showContent(aChange){
+				refreshMenu();
 				var log = document.getElementById('log');
 				log.innerHTML =JSON.stringify(aChange) + "\n";
 				var dataURI = '';
@@ -93,7 +110,7 @@
 				if(xsltProc == null){
 					xsltProc = addToXSLTProcCache(xsltURI);
 				}
-				xsltProc.setParameter(null, "stateId", document.statechart._name);
+				xsltProc.setParameter(null, "stateIds", stateIds);
 				return xsltProc.transformToFragment(dataDoc, document);
 			}
 			
@@ -119,7 +136,5 @@
 			}
 		</script>
 	</head>
-	<body>
-		<h4 id="stateId"> </h4>
-	</body>
+	<body>	</body>
 </html>

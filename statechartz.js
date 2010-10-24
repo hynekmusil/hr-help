@@ -589,6 +589,7 @@ Statechartz = {
                 } else return false;
             },
             isDescendant: function isDescendant(child, parent) {
+				if(typeof(child) == "undefined") return false;
                 for (var s = child.parent; s != parent; s = s.parent) {
 
                     if (typeof(s) == "undefined") return false;
@@ -599,7 +600,7 @@ Statechartz = {
                 var ancs = [];
                 var i = 0;
                 if (state != undefined) {
-                    for (var s = state.parent; s != root && s != undefined; s = s.parent) {
+                    for (var s = state; s != root && s != undefined; s = s.parent) {
                         ancs[i++] = s;
                     }
                 }

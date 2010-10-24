@@ -368,7 +368,7 @@ Statechartz = {
                         microstep(this.enabledTransitions);
                     } else break;
                 }
-				debug('run','starttEventLoop...');
+				debug('run','startEventLoop...');
                 this.process();
             },
             process: function process() {
@@ -402,6 +402,7 @@ Statechartz = {
                         }
                     }
                 }
+				debug('run','____________________________________________\n' );
                 this.processing = false;
             },
             exitOrder: function (state_a, state_b) {
@@ -486,6 +487,7 @@ Statechartz = {
 					//debug('run','exitState: '+s.id);
                     this.func(s.onexit);
                     this.configuration = removeFromSet(this.configuration, s);
+					debug('run','remove state: '+s.id);
                     if (s.id != undefined && s.id != "") {
                         this.removeCssClass("state_" + s.id);
                         /*
@@ -511,6 +513,7 @@ Statechartz = {
                 }
                 statesToEnter = statesToEnter.sort(this.entryOrder);
                 for (var i = 0; i < statesToEnter.length; ++i) {
+					debug('run','addState: '+statesToEnter[i].id);
                     var s = statesToEnter[i];
                     this.configuration.push(s);
                     if (s.id != undefined && s.id != "") {
@@ -604,6 +607,7 @@ Statechartz = {
                 } else return false;
             },
             isDescendant: function isDescendant(child, parent) {
+				if(typeof(child) == "undefined") return false;
                 for (var s = child.parent; s != parent; s = s.parent) {
 
                     if (typeof(s) == "undefined") return false;
@@ -614,7 +618,7 @@ Statechartz = {
                 var ancs = [];
                 var i = 0;
                 if (state != undefined) {
-                    for (var s = state.parent; s != root && s != undefined; s = s.parent) {
+                    for (var s = state; s != root && s != undefined; s = s.parent) {
                         ancs[i++] = s;
                     }
                 }

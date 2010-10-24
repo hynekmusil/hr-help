@@ -6,37 +6,32 @@
 >
     <parallel id="cms">
         <onentry>
-            <script>
-                 alert('cms onentry');
-                 document.getElementById('stateId').innerHTML = document.statechart._name;
-            </script>
+            <if cond="_data.layout == ''">
+                <script>
+                    setLayout('data/layout.xml');
+                </script> 
+                <assign location="_data.layout" expr="'layout'"/>
+            </if>
         </onentry>
         <state id="editor" initial="preview">
             <state id="preview">
                 <onentry>
-                    <script>alert('preview');</script>
-                </onentry>
+                    <script>refreshMenu();</script>
+                </onentry>  
             </state>
             <state id="edit">
-                <onentry>
-                    <script>alert('edit');</script>
-                </onentry>
+               <onentry>
+                   <script>refreshMenu();</script>
+               </onentry>
             </state>
-            
+			<transition event="preview" target="preview"/>
+			<transition event="edit" target="edit"/>
         </state>
         <state id="site" initial="homepage">
             <datamodel>
                 <data id="layout" expr="''"/>
                 <data id="isValid" />
             </datamodel>
-            <onentry>
-                <if cond="_data.layout == ''">
-                    <script>
-                    setLayout('data/layout.xml');
-                    </script> 
-                    <assign location="_data.layout" expr="'layout'"/>
-                </if>
-            </onentry>
             <state id="homepage">
                 <onentry>
                     <script>
@@ -53,11 +48,9 @@
                     {"ch":[{"f":"content","d":["data/article-nabidka_sluzeb.xml"]}]});
                     </script>
                 </onentry>
-                <transition event="test">
-                    <script>
-                    alert('kuk');
-                </script>
-                </transition>
+                <!--transition event="test">
+                    <script>document.getElementById('stateId').innerHTML += 'transition test'</script>
+                </transition-->
             </state>
             <state id="cenik_sluzeb">
                 <onentry>
@@ -105,17 +98,13 @@
                     </script>
                 </onentry>
             </state>
+			<transition event="homepage" target="homepage"/>
+			<transition event="nabidka_sluzeb" target="nabidka_sluzeb">
+				<!--raise event="test"/-->
+			</transition>
+			<transition event="cenik_sluzeb" target="cenik_sluzeb"/>
+			<transition event="registrace" target="registrace"/>
+			<transition event="prihlaseni" target="prihlaseni"/>
         </state>
-        
-        <transition event="homepage" target="homepage"/>
-        <transition event="nabidka_sluzeb" target="nabidka_sluzeb">
-            <raise event="test"/>
-        </transition>
-        <transition event="cenik_sluzeb" target="cenik_sluzeb"/>
-        <transition event="registrace" target="registrace"/>
-        <transition event="prihlaseni" target="prihlaseni"/>
-        
-        <transition event="preview" target="preview"/>
-        <transition event="edit" target="edit"/>
     </parallel>
 </scxml>
