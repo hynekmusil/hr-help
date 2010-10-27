@@ -20,9 +20,16 @@
 			var xsltProcCache = new Array();
 		
 			window.onload = function(){
-				menuProc = new XSLTProcessor();
-				menuProc.importStylesheet(getSource(menuUri));
-				Statechartz.loadFromDocument();
+				try{
+					menuProc = new XSLTProcessor();
+					menuProc.importStylesheet(getSource(menuUri));
+					Statechartz.loadFromDocument();
+				}catch(err){
+					var str = '<h1>Váš prohlížeč nepodporuje tuto aplikaci - vyzkoušejte Firefox</h1><span>';
+					if (typeof (exception) == "object" && exception.message) str += err.message;
+					else str +=err;
+					document.body.innerHTML = str+'</span>';
+				}
 			}
 			
 			function getActiveStateIds(){
@@ -116,6 +123,7 @@
 			
 			function getXSLTURI(aDataURI, aDataDoc){
 				var styleInstruction = aDataDoc.firstChild.data;
+				alert(styleInstruction);
 				styleInstruction = styleInstruction.substring(styleInstruction.indexOf('href')+6);
 				styleInstruction = styleInstruction.substring(0,styleInstruction.indexOf('"'));
 				return resolveURI(aDataURI, styleInstruction);
@@ -130,6 +138,7 @@
 			
 			function getSource(aUri){
 				var http = new XMLHttpRequest(); 
+				if (http.overrideMimeType) http.overrideMimeType('text/xml');
 				http.open("GET",aUri,false);
 				http.send(null);
 				return http.responseXML;

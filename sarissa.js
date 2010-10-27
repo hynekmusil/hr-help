@@ -213,7 +213,7 @@ if(Sarissa._SARISSA_IS_IE){
      */
     XSLTProcessor = function(){
         if(!_SARISSA_XSLTEMPLATE_PROGID){
-            _SARISSA_XSLTEMPLATE_PROGID = Sarissa.pickRecentProgID(["Msxml2.XSLTemplate.6.0", "MSXML2.XSLTemplate.3.0"]);
+            _SARISSA_XSLTEMPLATE_PROGID = Sarissa.pickRecentProgID(["Msxml2.XSLTemplate.6.0","Msxml2.XSLTemplate.4.0","Msxml2.XSLTemplate.3.0"]);
         }
         this.template = new ActiveXObject(_SARISSA_XSLTEMPLATE_PROGID);
         this.processor = null;
