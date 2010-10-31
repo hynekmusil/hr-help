@@ -122,8 +122,12 @@
 			}
 			
 			function getXSLTURI(aDataURI, aDataDoc){
-				var styleInstruction = aDataDoc.firstChild.data;
-				alert(styleInstruction);
+				var nodeInstruction = aDataDoc.firstChild;
+				while(nodeInstruction.data.indexOf("text/xsl") == -1){
+					nodeInstruction = nodeInstruction.nextSibling;
+					if(nodeInstruction.nodeType != 7) break;
+				}
+				var styleInstruction = nodeInstruction.data;
 				styleInstruction = styleInstruction.substring(styleInstruction.indexOf('href')+6);
 				styleInstruction = styleInstruction.substring(0,styleInstruction.indexOf('"'));
 				return resolveURI(aDataURI, styleInstruction);
@@ -136,14 +140,15 @@
 				return xsltProc;
 			}
 			
-			function getSource(aUri){
+			function getSource(aUri,aAsText){
 				var http = new XMLHttpRequest(); 
 				if (http.overrideMimeType) http.overrideMimeType('text/xml');
 				http.open("GET",aUri,false);
 				http.send(null);
+				if(aAsText) return http.responseText;
 				return http.responseXML;
 			}
 		</script>
 	</head>
-	<body>	</body>
+	<body>	<div id="menu">-</div></body>
 </html>

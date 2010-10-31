@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="sc l" extension-element-prefixes="e"
+<xsl:stylesheet version="1.0" exclude-result-prefixes="sc l"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:sc="http://www.w3.org/2005/07/scxml"
     xmlns:l="http://formax.cz/ns/xslt-lib"
-    xmlns:e="http://exslt.org/common"
+    xmlns:exslt="http://exslt.org/common"
+    xmlns:msxsl="urn:schemas-microsoft-com:xslt"
     xmlns="http://www.w3.org/1999/xhtml"
+    extension-element-prefixes="exslt msxsl"
 >
+    <msxsl:script language="JScript" implements-prefix="exslt">
+        this['node-set'] =  function (x) {
+        return x;
+        }
+    </msxsl:script>
+    
     <xsl:output indent="yes"/>
     <xsl:param name="stateIds" select="'homepage preview'"/>
     
@@ -35,7 +43,7 @@
     <xsl:template match="/sc:scxml">
         <div>
             <h4><xsl:value-of select="$stateIds"/></h4>
-            <xsl:apply-templates select=".//sc:state[@id = e:node-set($sId)/*]"/>
+            <xsl:apply-templates select=".//sc:state[@id = exslt:node-set($sId)/*]"/>
         </div>
     </xsl:template>
     
@@ -53,7 +61,7 @@
     
     <xsl:template match="sc:transition">
         <li>
-            <xsl:if test="@target = e:node-set($sId)/*">
+            <xsl:if test="@target = exslt:node-set($sId)/*">
                 <xsl:attribute name="style">background-color: yellow;</xsl:attribute>
             </xsl:if>
             <a href="javascript:document.statechart.raise('{@event}')">
