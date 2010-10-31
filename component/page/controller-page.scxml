@@ -4,14 +4,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.w3.org/2005/07/scxml controller/schema-scxml/scxml-profile-ecma.xsd"
 >
+	 <datamodel>
+        <data id="layout" expr="''"/>
+        <data id="isValid" />
+	</datamodel>
     <parallel id="cms">
         <onentry>
-            <if cond="_data.layout == ''">
-                <script>
-                    setLayout('data/layout.xml');
-                </script> 
-                <assign location="_data.layout" expr="'layout'"/>
-            </if>
+			<script>setLayout('data/layout.xml');</script> 
         </onentry>
         <state id="editor" initial="preview">
             <state id="preview">
@@ -28,10 +27,6 @@
 			<transition event="edit" target="edit"/>
         </state>
         <state id="site" initial="homepage">
-            <datamodel>
-                <data id="layout" expr="''"/>
-                <data id="isValid" />
-            </datamodel>
             <state id="homepage">
                 <onentry>
                     <script>

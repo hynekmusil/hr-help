@@ -73,11 +73,6 @@
 					for(var j=0; j < aChange.ch[i].d.length; j++){
 						var fragment = xsltTransform(aChange.ch[i].d[j]);
 						componentNode.appendChild(fragment);
-						/*log.innerHTML += "data: " + aChange.ch[i].d[j];
-						dataURI = aChange.ch[i].d[j];
-						componentDoc = getSource(dataURI);
-						xsltURI = getXSLTURI(dataURI,componentDoc);
-						log.innerHTML += "; template: " + xsltURI + "\n";*/
 					}
 				}
 			}
@@ -87,7 +82,7 @@
 				var baseURIArray = aBaseURI.split("/");
 				var countToParents = 0;
 				var i = 0;
-				for (i in uriArray){
+				for(i=0; i<uriArray.length; i++){
 					if(uriArray[i] == '..') countToParents++;
 					else break;
 				}
@@ -122,8 +117,12 @@
 			}
 			
 			function getXSLTURI(aDataURI, aDataDoc){
-				var styleInstruction = aDataDoc.firstChild.data;
-				alert(styleInstruction);
+				var nodeInstruction = aDataDoc.firstChild;
+				while(nodeInstruction.data.indexOf("text/xsl") == -1){
+					nodeInstruction = nodeInstruction.nextSibling;
+					if(nodeInstruction.nodeType != 7) break;
+				}
+				var styleInstruction = nodeInstruction.data;
 				styleInstruction = styleInstruction.substring(styleInstruction.indexOf('href')+6);
 				styleInstruction = styleInstruction.substring(0,styleInstruction.indexOf('"'));
 				return resolveURI(aDataURI, styleInstruction);
@@ -136,14 +135,20 @@
 				return xsltProc;
 			}
 			
-			function getSource(aUri){
+			function getSource(aUri,aAsText){
 				var http = new XMLHttpRequest(); 
-				if (http.overrideMimeType) http.overrideMimeType('text/xml');
-				http.open("GET",aUri,false);
+				var uri = aUri;
+				if (http.overrideMimeType){
+					http.overrideMimeType('text/xml');
+				}else {
+					uri = 'xml.php?x='+aUri;
+				}
+				http.open("GET",uri,false);
 				http.send(null);
+				if(aAsText) return http.responseText;
 				return http.responseXML;
 			}
 		</script>
 	</head>
-	<body>	</body>
+	<body>	<div id="menu">-</div></body>
 </html>
