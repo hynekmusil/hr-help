@@ -36,6 +36,7 @@
         <xsl:attribute name="id">
             <xsl:value-of select="."/>
         </xsl:attribute>
+        <xsl:attribute name="contentEditable"></xsl:attribute>
     </xsl:template>
 
 </xsl:stylesheet>
