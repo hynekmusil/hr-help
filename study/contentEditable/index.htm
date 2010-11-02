@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>contentEditable</title>
+<script src="buttons.js" type="text/javascript"></script>
+</head><body>
+
+<form id="testForm">
+	<input value="Cut" id="cut" type="button">
+	<input value="Copy" id="copy" type="button">
+	<input value="Paste" id="paste" type="button">
+	<span class="separator">|</span>
+	<input value="Bold" id="bold" type="button">
+	<input value="Italic" id="italic" type="button">
+	<input value="Underline" id="underline" type="button">
+	<input value="&lt;s&gt;" id="strikethrough" type="button">
+	<input value="&lt;a&gt;" id="createLink" cmdvalue="promptUser" prompttext="URL of link?" type="button">
+	<input value="&lt;hr /&gt;" id="inserthorizontalrule" type="button">
+	<input value="&lt;img /&gt;" id="insertimage" cmdvalue="/pix/logo_ppk.gif" type="button">
+	<span class="separator">|</span>
+	<input value="Undo" id="undo" type="button">
+	<input value="Redo" id="redo" type="button">
+	<span class="separator">|</span>
+	<input value="bgcolor" id="backcolor" cmdvalue="promptUser" prompttext="color?" type="button">
+	<input value="fgcolor" id="forecolor" cmdvalue="promptUser" prompttext="color?" type="button">
+	<input value="hilite" id="hilitecolor" cmdvalue="promptUser" prompttext="color?" type="button">
+	<span class="separator">|</span>
+	<input value="A+" id="increasefontsize" type="button">
+	<input value="A-" id="decreasefontsize" type="button">
+	<input value="font-family" id="fontname" cmdvalue="promptUser" prompttext="font name?" type="button">
+	<input value="font-size" id="FontSize" cmdvalue="promptUser" prompttext="font size?" type="button">
+	<input value="&lt;sub&gt;" id="subscript" type="button">
+	<input value="&lt;sup&gt;" id="superscript" type="button">
+	<span class="separator">|</span>
+	text-align:
+	<input value="left" id="justifyleft" type="button">
+	<input value="right" id="justifyright" type="button">
+	<input value="center" id="justifycenter" type="button">
+	<input value="justify" id="justifyfull" type="button">
+	<span class="separator">|</span>
+	<input value="&lt;ol&gt;" id="insertorderedlist" type="button">
+	<input value="&lt;ul&gt;" id="insertunorderedlist" type="button">
+	<input value="&lt;p&gt;" id="insertparagraph" type="button">
+	<input value="html" id="inserthtml" cmdvalue="promptUser" prompttext="Valid HTML snippet" type="button">
+	<span class="separator">|</span>
+	<input value="formatblock" id="formatblock" cmdvalue="promptUser" prompttext="Which block? (Header or paragraph)" type="button">
+	<input value="heading" id="heading" cmdvalue="promptUser" prompttext="Which header?" type="button">
+	<input value="indent" id="indent" type="button">
+	<input value="outdent" id="outdent" type="button">
+	<span class="separator">|</span>
+	<input value="readonly" id="contentreadonly" type="button">
+	<input value="del" id="delete" type="button">
+	<input value="unlink" id="unlink" type="button">
+
+
+</form>
+
+<div class="entry" id="testElement" contenteditable="true">
+<p class="dateline smaller"> 3 April 2007</p>
+
+<h4 id="entry1196"><a href="http://radar.oreilly.com/archives/2007/03/call_for_a_blog_1.html" class="external">Call for a Blogger's Code of Conduct</a></h4>
+<p>Tim O'Reilly calls for a <span style="font-weight: bold; font-style: italic;">Blogger</span> Code of Conduct. His proposals are:</p>
+<p>An extra paragraph with a <br>break for testing purposes.</p>
+<ol>
+<li>Take responsibility not just for your own words, but for the comments you allow on your blog.</li>
+<li>Label your tolerance level for abusive comments.</li>
+<li>Consider eliminating anonymous comments.</li>
+<li>Ignore the trolls.</li>
+<li>Take the conversation offline, and talk directly, or find an intermediary who can do so.</li>
+<li>If you know someone who is behaving badly, tell them so.</li>
+<li>Don't say anything online that you wouldn't say in person.</li>
+</ol>
+
+<p>I find 1 interesting; I never thought of responsibility for comments,
+ but it makes excellent sense. To me, 2 is something I decide in 
+private, because I find it hard to articulate my exact tolerance, and it
+ depends on my mood anyway. I implement 4 by deleting trolls.</p>
+
+<p class="smaller">(Via <a href="http://www.tbray.org/ongoing/" class="external">Tim Bray</a>.)</p>
+<p class="smaller">Society</p>
+</div>
+
+<a href="http://www.quirksmode.org/dom/execCommand.html">Compatibility table</a><br>
+Undo/Redo doesn't work in IE. The problem is that the changes in the textarea to the right are also added
+to the Undo/Redo stack. There will be no textarea in the final version, so it's not necessary to solve the problem.
+
+</body></html>
