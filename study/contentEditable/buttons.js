@@ -12,7 +12,8 @@ function command() {
 	var value = this.getAttribute('cmdValue') || null;
 	if (value == 'promptUser')
 		value = prompt(this.getAttribute('promptText'));
-	if(document.execCommand(cmd,bool,value)){ 
+	var test = document.execCommand(cmd,bool,value);
+	if(test){ 
 		var doc = document.implementation.createDocument ('', '', null);  
 		var node = doc.importNode(document.getElementById('testElement'),true);
 		doc.appendChild(node);
@@ -22,7 +23,10 @@ function command() {
 		repairerProc = new XSLTProcessor();
 		repairerProc.importStylesheet(getSource(repairerUri));
 		var fragment = repairerProc.transformToFragment(doc, document);
-		document.getElementById('result').appendChild(fragment);
+		//document.getElementById('result').innerHTML = '';
+		//document.getElementById('result').appendChild(fragment);
+		//document.getElementById('testElement').innerHTML = '';
+		//document.getElementById('testElement').appendChild(fragment);
 	}
 }
 
