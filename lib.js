@@ -3,6 +3,7 @@ var menuProc = null;
 var menuUri = 'component/menu/controller-menu.xsl';
 var menuNode = null;
 var stateIds = '';
+var stateShot = null;
 
 var presentationCache = new Array();
 var xsltProcCache = new Array();
@@ -33,6 +34,7 @@ function getActiveStateIds(){
 
 function setLayout(aLayoutURI){
 	//document.body.innerHTML = '';
+	stateShot = {"layout": aLayoutURI};
 	var fragment = xsltTransform(aLayoutURI);
 	document.body.appendChild(fragment);
 }
@@ -54,13 +56,19 @@ function showContent(aChange){
 	var componentDoc = null;
 	var componentNode = null;
 	var xsltURI = '';
-	for(var i=0; i < aChange.ch.length; i++){
-		componentNode = document.getElementById(aChange.ch[i].f)
-		componentNode.innerHTML = '';
-		log.innerHTML += aChange.ch[i].f + ": \n";
-		for(var j=0; j < aChange.ch[i].d.length; j++){
-			var fragment = xsltTransform(aChange.ch[i].d[j]);
-			componentNode.appendChild(fragment);
+	for(var i=0; i < aChange.length; i++){
+		for(var cn in aChange[i]){
+			if(cn != 'clone'){
+				componentNode = document.getElementById(cn);
+				if(componentNode){
+					componentNode.innerHTML = '';
+					log.innerHTML += aChange[i][cn] + ": \n";
+					for(var j=0; j < aChange[i][cn].length; j++){
+						var fragment = xsltTransform(aChange[i][cn][j]);
+						componentNode.appendChild(fragment);
+					}
+				}
+			}
 		}
 	}
 }

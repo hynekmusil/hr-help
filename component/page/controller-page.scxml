@@ -31,16 +31,15 @@
                 <onentry>
                     <script>
                      showContent(
-                     {"ch":[{"f":"content","d":["data/article-aktualne.xml",
-                    "data/article-jak_zacit.xml"]}]});
+                     [{"content":["data/article-aktualne.xml",
+                    "data/article-jak_zacit.xml"]}]);
                     </script>
                 </onentry>
             </state>
             <state id="nabidka_sluzeb">
                 <onentry>
                     <script>
-                    showContent(
-                    {"ch":[{"f":"content","d":["data/article-nabidka_sluzeb.xml"]}]});
+                    showContent([{"content":["data/article-nabidka_sluzeb.xml"]}]);
                     </script>
                 </onentry>
                 <!--transition event="test">
@@ -50,16 +49,14 @@
             <state id="cenik_sluzeb">
                 <onentry>
                     <script>
-                   showContent(
-                    {"ch":[{"f":"content","d":["data/priceList.xml"]}]});
+                   showContent([{"content":["data/priceList.xml"]}]);
                     </script>
                 </onentry>
             </state>
             <state id="registrace">
                 <onentry>
                     <script>
-                    showContent(
-                    {"ch":[{"f":"content","d":["data/registration.xml"]}]});
+                    showContent([{"content":["data/registration.xml"]}]);
                     </script>
                 </onentry>
                 <transition event="send">
@@ -73,15 +70,15 @@
                 <onentry>
                     <script>
                     showContent(
-                    {"ch":[{"f":"content","d":["data/registration.xml"]},
-                    {"f":"sidebar","d":["data/login.xml"]}]});
+                    [{"content":["data/registration.xml"]},
+                    {"sidebar":["data/login.xml"]}]);
                     </script>
                 </onentry>
                 <onexit>
                     <script>
                      showContent(
-                     {"ch":[{"f":"sidebar","d":["data/news.xml",
-                    "../data/article-sluzby.xml"]}]});
+                     [{"sidebar":["data/news.xml",
+                    "../data/article-sluzby.xml"]}]);
                     </script>
                 </onexit>
             </state>
