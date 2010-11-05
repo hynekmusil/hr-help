@@ -61,6 +61,7 @@ function showContent(aChange){
 			if(cn != 'clone'){
 				componentNode = document.getElementById(cn);
 				if(componentNode){
+					stateShot[cn] = aChange[i][cn];
 					componentNode.innerHTML = '';
 					log.innerHTML += aChange[i][cn] + ": \n";
 					for(var j=0; j < aChange[i][cn].length; j++){
