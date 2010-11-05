@@ -795,7 +795,11 @@ Statechartz = {
             var link = links[i];
             var rel = link.getAttribute("rel");
             if (rel == "statechart") {
-                var href = link.getAttribute("href");
+				xmlDoc = getSource(link.getAttribute("href"));
+				document.statechart = Statechartz.loadScxml(xmlDoc);
+				Statechartz.doc = xmlDoc;
+				document.statechart.start();
+                /*var href = link.getAttribute("href");
                 if (window.XMLHttpRequest) xhttp = new XMLHttpRequest();
                 else xhttp = new ActiveXObject("Microsoft.XMLHTTP");
                 xhttp.open("GET", href, false);
@@ -812,7 +816,7 @@ Statechartz = {
 						Statechartz.doc = xmlDoc;
                         document.statechart.start();
                     }
-                }
+                }*/
             }
         }
     }
