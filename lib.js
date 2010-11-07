@@ -3,7 +3,8 @@ var menuProc = null;
 var menuUri = 'component/menu/controller-menu.xsl';
 var menuNode = null;
 var stateIds = '';
-var stateShot = null;
+var stateShot = new Object;
+//var stateShotHTML = '';
 
 var presentationCache = new Array();
 var xsltProcCache = new Array();
@@ -33,8 +34,8 @@ function getActiveStateIds(){
 }
 
 function setLayout(aLayoutURI){
-	//document.body.innerHTML = '';
-	stateShot = {"layout": aLayoutURI};
+	document.body.innerHTML = '';
+	//stateShot = {"layout": aLayoutURI};
 	var fragment = xsltTransform(aLayoutURI);
 	document.body.appendChild(fragment);
 }
@@ -48,7 +49,15 @@ function refreshMenu(){
 	menuNode.appendChild(fragment);
 }
 
-function showContent(aChange){
+function showContent(aChange,aURI,aTitle){
+	if(aURI) {
+		location.hash = aURI;
+		stateShot.uri = aURI; 
+	}
+	if(aTitle) {
+		document.title = aTitle;
+		stateShot.title= aTitle;
+	}
 	refreshMenu();
 	var log = document.getElementById('log');
 	log.innerHTML =JSON.stringify(aChange) + "\n";
@@ -61,18 +70,33 @@ function showContent(aChange){
 			if(cn != 'clone'){
 				componentNode = document.getElementById(cn);
 				if(componentNode){
-					stateShot[cn] = aChange[i][cn];
 					componentNode.innerHTML = '';
 					log.innerHTML += aChange[i][cn] + ": \n";
 					for(var j=0; j < aChange[i][cn].length; j++){
+						var uid = "fxd"+S4();
+						stateShot[uid] = aChange[i][cn][j];
 						var fragment = xsltTransform(aChange[i][cn][j]);
+						for(var k=0; k<fragment.childNodes.length; k++){
+							fragment.childNodes.item(i).className += "fxd_componentSelect " + uid;
+							fragment.childNodes.item(i).onclick = editComponent;
+						}
 						componentNode.appendChild(fragment);
 					}
 				}
 			}
 		}
 	}
+	stateShot.html = document.body.innerHTML;
 }
+
+function editComponent(){
+	alert(this.className);
+}
+
+function S4() {
+   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+}
+
 
 function resolveURI(aBaseURI, aURI){
 	var uriArray = aURI.split("/");

@@ -5,7 +5,7 @@
     xmlns="http://www.w3.org/1999/xhtml"
 >
     <xsl:template match="a:article">
-        <div>
+        <div class="fxd:article">
             <xsl:apply-templates select="@xml:id"/>
             <xsl:apply-templates/>
         </div>

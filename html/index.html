@@ -1,0 +1,343 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>HR help &ndash; nebuďte hrrrrrr!</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="FormaxDesign.cz" />
+	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<!--[if lt IE 9]>
+	<link rel="stylesheet" type="text/css" href="css/ie8.css" /> 
+	<![endif]-->
+</head>
+<body>
+
+<div id="container">
+
+	<div id="header">
+		<h2 id="logo"><a href="/"><span class="blind">HR help</span></a></h2>
+		<p><a href="#menu" class="blind">Skočit na navigaci</a></p>
+	</div>
+	
+	<div id="subheader">
+		<div id="catname">
+			<h4>Název kategorie</h4>
+		</div>
+		<div id="welcome">
+			<p class="welcome"><strong>Your company's welcome message or slogan. Lorem ipsum dolor sit amet, consectur el.</strong></p>
+			<p style="font-size: 11px; color: #7d7d7d">Donec metus lacus, porta id, auctor sit amet, aliquam eu, lacus. Quisque sagittis vulputate orci.</p>
+		</div>
+	</div>
+	
+	<div id="main">
+		<div id="main-content">
+			
+			<!-- Hlavni obsah -->
+			<div id="maincol">
+				<h1 class="title">Nadpis 1. úrovně</h1>
+				
+				<p><strong>Contrary to popular belief</strong>, Lorem Ipsum is not simply random text. It has roots in a piece <a href="#">typesetting industry</a> of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.</p>
+				
+				
+				
+				
+				
+				
+
+<form method="post" action="/account/" onsubmit="return checkForm(this);"> 
+	<fieldset>
+		<legend>Základní údaje</legend>
+		<table> 
+			<tr><th>Identifikační číslo (IČ):</th><td><input type="text" name="IC" maxlength="10" size="10" class="inputText" /></td></tr> 
+			<tr><th>Daňové identifikační číslo (DIČ):</th><td><input type="text" name="DIC" maxlength="12" size="10" class="inputText" /></td></tr> 
+			<tr><th>Název společnosti:<font color="red">*</font></th><td><input type="text" name="OFFICIAL" maxlength="200" size="35" class="inputText" /></td></tr> 
+			<tr><th>Alternativní název společnosti:</th><td><input type="text" name="NAME" maxlength="200" size="35" class="inputText" /></td></tr> 
+			<tr><th>Typ společnosti:<font color="red">*</font></th><td> 
+			<select name="CMP_TYPE">
+				<option value="0">-- Vyberte --</option> 
+				<option value="31">Personální agentura</option>
+				<option value="32">Zaměstnavatel</option>
+			</select> 
+			</td></tr>
+		</table>
+	</fieldset>
+
+	<fieldset>
+		<legend>Kontaktní adresa</legend>
+		<table> 
+			<tr><th>Ulice:</th><td><input type="text" name="STREET" maxlength="200" size="35" class="inputText" /></td></tr> 
+			<tr><th>Číslo popisné:</th><td><input type="text" name="CP" maxlength="10" size="10" class="inputText" /></td></tr> 
+			<tr><th>Město:</th><td><input type="text" name="CITY" maxlength="200" size="35" class="inputText" /></td></tr> 
+			<tr><th>PSČ:</th><td><input type="text" name="PSC" maxlength="6" size="6" class="inputText" /></td></tr> 
+		</table>
+	</fieldset>
+	
+	<fieldset>
+		<legend>Fakturační adresa</legend>
+		<table> 
+			<tr><td colspan="2">Adresa je shodná s kontaktní <input type="checkbox" name="INV_SAME" /></td></tr>
+			<tr><th>Ulice:</th><td><input type="text" name="STREETI" maxlength="200" size="35" class="inputText" /></td></tr> 
+			<tr><th>Číslo popisné:</th><td><input type="text" name="CPI" maxlength="10" size="10" class="inputText" /></td></tr> 
+			<tr><th>Město:</th><td><input type="text" name="CITYI" maxlength="200" size="35" class="inputText" /></td></tr> 
+			<tr><th>PSČ:</th><td><input type="text" name="PSCI" maxlength="6" size="6" class="inputText" /></td></tr> 
+		</table>
+	</fieldset>
+
+	<fieldset>
+		<legend>Kontaktní osoba</legend>
+		<table> 
+			<tr><th>Titul:</th><td><input type="text" name="TITLE" maxlength="10" size="6" class="inputText" /></td></tr> 
+			<tr><th>Oslovení<font color="red">*</font></th><td> 
+			<select name="SALUTATION"> 
+			<option value="0">-- Vyberte --</option> 
+			<option value="28">Pan</option>
+			
+			<option value="29">Paní</option>
+			<option value="30">Slečna</option>
+			 
+			</select></td></tr> 
+			<tr><th>Křestní jméno:<font color="red">*</font></th><td><input type="text" name="FNAME" maxlength="200" size="35" class="inputText" /></td></tr> 
+			<tr><th>Příjmení:<font color="red">*</font></th><td><input type="text" name="SNAME" maxlength="200" size="35" class="inputText" /></td></tr> 
+			<tr><th>Email:<font color="red">*</font></th><td><input type="text" name="EMAIL" maxlength="200" size="35" class="inputText" /></td></tr> 
+			<tr><th>Telefon:<font color="red">*</font></th><td><input type="text" name="TEL" maxlength="15" size="15" class="inputText" /></td></tr> 
+			
+			<tr><th>Pozice:<font color="red">*</font></th><td> 
+			<select name="POSITION"> 
+			<option value="0">-- Vyberte --</option> 
+			<option value="33">HR generalista</option>
+			<option value="34">HR konzultant</option>
+			<option value="35">HR manažer</option>
+			<option value="36">HR specialista</option>
+			<option value="37">Kouč</option>
+			<option value="38">Mzdová účetní</option>
+			
+			<option value="39">Personalista</option>
+			<option value="40">Specialista pro rozvoj a vzdělávání</option>
+			<option value="41">Náborář</option>
+			<option value="42">Jiná pozice</option>
+			 
+			</select> 
+			</td></tr>  
+		</table>
+	</fieldset>
+	
+	<fieldset>
+		<legend>Informace o společnosti</legend>
+		<table> 
+			<tr><th>Počet zaměstnanců HR oddělení:<font color="red">*</font></th><td> 
+			<select name="SIZE_HR"> 
+			
+			<option value="0">-- Vyberte --</option> 
+			<option value="1">0-1</option>
+			<option value="2">2-3</option>
+			<option value="3">4-6</option>
+			<option value="4">7-11</option>
+			<option value="5">12-18</option>
+			<option value="6">19-30</option>
+			<option value="7">30-40</option>
+			<option value="8">41 a víc</option>
+			
+			 
+			</select> 
+			</td></tr> 
+			<tr><th>Počet zaměstnanců celkem:<font color="red">*</font></th><td> 
+			<select name="SIZE_CMP"> 
+			<option value="0">-- Vyberte --</option> 
+			<option value="9">Bez zaměstnanců</option>
+			<option value="10">1 - 5</option>
+			<option value="11">6 - 9</option>
+			<option value="12">10 - 19</option>
+			
+			<option value="13">20 - 24</option>
+			<option value="14">25 - 49</option>
+			<option value="15">50 - 99</option>
+			<option value="16">100 - 199</option>
+			<option value="17">200 - 249</option>
+			<option value="18">250 - 499</option>
+			<option value="19">500 - 999</option>
+			<option value="20">1000 - 1499</option>
+			<option value="21">1500 - 1999</option>
+			
+			<option value="22">2000 - 2499</option>
+			<option value="23">2500 - 2999</option>
+			<option value="24">3000 - 3999</option>
+			<option value="25">4000 - 4999</option>
+			<option value="26">5000 - 9999</option>
+			<option value="27">10 000 a více</option>
+			 
+			</select> 
+			</td></tr> 
+			<tr><th>Obor činnosti společnosti:<font color="red">*</font></th><td> 
+			
+			<select name="BRANCH"> 
+			<option value="0">-- Vyberte --</option> 
+			<option value="43">Administrativa a správní činnosti</option>
+			<option value="44">Automobilový průmysl</option>
+			<option value="45">Bankovnictví, Peněžnictví, Pojišťovnictví</option>
+			<option value="46">Bezpečnost a ochrana majetku</option>
+			<option value="47">Celní správa</option>
+			<option value="48">Činnosti zájmových organizací</option>
+			<option value="49">Doprava</option>
+			
+			<option value="50">Dřevozpracující průmysl</option>
+			<option value="51">Ekonomie a Finance</option>
+			<option value="52">Elekrotechnika</option>
+			<option value="53">Energetika</option>
+			<option value="54">Farmacie, Kosmetická výroba</option>
+			<option value="55">Chemická výroba</option>
+			<option value="56">Informace, Media, Publicistika</option>
+			<option value="57">Informační technologie</option>
+			<option value="58">Logistika</option>
+			
+			<option value="59">Marketing a Reklama</option>
+			<option value="60">Obchod a prodej, nákup</option>
+			<option value="61">Ochrana životního prostředí</option>
+			<option value="62">Pohostinství, gastronomie, cest.ruch</option>
+			<option value="63">Policie a vězeňská služba</option>
+			<option value="64">Polygrafie</option>
+			<option value="65">Poradenství a konzultace</option>
+			<option value="66">Pošty, Zasilatelství</option>
+			<option value="67">Potravinářství</option>
+			
+			<option value="68">Právní činnosti</option>
+			<option value="69">Sklářská, keramická výroba</option>
+			<option value="70">Služby</option>
+			<option value="71">Sociální péče</option>
+			<option value="72">Sport a sportovní služby</option>
+			<option value="73">Státní a veřejná správa</option>
+			<option value="74">Stavebnictví a reality</option>
+			<option value="75">Strojírenství</option>
+			<option value="76">Telekomunikace</option>
+			
+			<option value="77">Textilní a oděvní výroba</option>
+			<option value="78">Těžba a úprava surovin, užitá geologie</option>
+			<option value="79">Umělecká řemeslná výroba</option>
+			<option value="80">Umění, kultura</option>
+			<option value="81">Vědecko-výzkumné činnosti</option>
+			<option value="82">Vojsko</option>
+			<option value="83">Výchova a vzdělávání</option>
+			<option value="84">Výroba</option>
+			<option value="85">Výroba a zpracování papíru</option>
+			
+			<option value="86">Výroba kovů</option>
+			<option value="87">Zdravotnictví a lázeňské služby</option>
+			<option value="88">Zemědělství, lesní a vodní hospodářství</option>
+			<option value="89">Zprostředkovatelská činnost</option>
+			 
+			</select> 
+			</td></tr> 
+			<tr><th>Firemní uživatelské jméno:<font color="red">*</font></th><td><input type="text" name="CMP_USERNAME" maxlength="200" size="35" class="inputText" /></td></tr>
+			<tr><th>Zvolte si uživatelské jméno:<font color="red">*</font></th><td><input type="text" name="USERNAME" maxlength="200" size="35" class="inputText" /></td></tr> 
+			
+			<tr><th>Zvolte heslo:<font color="red">*</font></th><td><input type="password" name="PASSWORD" maxlength="200" size="35" class="inputText" /></td></tr> 
+			<tr><th>Opakujte heslo:<font color="red">*</font></th><td><input type="password" name="PASSWORD2" maxlength="200" size="35" class="inputText" /></td></tr>
+		</table>
+	</fieldset>
+
+	<fieldset>
+		<legend>Jaké služby Vás zajímají? <font color="red">*</font></legend>
+		<table> 
+			<tr><th>360° zpětná vazba</th><td><input type="checkbox" name="service2" /></td></tr>
+			<tr><th>E-learning/LMS</th><td><input type="checkbox" name="service6" /></td></tr>
+			<tr><th>HR HELP (Workflow)</th><td><input type="checkbox" name="service8" /></td></tr>
+			<tr><th>Kvalita spolupráce ve společnosti</th><td><input type="checkbox" name="service10" /></td></tr>
+			<tr><th>Průzkum spokojenosti zaměstnanců </th><td><input type="checkbox" name="service4" /></td></tr>
+		</table>
+	</fieldset>
+
+	<input type="hidden" name="submitted" value="1" />
+	<button type="submit">Registrovat</button>
+
+</form>
+
+				
+				
+				
+<br />
+<br />
+	
+				
+				
+				
+				
+				
+				<table border="1" bordercolor="#665F7A" class="data">
+					<thead>
+						<tr><th colspan="3">Průzkum spokojenosti zaměstnanců </th></tr>
+					</thead>
+					<tbody>
+						<tr><th>Služba</th><td>ZDARMA</th><td>Placená (20000,- / rok)</td></tr>
+						
+						<tr><th>Export odpovědí do XLS</th><td>15000,- CZK</th><td>v ceně</td></tr>
+						<tr><th>Export výsledků do PDF</th><td>5000,- CZK</th><td>v ceně</td></tr>
+						
+						<tr><th>Vlastní design</th><td>nelze</th><td>individuálně</td></tr>
+						<tr><th>Zabezpečení dotazníku heslem</th><td>v ceně</th><td>v ceně</td></tr>
+						<tr><th>Uvítací text</th><td>v ceně</th><td>v ceně</td></tr>
+						<tr><th>Časové omezení průzkumu</th><td>v ceně</th><td>v ceně</td></tr>
+						<tr><th>Sloupcový graf</th><td>v ceně</th><td>v ceně</td></tr>
+						
+						<tr><th>Koláčový graf</th><td>nelze</th><td>v ceně</td></tr>
+						<tr><th>Import otázek z XLS</th><td>10000,- CZK</th><td>v ceně</td></tr>
+						<tr><th>Počet otázek méně než 20</th><td>v ceně</th><td>v ceně</td></tr>
+						<tr><th>Počet otázek 20 - 50</th><td>nelze</th><td>16000,- CZK</td></tr>
+						<tr><th>Počet otázek 50 - 100</th><td>nelze</th><td>30000,- CZK</td></tr>
+						
+						<tr><th>Počet otázek více než 100</th><td>nelze</th><td>individuálně</td></tr>
+						<tr><th>Počet kategorií méně než 4</th><td>v ceně</th><td>v ceně</td></tr>
+						<tr><th>Počet kategorií 4-8</th><td>nelze</th><td>14000,- CZK</td></tr>
+						<tr><th>Počet kategorií 9-20</th><td>nelze</th><td>26000,- CZK</td></tr>
+						<tr><th>Počet kategorií více než 20</th><td>nelze</th><td>individuálně</td></tr>
+						
+						<tr><th>Počet zaměstnanců do 150</th><td>v ceně</th><td>v ceně</td></tr>
+						<tr><th>Počet zaměstnanců do 400</th><td>nelze</th><td>v ceně</td></tr>
+						<tr><th>Počet zaměstnanců nad 1000</th><td>nelze</th><td>200,- CZK</td></tr>
+						<tr><th>Vícejazyčný průzkum</th><td>nelze</th><td>v ceně</td></tr>
+					</tbody>
+				</table>
+
+			</div>
+			
+			<!-- Levy sloupec -->
+			<div id="leftcol">
+				<div class="box">
+					<h4 class="title">Lorem ipsum...</h4>
+					<div class="content">Lorem Ipsum is simply <a href="#">dummy text</a> of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+				</div>
+				
+				<div class="box">
+					<h4 class="title">Lorem ipsum...</h4>
+					<div class="content">
+						<ul>
+							<li>Donec metus lacus, porta id, auctor sit amet, aliquam eu, lacus. Quisque sagittis vulputate orci.</li>
+							<li>Lorem Ipsum is simply dummy text of the printing and <a href="#">typesetting industry</a>. Donec metus lacus, porta id, auctor sit amet, aliquam eu, lacus. Quisque sagittis vulputate orci.</li>
+							<li>Donec metus lacus, porta id, auctor sit amet, aliquam eu, lacus. Quisque sagittis vulputate orci.</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+			<div class="cleaner"></div>
+		</div>
+	</div>
+	
+	<!-- Horni menu -->
+		<h3 class="blind">Menu</h3>
+		<ul id="menu">
+			<li><a href="#"><span><span>Lorem</span></span></a></li>
+			<li class="active"><a href="#"><span><span>Lorem</span></span></a></li>
+			<li><a href="#"><span><span>Lorem</span></span></a></li>
+		</ul>
+	
+	<!-- Paticka -->
+	<div id="footer">
+		2010 © Copyright <strong>HR help</strong>. Všechna práva vyhrazena. Developed by <a href="#"><strong>FormaxDesign.cz</strong></a>
+		<br />
+		<a href="#">Home</a> | <a href="#">Kontakt</a> | <a href="#">RSS</a>
+	</div>
+</div>
+
+</body>
+</html>

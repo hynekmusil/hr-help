@@ -1,0 +1,300 @@
+body {
+	font: 12px/18px Tahoma, sans-serif;
+	background: #DFDFDF url('../img/bg.png') repeat-x 0 0;
+	margin: 0;
+	color: #3D3D3D;
+}
+
+
+/* reset */
+
+p, form, h1, h2, h3, h4, h5, h6, ul, li, fieldset, legend, dl, dt, dd {
+	margin: 0;
+	padding: 0;
+}
+
+
+/* Obecne */
+
+.cleaner {
+	clear: both;
+}
+.blind {
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	visibility: hidden;
+	position: absolute;
+	left: -999px;
+	top: -999px;
+}
+.hidden {
+	display: none;
+}
+a:link {
+	color: #780fc9;
+}
+a:visited {
+	color: navy;
+}
+a:hover {
+	text-decoration: none;
+}
+.title {
+	display: block;
+	height: 41px;
+	font: bold 16px/40px Tahoma !important;
+	margin: 0 !important;
+	color: #fff;
+	text-shadow: black 1px 1px 3px;
+	text-indent: 40px;
+	background: url('../img/title.jpg');
+	white-space: nowrap;
+}
+hr {
+	background: none;
+	border: 0;
+	border-top: 1px solid #726B7D;
+	padding: 0;
+	margin: 10px 0;
+	height: 1px;
+}
+fieldset {
+	background: #f1e9f2;
+	border: 1px solid #b3a7b9;
+	padding: 15px;
+	margin: 10px 0;
+}
+legend {
+	font-weight: bold;
+	background: #fff;
+	border: 1px solid #b3a7b9;
+	padding: 1px 4px;
+}
+
+
+/* Layout */
+
+#container {
+	width: 960px;
+	margin: 0 auto;
+	position: relative;
+}
+#header {
+	height: 118px;
+	position: relative;
+}
+#logo {
+	width: 170px;
+	height: 30px;
+	position: absolute;
+	left: 10px;
+	top: 43px;
+}
+#logo a {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background: url('../img/logo.png');
+}
+#catname {
+	display: block;
+	height: 136px;
+	background: url('../img/subheader.jpg') no-repeat 0 0;
+	padding-left: 10px;
+}
+#catname h4 {
+	display: inline;
+	font: normal 36px/130px "Trebuchet MS",Helvetica,Jamrul,sans-serif;
+	color: #fff;
+	text-shadow: black 1px 1px 3px;
+}
+#welcome {
+	height: 92px;
+	overflow: hidden;
+	text-indent: 10px;
+}
+#welcome p.welcome {
+	font-size: 16px;
+	font-weight: normal;
+	font-family: Arial;
+	margin: 30px 0 0 0;
+}
+#main {
+	background: #F9F9F9;
+	-moz-box-shadow: 1px 1px 1px silver;
+	-webkit-box-shadow: 1px 1px 1px silver;
+	box-shadow: 1px 1px 1px silver;
+	height: 1%; /* IE */
+	margin-top: 15px;
+}
+#main-content {
+	padding: 15px;
+}
+#maincol {
+	float: right;
+	display: inline; /* IE */
+	width: 605px;
+	overflow: hidden;
+}
+#maincol h1.title {
+	margin-bottom: 20px !important;
+}
+#maincol h1 {
+	font-size: 26px;
+	margin: 10px 0 25px 0;
+}
+#maincol h2 {
+	font-size: 22px;
+	margin: 30px 0 15px 0;
+	line-height: 1em;
+}
+#maincol h3 {
+	font-size: 18px;
+	margin: 10px 0 20px 0;
+}
+#maincol h4 {
+	font-size: 14px;
+	margin: 7px 0 15px 0;
+}
+#maincol h5 {
+	font-size: 12px;
+	margin: 5px 0 10px 0;
+}
+#maincol h6 {
+	font-size: 11px;
+	margin: 5px 0 8px 0;
+}
+#maincol p {
+	padding: 5px 0 12px 0;
+	text-indent: 20px;
+}
+#maincol ul {
+	list-style: none;
+	margin: 4px 0 8px 0;
+}
+#maincol li {
+	background: url('../img/arrow_green.gif') no-repeat 0 0.6em;
+	padding-left: 13px;
+	margin: 0 0 0 20px;
+}
+#maincol ul.plus li {
+	background: url('../img/plus.gif') no-repeat 0 0.4em;
+	padding-left: 16px;
+}
+#maincol ul.minus li {
+	background: url('../img/minus.png') no-repeat 0 0.4em;
+	padding-left: 16px;
+}
+#leftcol {
+	float: right;
+	display: inline; /* IE */
+	width: 300px;
+	margin-right: 25px;
+}
+#footer {
+	overflow: hidden;
+	margin: 15px 0;
+	background: url('../img/footer.jpg') no-repeat;
+	color: gray;
+	text-align: center;
+	font-size: 11px;
+}
+#footer a {
+	color: gray;
+}
+
+
+/* Menu */
+
+#menu {
+	list-style: none;
+	position: absolute;
+	right: 0;
+	top: 40px;
+}
+#menu li {
+	float: left;
+	margin: 0 2px;
+}
+#menu li a {
+	float: left;
+	text-decoration: none;
+	color: #000;
+	font-weight: bold;
+	cursor: pointer;
+}
+#menu li span {
+	float: left;
+}
+#menu li span span {
+	height: 33px;
+	padding: 0 20px;
+	margin: 0 5px;
+	line-height: 30px;
+	white-space: nowrap;
+}
+#menu li a:hover,
+#menu li.active a {
+	background: url('../img/menu.item.png') no-repeat 0 0;
+}
+#menu li a:hover span,
+#menu li.active a span {
+	background: url('../img/menu.item.png') no-repeat right -66px;
+}
+#menu li a:hover span span,
+#menu li.active a span span {
+	background-position: 0 -33px;
+	background-repeat: repeat-x;
+}
+
+
+/* Levy sloupec */
+
+.box .content {
+	padding: 10px;
+	font-size: 11px;
+	line-height: 16px;
+	text-align: justify;
+}
+.box ul {
+	list-style: none;
+}
+.box li {
+	background: url('../img/bullet.gif') no-repeat 0 0.45em;
+	padding-left: 20px;
+	margin-bottom: 10px;
+}
+
+
+/* Tabulky */
+
+#maincol table {
+	border-collapse: collapse;
+}
+/* obecna data */
+#maincol table.data {
+	font-size: 11px;
+}
+#maincol table.data thead th {
+	background: #625B76 url('../img/th.png') repeat-x 0 0;
+	color: #fff;
+}
+#maincol table.data tbody th { /* horizontalni hlavicka */
+	background: #827B97 url('../img/tr.th.png') repeat-x 0 0;
+	color: #fff;
+	text-align: left;
+}
+#maincol table.data th,
+#maincol table.data td {
+	padding: 3px 5px;
+}
+/* formular */
+#maincol form table th {
+	text-align: right;
+	font-weight: normal;
+}
+#maincol form table td,
+#maincol form table th {
+	padding: 3px;
+}

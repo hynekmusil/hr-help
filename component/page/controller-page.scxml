@@ -10,7 +10,7 @@
 	</datamodel>
     <parallel id="cms">
         <onentry>
-			<script>setLayout('data/layout.xml');</script> 
+			<script>setLayout('data/page.xml');</script> 
         </onentry>
         <state id="editor" initial="preview">
             <state id="preview">
@@ -32,14 +32,16 @@
                     <script>
                      showContent(
                      [{"content":["data/article-aktualne.xml",
-                    "data/article-jak_zacit.xml"]}]);
+                    "data/article-jak_zacit.xml"]}],
+                    "uvodni-stranka","úvodní stránka");
                     </script>
                 </onentry>
             </state>
             <state id="nabidka_sluzeb">
                 <onentry>
                     <script>
-                    showContent([{"content":["data/article-nabidka_sluzeb.xml"]}]);
+                    showContent([{"content":["data/article-nabidka_sluzeb.xml"]}],
+                    "nabidka-sluzeb","nabídka služeb");
                     </script>
                 </onentry>
                 <!--transition event="test">
