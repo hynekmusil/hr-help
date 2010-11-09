@@ -15,12 +15,12 @@
         <state id="editor" initial="preview">
             <state id="preview">
                 <onentry>
-                    <script>refreshMenu();</script>
+                    <script>refreshMenu(); switchToPreview();</script>
                 </onentry>  
             </state>
             <state id="edit">
                <onentry>
-                   <script>refreshMenu();</script>
+                   <script>refreshMenu(); switchToEditMode();</script>
                </onentry>
             </state>
 			<transition event="preview" target="preview"/>

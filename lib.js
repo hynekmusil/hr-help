@@ -70,23 +70,54 @@ function showContent(aChange,aURI,aTitle){
 			if(cn != 'clone'){
 				componentNode = document.getElementById(cn);
 				if(componentNode){
+					stateShot[cn] = new Array;
 					componentNode.innerHTML = '';
 					log.innerHTML += aChange[i][cn] + ": \n";
 					for(var j=0; j < aChange[i][cn].length; j++){
-						var uid = "fxd"+S4();
-						stateShot[uid] = aChange[i][cn][j];
 						var fragment = xsltTransform(aChange[i][cn][j]);
-						for(var k=0; k<fragment.childNodes.length; k++){
-							fragment.childNodes.item(i).className += "fxd_componentSelect " + uid;
-							fragment.childNodes.item(i).onclick = editComponent;
+						stateShot[cn][j] = new Array;
+						for(var k = 0; k < fragment.childNodes.length; k++){
+							stateShot[cn][j][k] = new Object;
+							stateShot[cn][j][k].node = fragment.childNodes.item(k);
+							stateShot[cn][j][k].dataURI = aChange[i][cn][j]; 
 						}
-						componentNode.appendChild(fragment);
+						var nl = componentNode.appendChild(fragment);
 					}
 				}
 			}
 		}
 	}
-	stateShot.html = document.body.innerHTML;
+}
+
+function switchToEditMode(){
+	for(var c in stateShot){
+		if(c!="clone" && c!= "title" && c!= "uri"){
+			for(var i=0; i < stateShot[c].length; i++){
+				for(var j=0; j < stateShot[c][i].length; j++){
+					var space = "";
+					if(stateShot[c][i][j].node.className) space = " ";
+					stateShot[c][i][j].node.className += space+"f-component "+c+"_"+i+"_"+j;
+					stateShot[c][i][j].node.onclick = editComponent;
+				}
+			}
+		}
+	}
+}
+
+function switchToPreview(){
+	for(var c in stateShot){
+		if(c!="clone" && c!= "title" && c!= "uri"){
+			for(var i=0; i < stateShot[c].length; i++){
+				for(var j=0; j < stateShot[c][i].length; j++){
+					var icn = stateShot[c][i][j].node.className.indexOf("f-component");
+					if(icn > -1){
+						stateShot[c][i][j].node.className = stateShot[c][i][j].node.className.substring(0,icn);
+						stateShot[c][i][j].node.onclick = null;
+					}
+				}
+			}
+		}
+	}
 }
 
 function editComponent(){
