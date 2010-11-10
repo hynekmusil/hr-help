@@ -1,10 +1,10 @@
+//encoding=UTF-8
 var menuDoc = null;
 var menuProc = null;
 var menuUri = 'component/menu/controller-menu.xsl';
 var menuNode = null;
 var stateIds = '';
 var stateShot = new Object;
-//var stateShotHTML = '';
 
 var presentationCache = new Array();
 var xsltProcCache = new Array();
@@ -31,6 +31,13 @@ function getActiveStateIds(){
 		} 
 	}
 	return result.substring(1);
+}
+
+function inState(aStateId){
+	for (var i = 0; i < document.statechart.configuration.length; ++i) {
+		if(document.statechart.configuration[i].id == aStateId) return true;
+	}
+	return false;
 }
 
 function setLayout(aLayoutURI){
@@ -81,12 +88,13 @@ function showContent(aChange,aURI,aTitle){
 							stateShot[cn][j][k].node = fragment.childNodes.item(k);
 							stateShot[cn][j][k].dataURI = aChange[i][cn][j]; 
 						}
-						var nl = componentNode.appendChild(fragment);
+						componentNode.appendChild(fragment);
 					}
 				}
 			}
 		}
 	}
+	if(inState("edit")) switchToEditMode();
 }
 
 function switchToEditMode(){
@@ -97,14 +105,41 @@ function switchToEditMode(){
 					var space = "";
 					if(stateShot[c][i][j].node.className) space = " ";
 					stateShot[c][i][j].node.className += space+"f-component "+c+"_"+i+"_"+j;
-					stateShot[c][i][j].node.onclick = editComponent;
+					stateShot[c][i][j].node.onclick = startEditing;
 				}
 			}
 		}
 	}
 }
 
+function htmlEditCmd(aCmd,aValue,aPrompt) {
+	var bool = false;
+	var value = null;
+	if(aValue === '') value= '';
+	if ((value === '') && (aPrompt != undefined))
+		value = prompt(aPrompt);
+	document.execCommand(aCmd,bool,value);
+	/*if(test){ 
+		var doc = document.implementation.createDocument ('', '', null);  
+		var node = doc.importNode(document.getElementById('testElement'),true);
+		doc.appendChild(node);
+		
+		var repairerProc = null;
+		var repairerUri = 'repairer.xsl';
+		repairerProc = new XSLTProcessor();
+		repairerProc.importStylesheet(getSource(repairerUri));
+		var fragment = repairerProc.transformToFragment(doc, document);
+		document.getElementById('result').innerHTML = '';
+		document.getElementById('result').appendChild(fragment);
+		document.getElementById('testElement').innerHTML = '';
+		document.getElementById('testElement').appendChild(fragment);
+	}*/
+}
+
 function switchToPreview(){
+	var eb =  document.getElementById("editButtons");
+	if(eb)
+		document.body.removeChild(eb);
 	for(var c in stateShot){
 		if(c!="clone" && c!= "title" && c!= "uri"){
 			for(var i=0; i < stateShot[c].length; i++){
@@ -113,6 +148,7 @@ function switchToPreview(){
 					if(icn > -1){
 						stateShot[c][i][j].node.className = stateShot[c][i][j].node.className.substring(0,icn);
 						stateShot[c][i][j].node.onclick = null;
+						stateShot[c][i][j].node.contentEditable = false;
 					}
 				}
 			}
@@ -120,12 +156,19 @@ function switchToPreview(){
 	}
 }
 
-function editComponent(){
-	alert(this.className);
-}
-
-function S4() {
-   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+function startEditing(){
+	var eb =  document.getElementById("editButtons");
+	if(eb == undefined) {
+		var fragment = xsltTransform("data/editCommands.xml");
+		document.body.appendChild(fragment);
+		eb = document.getElementById("editButtons");
+	}
+	var ebHeight = getElementHeight(eb);
+	var coo = getElementCoordinate(this);
+	eb.style.position = "absolute";
+	eb.style.top = String(coo[0] - ebHeight)+"px";
+	eb.style.left = String(coo[1])+"px";
+	this.contentEditable = true;
 }
 
 function resolveURI(aBaseURI, aURI){
@@ -198,4 +241,21 @@ function getSource(aUri,aAsText){
 	http.send(null);
 	if(aAsText) return http.responseText;
 	return http.responseXML;
+}
+
+function getElementHeight(aNode){
+	var heightStr = document.defaultView.getComputedStyle(aNode,null).getPropertyValue("height");
+	return Number(heightStr.substr(0, heightStr.length - 2));
+}
+
+function getElementCoordinate(aNode){
+	var top=0;
+	var left=0;
+	var node = aNode;
+	while (node != null) {
+		top += node.offsetTop;
+		left += node.offsetLeft;
+		node = node.offsetParent;
+	}
+	return new Array(top, left);
 }

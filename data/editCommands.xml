@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../aspect/edit/view-editCommands.xsl"?>
+<editCommands xmlns="http://formax.cz/ns/editCommands">
+    <htmlCommands>
+        <undo/>
+        <redo/>
+        <bold/>
+        <italic/>
+        <indent/>
+        <outdent/>
+        <createLink>
+            <prompt>Zadejte odkaz.</prompt>
+        </createLink>
+    </htmlCommands>
+    <fxCommands>
+        <clear/>
+        <save/>
+    </fxCommands>
+</editCommands>
