@@ -244,7 +244,7 @@ function getSource(aUri,aAsText){
 }
 
 function getElementHeight(aNode){
-	var heightStr = document.defaultView.getComputedStyle(aNode,null).getPropertyValue("height");
+	var heightStr = window.getComputedStyle(aNode,null).getPropertyValue("height");
 	return Number(heightStr.substr(0, heightStr.length - 2));
 }
 
@@ -258,4 +258,22 @@ function getElementCoordinate(aNode){
 		node = node.offsetParent;
 	}
 	return new Array(top, left);
+}
+
+if (!window.getComputedStyle) {
+    window.getComputedStyle = function(el, pseudo) {
+        this.el = el;
+        this.getPropertyValue = function(prop) {
+            var re = /(\-([a-z]){1})/g;
+            if (prop == "float") prop = "styleFloat";
+			if (prop == "height") return el.offsetHeight+"px";
+            if (re.test(prop)) {
+                prop = prop.replace(re, function () {
+                    return arguments[2].toUpperCase();
+                });
+            }
+            return el.currentStyle[prop] ? el.currentStyle[prop] : null;
+        }
+        return this;
+    }
 }
