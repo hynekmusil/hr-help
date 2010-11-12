@@ -41,7 +41,7 @@ function inState(aStateId){
 }
 
 function setLayout(aLayoutURI){
-	document.body.innerHTML = '';
+	//document.body.innerHTML = '';
 	//stateShot = {"layout": aLayoutURI};
 	var fragment = xsltTransform(aLayoutURI);
 	document.body.appendChild(fragment);
