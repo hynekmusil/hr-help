@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<article xmlns="http://formax.cz/ns/article" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<article 
+ xmlns="http://formax.cz/ns/article" 
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://formax.cz/ns/article ../component/article/edit/model-article_edit.xsd"
  xml:id="d0e2">
  <h xml:id="d0e4">Aktuálně</h>

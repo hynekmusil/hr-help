@@ -82,11 +82,13 @@ function showContent(aChange,aURI,aTitle){
 					log.innerHTML += aChange[i][cn] + ": \n";
 					for(var j=0; j < aChange[i][cn].length; j++){
 						var fragment = xsltTransform(aChange[i][cn][j]);
-						stateShot[cn][j] = new Array;
+						stateShot[cn][j] = new Object;
+						stateShot[cn][j].xmlDoc = aChange[i][cn][j];
+						stateShot[cn][j].htmlFragments = new Array;
 						for(var k = 0; k < fragment.childNodes.length; k++){
-							stateShot[cn][j][k] = new Object;
-							stateShot[cn][j][k].node = fragment.childNodes.item(k);
-							stateShot[cn][j][k].dataURI = aChange[i][cn][j]; 
+							stateShot[cn][j].htmlFragments[k] = new Object;
+							stateShot[cn][j].htmlFragments[k].node = fragment.childNodes.item(k);
+							stateShot[cn][j].htmlFragments[k].dataURI = aChange[i][cn][j]; 
 						}
 						componentNode.appendChild(fragment);
 					}
@@ -101,11 +103,11 @@ function switchToEditMode(){
 	for(var c in stateShot){
 		if(c!="clone" && c!= "title" && c!= "uri"){
 			for(var i=0; i < stateShot[c].length; i++){
-				for(var j=0; j < stateShot[c][i].length; j++){
+				for(var j=0; j < stateShot[c][i].htmlFragments.length; j++){
 					var space = "";
-					if(stateShot[c][i][j].node.className) space = " ";
-					stateShot[c][i][j].node.className += space+"f-component "+c+"_"+i+"_"+j;
-					stateShot[c][i][j].node.onclick = startEditing;
+					if(stateShot[c][i].htmlFragments[j].node.className) space = " ";
+					stateShot[c][i].htmlFragments[j].node.className += space+"f-component "+c+"_"+i+"_"+j;
+					stateShot[c][i].htmlFragments[j].node.onclick = startEditing;
 				}
 			}
 		}
@@ -185,7 +187,15 @@ function resolveURI(aBaseURI, aURI){
 		baseURIArray.shift();
 	}
 	baseURIArray.pop();
-	return baseURIArray.join('/') + uriArray.join('/') ;
+	return baseURIArray.join("/") + uriArray.join("/") ;
+}
+
+function xsltTransform4Edit(aDataURI){
+	var dataDoc = getSource(aDataURI);
+	var result = new Object;
+	result.setter = dataDoc.documentElement.getAttributeNS("http://formax.cz/ns/aspect/edit","setter")
+	result.fragment = xsltTransform("", aDataDoc);
+	return result;
 }
 
 function xsltTransform(aDataURI, aDataDoc){
