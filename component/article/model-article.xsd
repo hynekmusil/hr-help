@@ -44,19 +44,20 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="p">
-        <xs:complexType mixed="true">
-            <xs:choice minOccurs="0" maxOccurs="unbounded">
-                <xs:group ref="inline"/>
-            </xs:choice>
-            <xs:attribute name="class"/>
-        </xs:complexType>
-    </xs:element>
-
+    <xs:element name="p" type="inline"/>
+    
+    <xs:complexType name="inline" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="inline"/>
+        </xs:choice>
+        <xs:attribute name="class"/>
+    </xs:complexType>
+    
     <xs:group name="inline">
         <xs:choice>
             <xs:element ref="br"/>
             <xs:element ref="a"/>
+            <xs:element ref="i"/>
             <xs:element ref="email"/>
             <xs:element ref="img"/>
             <xs:element ref="strong"/>
@@ -86,6 +87,8 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="strong" type="xs:string"/>
+    <xs:element name="strong" type="inline"/>
+    
+    <xs:element name="i" type="inline"/>
 
 </xs:schema>

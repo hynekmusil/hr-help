@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="../component/article/view-article.xsl"?>
-<article fx:setter="../component/article/edit/setter-article.php"
+<?xml-setter href="../component/article/edit/setter-article.php"?>
+<article
  xmlns="http://formax.cz/ns/article" 
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xmlns:fx="http://formax.cz/ns/aspect/edit"
  xsi:schemaLocation="http://formax.cz/ns/article ../component/article/model-article.xsd"
 >
  <h>Aktuálně</h>

@@ -5,6 +5,7 @@ var menuUri = 'component/menu/controller-menu.xsl';
 var menuNode = null;
 var stateIds = '';
 var stateShot = new Object;
+var eb = null;
 
 var presentationCache = new Array();
 var xsltProcCache = new Array();
@@ -81,14 +82,14 @@ function showContent(aChange,aURI,aTitle){
 					componentNode.innerHTML = '';
 					log.innerHTML += aChange[i][cn] + ": \n";
 					for(var j=0; j < aChange[i][cn].length; j++){
-						var fragment = xsltTransform(aChange[i][cn][j]);
+						var transformResult = xsltTransform4Edit(aChange[i][cn][j]);
+						var fragment = transformResult.fragment;
 						stateShot[cn][j] = new Object;
-						stateShot[cn][j].xmlDoc = aChange[i][cn][j];
+						stateShot[cn][j].dataURI = aChange[i][cn][j];
+						stateShot[cn][j].setterURI = transformResult.setterURI;
 						stateShot[cn][j].htmlFragments = new Array;
 						for(var k = 0; k < fragment.childNodes.length; k++){
-							stateShot[cn][j].htmlFragments[k] = new Object;
-							stateShot[cn][j].htmlFragments[k].node = fragment.childNodes.item(k);
-							stateShot[cn][j].htmlFragments[k].dataURI = aChange[i][cn][j]; 
+							stateShot[cn][j].htmlFragments[k] = fragment.childNodes.item(k);
 						}
 						componentNode.appendChild(fragment);
 					}
@@ -103,11 +104,19 @@ function switchToEditMode(){
 	for(var c in stateShot){
 		if(c!="clone" && c!= "title" && c!= "uri"){
 			for(var i=0; i < stateShot[c].length; i++){
+				stateShot[c][i].ids = new Array();
 				for(var j=0; j < stateShot[c][i].htmlFragments.length; j++){
 					var space = "";
-					if(stateShot[c][i].htmlFragments[j].node.className) space = " ";
-					stateShot[c][i].htmlFragments[j].node.className += space+"f-component "+c+"_"+i+"_"+j;
-					stateShot[c][i].htmlFragments[j].node.onclick = startEditing;
+					if(stateShot[c][i].htmlFragments[j].className) space = " ";
+					stateShot[c][i].htmlFragments[j].className += space+"f-component "+c+"_"+i+"_"+j;
+					stateShot[c][i].htmlFragments[j].onclick = startEditing;
+					if(stateShot[c][i].htmlFragments[j].id == ""){
+						stateShot[c][i].ids[j] = c+"_"+i+"_"+j;
+						stateShot[c][i].htmlFragments[j].id =  c+"_"+i+"_"+j;
+					}
+					else{
+						stateShot[c][i].ids[j] = stateShot[c][i].htmlFragments[j].id;
+					}
 				}
 			}
 		}
@@ -121,36 +130,62 @@ function htmlEditCmd(aCmd,aValue,aPrompt) {
 	if ((value === '') && (aPrompt != undefined))
 		value = prompt(aPrompt);
 	document.execCommand(aCmd,bool,value);
-	/*if(test){ 
-		var doc = document.implementation.createDocument ('', '', null);  
-		var node = doc.importNode(document.getElementById('testElement'),true);
-		doc.appendChild(node);
-		
-		var repairerProc = null;
-		var repairerUri = 'repairer.xsl';
-		repairerProc = new XSLTProcessor();
-		repairerProc.importStylesheet(getSource(repairerUri));
-		var fragment = repairerProc.transformToFragment(doc, document);
-		document.getElementById('result').innerHTML = '';
-		document.getElementById('result').appendChild(fragment);
-		document.getElementById('testElement').innerHTML = '';
-		document.getElementById('testElement').appendChild(fragment);
-	}*/
+}
+
+function clearData(){
+	alert("clear " + eb.className);
+}
+
+function saveData(){
+	var ss = stateShotAddr2Object(eb.className);
+	var cen =  ss.htmlFragments[0];
+	var id = ss.ids[0];
+	var nn = cen.nodeName;
+	var stag = "<"+nn+">";
+	var etag = "</"+nn+">";
+	send = stag + ss.htmlFragments[0].innerHTML + etag;
+	var doc = getSource(ss.setterURI, send);
+	fragment = xsltTransform(ss.setterURI, doc);
+	for(var i in fragment.childNodes){
+		if(fragment.childNodes.item(i)){
+			if(fragment.childNodes.item(i).nodeType == 1){
+				var n = fragment.childNodes.item(i);
+				n.className = cen.className;
+				n.contentEditable = true;
+				n.id = id;
+				cen.parentNode.replaceChild(n, cen);
+			}
+		}
+	}
+	ss.htmlFragments[0] = document.getElementById(id);
+}
+
+function stateShotAddr2Object(aAddr){
+	var addrArray = aAddr.split("_");
+	if(addrArray.length != 3) return null;
+	var result = stateShot[addrArray[0]];
+	if(result != undefined){
+		result = result[addrArray[1]];
+		if(result != undefined){
+			return result;
+		}
+	}
+	return null;
 }
 
 function switchToPreview(){
-	var eb =  document.getElementById("editButtons");
+	eb =  document.getElementById("editButtons");
 	if(eb)
 		document.body.removeChild(eb);
 	for(var c in stateShot){
 		if(c!="clone" && c!= "title" && c!= "uri"){
 			for(var i=0; i < stateShot[c].length; i++){
-				for(var j=0; j < stateShot[c][i].length; j++){
-					var icn = stateShot[c][i][j].node.className.indexOf("f-component");
+				for(var j=0; j < stateShot[c][i].htmlFragments.length; j++){
+					var icn = stateShot[c][i].htmlFragments[j].className.indexOf("f-component");
 					if(icn > -1){
-						stateShot[c][i][j].node.className = stateShot[c][i][j].node.className.substring(0,icn);
-						stateShot[c][i][j].node.onclick = null;
-						stateShot[c][i][j].node.contentEditable = false;
+						stateShot[c][i].htmlFragments[j].className = stateShot[c][i].htmlFragments[j].className.substring(0,icn);
+						stateShot[c][i].htmlFragments[j].onclick = null;
+						stateShot[c][i].htmlFragments[j].contentEditable = false;
 					}
 				}
 			}
@@ -159,7 +194,7 @@ function switchToPreview(){
 }
 
 function startEditing(){
-	var eb =  document.getElementById("editButtons");
+	eb =  document.getElementById("editButtons");
 	if(eb == undefined) {
 		var fragment = xsltTransform("data/editCommands.xml");
 		document.body.appendChild(fragment);
@@ -170,6 +205,7 @@ function startEditing(){
 	eb.style.position = "absolute";
 	eb.style.top = String(coo[0] - ebHeight)+"px";
 	eb.style.left = String(coo[1])+"px";
+	eb.className = this.className.substring(this.className.indexOf("f-component") + 12);
 	this.contentEditable = true;
 }
 
@@ -184,17 +220,19 @@ function resolveURI(aBaseURI, aURI){
 	}
 	for(i=0; i<countToParents; i++){
 		uriArray.shift();
-		baseURIArray.shift();
+		baseURIArray.pop();
 	}
 	baseURIArray.pop();
-	return baseURIArray.join("/") + uriArray.join("/") ;
+	var baseURI = baseURIArray.join("/");
+ 	if(baseURI != "") baseURI += "/";
+	return baseURI + uriArray.join("/") ;
 }
 
 function xsltTransform4Edit(aDataURI){
 	var dataDoc = getSource(aDataURI);
 	var result = new Object;
-	result.setter = dataDoc.documentElement.getAttributeNS("http://formax.cz/ns/aspect/edit","setter")
-	result.fragment = xsltTransform("", aDataDoc);
+	result.setterURI = getSetterURI(aDataURI, dataDoc);
+	result.fragment = xsltTransform("", dataDoc);
 	return result;
 }
 
@@ -221,11 +259,20 @@ function xsltTransform(aDataURI, aDataDoc){
 }
 
 function getXSLTURI(aDataURI, aDataDoc){
+	return getProcessingURI("stylesheet", aDataURI, aDataDoc);
+}
+
+function getSetterURI(aDataURI, aDataDoc){
+	return getProcessingURI("setter", aDataURI, aDataDoc);
+}
+
+function getProcessingURI(aProc, aDataURI, aDataDoc){
 	var nodeInstruction = aDataDoc.firstChild;
-	while(nodeInstruction.data.indexOf("text/xsl") == -1){
+	while(nodeInstruction.target.indexOf(aProc) == -1){
 		nodeInstruction = nodeInstruction.nextSibling;
 		if(nodeInstruction.nodeType != 7) break;
 	}
+	if(nodeInstruction.data == undefined) return '';
 	var styleInstruction = nodeInstruction.data;
 	styleInstruction = styleInstruction.substring(styleInstruction.indexOf('href')+6);
 	styleInstruction = styleInstruction.substring(0,styleInstruction.indexOf('"'));
@@ -239,16 +286,22 @@ function addToXSLTProcCache(aXSLTURI){
 	return xsltProc;
 }
 
-function getSource(aUri,aAsText){
+function getSource(aUri, aSend, aAsText){
 	var http = new XMLHttpRequest(); 
 	var uri = aUri;
-	if (http.overrideMimeType){
-		http.overrideMimeType('text/xml');
-	}else {
-		uri = 'xml.php?x='+aUri;
+	var send = null;
+	if(aSend != undefined){
+		send = aSend;
 	}
-	http.open("GET",uri,false);
-	http.send(null);
+	if(aAsText == undefined){
+		if (http.overrideMimeType){
+			http.overrideMimeType('text/xml');
+		}else {
+			uri = 'xml.php?x='+aUri;
+		}
+	}
+	http.open("POST",uri,false);
+	http.send(send);
 	if(aAsText) return http.responseText;
 	return http.responseXML;
 }

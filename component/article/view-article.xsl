@@ -22,6 +22,7 @@
     
     <xsl:template match="*">
         <xsl:element name="{local-name()}">
+            <xsl:copy-of select="@href | @class | @src | @alt"/>
             <xsl:apply-templates/> 
         </xsl:element>
     </xsl:template>

@@ -6,6 +6,15 @@
         <redo/>
         <bold/>
         <italic/>
+		<heading>
+			<prompt>Zadejte úroveň nadpisu H1-H6</prompt>
+		</heading>
+		<insertImage>
+			<prompt>Zadejte odkaz na obrázek</prompt>
+		</insertImage>
+		<insertparagraph/>
+		<insertorderedlist/>
+		<insertunorderedlist/>
         <indent/>
         <outdent/>
         <createLink>
@@ -13,7 +22,7 @@
         </createLink>
     </htmlCommands>
     <fxCommands>
-        <clear/>
-        <save/>
+        <clearData/>
+        <saveData/>
     </fxCommands>
 </editCommands>
