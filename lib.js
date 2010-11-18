@@ -62,28 +62,34 @@ function setLayout(aLayoutURI){
 function refreshMenu(){
 	stateIds = getActiveStateIds();
 	menuNode = document.getElementById("menu");
-	menuNode.innerHTML = '';
+	menuNode.innerHTML = "";
 	menuProc.setParameter(null, "stateIds", stateIds);
 	var fragment = menuProc.transformToFragment(Statechartz.doc, document);
 	menuNode.appendChild(fragment);
 }
 
-function showContent(aChange,aURI,aTitle){
-	if(aURI) {
-		location.hash = aURI;
-		stateShot.uri = aURI; 
-	}
-	if(aTitle) {
-		document.title = aTitle;
-		stateShot.title= aTitle;
-	}
-	refreshMenu();
+
+function raise(aEvent, aHref){
+	document.statechart.raise(aEvent);
+}
+function changeMenu(aMenu){
+	var info = changeContent([aMenu], [["","event",document.statechart.event.name]]);
+	if(info){
+		if(info.constructor == Array && info.length == 2){
+			document.title = info[0];
+			stateShot.title=  info[0];
+			location.hash = info[1];
+			stateShot.uri = info[1];
+		}
+	}	
+}
+
+function changeContent(aChange, aParams){	
+	//refreshMenu();
 	var log = document.getElementById("log");
+	var result = null;
 	log.innerHTML =JSON.stringify(aChange) + "\n";
-	var dataURI = "";
-	var componentDoc = null;
 	var componentNode = null;
-	var xsltURI = '';
 	for(var i=0; i < aChange.length; i++){
 		for(var cn in aChange[i]){
 			if(cn != 'clone'){
@@ -93,14 +99,18 @@ function showContent(aChange,aURI,aTitle){
 					componentNode.innerHTML = '';
 					log.innerHTML += aChange[i][cn] + ": \n";
 					for(var j=0; j < aChange[i][cn].length; j++){
-						var transformResult = xsltTransform4Edit(aChange[i][cn][j]);
+						var transformResult = xsltTransform4Edit(aChange[i][cn][j], aParams);
 						var fragment = transformResult.fragment;
 						stateShot[cn][j] = new Object;
 						stateShot[cn][j].dataURI = aChange[i][cn][j];
 						stateShot[cn][j].setterURI = transformResult.setterURI;
 						stateShot[cn][j].htmlFragments = new Array;
 						for(var k = 0; k < fragment.childNodes.length; k++){
-							stateShot[cn][j].htmlFragments[k] = fragment.childNodes.item(k);
+							if(fragment.childNodes.item(k).nodeType == 8 && (fragment.childNodes.item(k).data.indexOf("f-result") === 0)){
+								result = eval(fragment.childNodes.item(k).data.substring(9));
+							} else {
+								stateShot[cn][j].htmlFragments[k] = fragment.childNodes.item(k);
+							}
 						}
 						componentNode.appendChild(fragment);
 					}
@@ -110,6 +120,7 @@ function showContent(aChange,aURI,aTitle){
 	}
 	if(inState("edit")) switchToEditMode();
 	if(inState("publish")) publishState();
+	return result;
 }
 
 function switchToEditMode(){
@@ -152,7 +163,7 @@ function saveData(){
 	var etag = "</"+nn+">";
 	send = stag + ss.htmlFragments[0].innerHTML + etag;
 	var doc = getSource(ss.setterURI+"?dataURI="+ss.dataURI, send);
-	fragment = xsltTransform(ss.setterURI, doc);
+	fragment = xsltTransform("", doc);
 	for(var i in fragment.childNodes){
 		if(fragment.childNodes.item(i)){
 			if(fragment.childNodes.item(i).nodeType == 1){
@@ -235,15 +246,15 @@ function resolveURI(aBaseURI, aURI){
 	return baseURI + uriArray.join("/") ;
 }
 
-function xsltTransform4Edit(aDataURI){
+function xsltTransform4Edit(aDataURI, aParams){
 	var dataDoc = getSource(aDataURI);
 	var result = new Object;
 	result.setterURI = getSetterURI(aDataURI, dataDoc);
-	result.fragment = xsltTransform("", dataDoc);
+	result.fragment = xsltTransform("", dataDoc, aParams);
 	return result;
 }
 
-function xsltTransform(aDataURI, aDataDoc){
+function xsltTransform(aDataURI, aDataDoc, aParams){
 	var dataDoc = null;
 	if(aDataDoc == undefined){
 		dataDoc = getSource(aDataURI);
@@ -262,6 +273,13 @@ function xsltTransform(aDataURI, aDataDoc){
 		xsltProc = addToXSLTProcCache(xsltURI);
 	}
 	xsltProc.setParameter(null, "stateIds", stateIds);
+	if(aParams){
+		if(aParams.constructor == Array){
+			for(var i = 0; i < aParams.length; i++){
+				xsltProc.setParameter(aParams[i][0], aParams[i][1], aParams[i][2]);
+			}
+		}
+	}
 	return xsltProc.transformToFragment(dataDoc, document);
 }
 

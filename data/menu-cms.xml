@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<menu
+    xmlns="http://formax.cz/ns/menu"
+    >
+    <item id="homepage" href="uvodni-stranka">úvodní strana
+        <title>úvod</title>
+    </item>
+    <item id="nabidka_sluzeb" href="nabidka-sluzeb">nabídka služeb
+        <title>služby</title>
+    </item>
+</menu>

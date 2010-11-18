@@ -53,10 +53,12 @@
     </xsl:template>
     
     <xsl:template match="h1 | h2 | h3 | h4 | h5 | h6">
-        <a:h level="substring-afer(name(),'h')">
+        <a:h level="{substring-after(name(),'h')}">
             <xsl:apply-templates/>
         </a:h>
     </xsl:template>
+    
+    <xsl:template match="br"/>
     
     <xsl:template match="text()[normalize-space() = '']">
         <xsl:text> </xsl:text>

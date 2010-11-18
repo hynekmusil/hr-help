@@ -5,23 +5,18 @@
 	
 	$baseDir = substr(__DIR__,0,strpos(__DIR__,"component"));
 	
-	$config = array(
-           'indent'         => false,
-           'output-xhtml'   => true,
-           'wrap'           => 200);
-		   
+	$config = array("indent"=> false,"output-xhtml"=> true, "wrap"=> 200);
 	$tidy = new tidy();
-	$tidy->parseString($html, $config, 'utf8');
+	$tidy->parseString($html, $config, "utf8");
 	$tidy->cleanRepair();
 	
 	$xmlDoc = new DOMDocument("1.0","utf-8");
-	$xmlDoc->loadXML(str_replace("&nbsp;","",$tidy->body()->value)); 
+	$xmlDoc->loadXML(str_replace("&nbsp;","&#160;",$tidy->body()->value)); 
 	
 	$xslt = new XSLTProcessor();
 	$xslDoc = new DOMDocument();
-	$xslDoc->load( 'setter-article.xsl', LIBXML_NOCDATA);
+	$xslDoc->load( 'setter-article.xsl');
 	$xslt->importStylesheet( $xslDoc); 
-	
 	$result = $xslt->transformToXML( $xmlDoc );
 	print $result;
 	
@@ -33,7 +28,6 @@
 	$replacements[0] = '$1../component/article$3';
 	$replacements[1] =  '$1../component/article/edit/$2';
 	$replacements[2] =  '$1 ../component/article$3';
-	
 	$result = preg_replace($patterns, $replacements, $result);
 	
 	$fp = fopen($baseDir.$dataURI, "w");

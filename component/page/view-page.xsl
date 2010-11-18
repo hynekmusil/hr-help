@@ -5,7 +5,7 @@
     xmlns="http://www.w3.org/1999/xhtml"
 >
     <xsl:template match="p:layout">
-        <div id="menu">
+        <div id="menuA">
             <xsl:text> </xsl:text>
         </div>
         <div>

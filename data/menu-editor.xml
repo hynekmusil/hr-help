@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?stylesheet type="text/xsl" href="../component/menu/view-menu.xsl"?>
+<menu
+    xmlns="http://formax.cz/ns/menu"
+>
+    <item id="preview" selected="">náhled</item>
+    <item id="edit">editace</item>
+    <item id="publish">publikace</item>
+</menu>

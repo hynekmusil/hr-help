@@ -5,29 +5,35 @@
     xsi:schemaLocation="http://www.w3.org/2005/07/scxml controller/schema-scxml/scxml-profile-ecma.xsd"
 >
 	 <datamodel>
-        <data id="layout" expr="''"/>
         <data id="isValid" />
+	    <data id="mainMenu"/>
+	    <data id="editMenu"/>
 	</datamodel>
     <parallel id="cms">
         <onentry>
-			<script>setLayout('data/page.xml');</script> 
+			<script>
+			    setLayout('data/page.xml');
+			    _data.mainMenu = {"menuA":["data/menu-hlavni.xml"]};
+			    _data.editMenu = {"menu":["data/menu-editor.xml"]};
+			</script> 
         </onentry>
         <state id="site" initial="homepage">
+            <onentry>
+                <script>changeMenu(_data.mainMenu);</script>
+            </onentry>
             <state id="homepage">
                 <onentry>
                     <script>
-                     showContent(
+                     changeContent(
                      [{"content":["data/article-aktualne.xml",
-                    "data/article-jak_zacit.xml"]}],
-                    "uvodni-stranka","úvodní stránka");
+                    "data/article-jak_zacit.xml"]}]);
                     </script>
                 </onentry>
             </state>
             <state id="nabidka_sluzeb">
                 <onentry>
                     <script>
-                    showContent([{"content":["data/article-nabidka_sluzeb.xml"]}],
-                    "nabidka-sluzeb","nabídka služeb");
+                    changeContent([{"content":["data/article-nabidka_sluzeb.xml"]}]);
                     </script>
                 </onentry>
                 <!--transition event="test">
@@ -37,14 +43,14 @@
             <state id="cenik_sluzeb">
                 <onentry>
                     <script>
-                   showContent([{"content":["data/priceList.xml"]}]);
+                   changeContent([{"content":["data/priceList.xml"]}]);
                     </script>
                 </onentry>
             </state>
             <state id="registrace">
                 <onentry>
                     <script>
-                    showContent([{"content":["data/registration.xml"]}]);
+                    changeContent([{"content":["data/registration.xml"]}]);
                     </script>
                 </onentry>
                 <transition event="send">
@@ -57,14 +63,14 @@
             <state id="prihlaseni">
                 <onentry>
                     <script>
-                    showContent(
+                    changeContent(
                     [{"content":["data/registration.xml"]},
                     {"sidebar":["data/login.xml"]}]);
                     </script>
                 </onentry>
                 <onexit>
                     <script>
-                     showContent(
+                     changeContent(
                      [{"sidebar":["data/news.xml",
                     "../data/article-sluzby.xml"]}]);
                     </script>
@@ -78,9 +84,11 @@
                     </script>
                 </onentry>
             </state>
-			<transition event="homepage" target="homepage"/>
+			<transition event="homepage" target="homepage">
+			    <script>changeMenu(_data.mainMenu);</script>
+			</transition>
 			<transition event="nabidka_sluzeb" target="nabidka_sluzeb">
-				<!--raise event="test"/-->
+			    <script>changeMenu(_data.mainMenu);</script>
 			</transition>
 			<transition event="cenik_sluzeb" target="cenik_sluzeb"/>
 			<transition event="registrace" target="registrace"/>
@@ -88,14 +96,17 @@
         </state>
     
         <state id="editor" initial="preview">
+            <onentry>
+                <script>changeMenu(_data.editMenu);</script>
+            </onentry>
             <state id="preview">
                 <onentry>
-                    <script>refreshMenu(); switchToPreview();</script>
+                    <script>switchToPreview();</script>
                 </onentry>  
             </state>
             <state id="edit">
                 <onentry>
-                    <script>refreshMenu(); switchToEditMode();</script>
+                    <script>switchToEditMode();</script>
                 </onentry>
             </state>
             <state id="publish">
@@ -103,9 +114,15 @@
                     <script>publish();</script>
                 </onentry>
             </state>
-            <transition event="preview" target="preview"/>
-            <transition event="edit" target="edit"/>
-            <transition event="publish" target="publish"/>
+            <transition event="preview" target="preview">
+                <script>changeMenu(_data.editMenu);</script>
+            </transition>
+            <transition event="edit" target="edit">
+                <script>changeMenu(_data.editMenu);</script>
+            </transition>
+            <transition event="publish" target="publish">
+                <script>changeMenu(_data.editMenu);</script>
+            </transition>
         </state>
     </parallel>
 </scxml>

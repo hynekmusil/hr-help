@@ -6,7 +6,7 @@
     <xsl:param name="title"/>
     
     <xsl:output omit-xml-declaration="yes"
-        doctype-public="-//W3C//DTD XHTML 1.0 Strict" 
+        doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" 
         doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
     />
     
@@ -16,9 +16,9 @@
         <html>
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                <title><xsl:value-of select="$title"/></title>
+                <title>HR-pomoc</title>
             </head>
-            <xsl:apply-templates select="*"/>
+            <xsl:apply-templates select="body"/>
         </html>
     </xsl:template>
     
@@ -36,7 +36,7 @@
                 substring-after(.,concat('javascript:document.statechart.raise(',$apos)),$apos)"/>
         </xsl:variable>
         <xsl:attribute name="href">
-            <xsl:value-of select="concat($linkList//*[@id = $event]/@uri,'.html')"/>
+            <xsl:value-of select="$linkList//*[@id = $event]/@uri"/>
         </xsl:attribute>
     </xsl:template>
     
