@@ -1,14 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="../component/article/view-article.xsl"?>
-<?xml-setter href="../component/article/edit/setter-article.php"?>
-<article
- xmlns="http://formax.cz/ns/article" 
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://formax.cz/ns/article ../component/article/model-article.xsd"
->
- <h>Aktuálně</h>
- <p>Dne <strong>10.1.2010</strong> spouštíme portál HR-Help.cz, který Vám pomůže řešit některé body z HR problematiky. Nabízíme tímto velmi zajímavá IT řešení na HR procesy.
-  První funkční aplikace pro Vás bude <a href="/sluzby/pruzkum-spokojenosti-zamestnancu/">Průzkum spokojenosti zaměstnanců</a>. Varianta zdarma Vám umožní zadat až 20 otázek a vybrat k nim ze seznamu odpovědí. Zároveň jsou k dispozici další 3 otázky pro kategorizaci odpovědí. Vyhodnocení poté probíhá na sloupcových grafech.</p>
- <p>Jednotlivé grafy lze uložit jako obrázky, více informací naleznete v <a href="/sluzby/pruzkum-spokojenosti-zamestnancu/priklady/">příkladech</a> k dané službě.</p>
- <p> Zároveň jsme udělali vzorový výpočet, který by Vám měl usnadnit rozhodování, zda-li je tato služba pro Vás zajímavá. Podrobný výpočet naleznete <a href="/sluzby/pruzkum-spokojenosti-zamestnancu/#vypocet">zde</a>.</p>
-</article>
+<?stylesheet type="text/xsl" href="../component/article/view-article.xsl"?><?setter href="../component/article/edit/setter-article.php"?><a:article xmlns:a="http://formax.cz/ns/article" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://formax.cz/ns/article ../component/article/model-article.xsd"><a:h level="substring-afer(name(),'h')">Aktuálně</a:h><a:p>Dne<a:strong>10.1.2010</a:strong> <a:i>spouštíme</a:i> portál <a:strong><a:a href="http://formax.cz">HR-Help.cz</a:a></a:strong>, který</a:p> <a:l>Vám pomůže řešit některé body z <a:a href="ble:alert%281%29">HR</a:a> problematiky.</a:l> <a:l>jskjsihshh h
+ <a:l><a:a href="javascript:alert(1)">shihs iuhsih</a:a></a:l> <a:l><a:a href="&amp;#1ja&amp;#2&amp;#3va&amp;#4&amp;#5sc&amp;#6r&amp;#7i&amp;#8p&amp;#11t&amp;#12:alert%281%29">hjh hk</a:a></a:l> <a:l>jkjlkjljl</a:l>  </a:l> <a:l>Nabízíme tímto velmi zajímavá</a:l> <a:l>IT řešení na HR procesy. <a:strong>První</a:strong> funkční aplikace pro Vás bude <a:a href="/sluzby/pruzkum-spokojenosti-zamestnancu/">Průzkum spokojenosti zaměstnanců</a:a>.
+Varianta zdarma Vám umožní zadat až 20 otázek a vybrat k nim ze seznamu odpovědí. Zároveň jsou k <a:strong>dispozici</a:strong></a:l> <a:p>další 3 otázky pro kategorizaci odpovědí. Vyhodnocení poté probíhá na sloupcových grafech.</a:p><a:p>Jednotlivé grafy lze uložit jako obrázky, více informací naleznete v <a:a href="/sluzby/pruzkum-spokojenosti-zamestnancu/priklady/">příkladech</a:a> k dané službě.</a:p><a:p>Zároveň jsme udělali vzorový výpočet, který by Vám měl usnadnit rozhodování, zda-li je tato služba pro Vás zajímavá. Podrobný výpočet naleznete <a:a href="/sluzby/pruzkum-spokojenosti-zamestnancu/#vypocet">zde</a:a>.</a:p></a:article>

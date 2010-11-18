@@ -20,11 +20,28 @@
         </xsl:element>
     </xsl:template>
     
+    <xsl:template match="a:l[not(preceding-sibling::*[1][name() = 'a:l'])]">
+        <ul>
+            <xsl:apply-templates select="." mode="li"/>
+        </ul>
+    </xsl:template>
+    
+    <xsl:template match="a:l"/>
+    
+    <xsl:template match="a:l" mode="li">
+        <li><xsl:apply-templates/></li>
+        <xsl:apply-templates select="following-sibling::*[1][name()='a:l']" mode="li"/>
+    </xsl:template>
+        
     <xsl:template match="*">
         <xsl:element name="{local-name()}">
             <xsl:copy-of select="@href | @class | @src | @alt"/>
             <xsl:apply-templates/> 
         </xsl:element>
+    </xsl:template>
+    
+    <xsl:template match="text()[normalize-space() = '']">
+        <xsl:text> </xsl:text>
     </xsl:template>
 
 </xsl:stylesheet>

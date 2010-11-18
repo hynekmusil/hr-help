@@ -1,7 +1,7 @@
 //encoding=UTF-8
 var menuDoc = null;
 var menuProc = null;
-var menuUri = 'component/menu/controller-menu.xsl';
+var menuUri = "component/menu/controller-menu.xsl";
 var menuNode = null;
 var stateIds = '';
 var stateShot = new Object;
@@ -16,11 +16,22 @@ window.onload = function(){
 		menuProc.importStylesheet(getSource(menuUri));
 		Statechartz.loadFromDocument();
 	}catch(err){
-		var str = '<h1>Váš prohlížeč nepodporuje tuto aplikaci - vyzkoušejte Firefox</h1><span>';
+		var str = "<h1>Váš prohlížeč nepodporuje tuto aplikaci - vyzkoušejte Firefox</h1><span>";
 		if (typeof (exception) == "object" && exception.message) str += err.message;
 		else str +=err;
-		document.body.innerHTML = str+'</span>';
+		document.body.innerHTML = str + "</span>";
 	}
+}
+
+function publish(){
+	for(var i = 0; i < events4Publish.length;  i++){
+		document.statechart.raise(events4Publish[i]);
+	}
+}
+
+function publishState(){
+	send = document.body.innerHTML;
+	getSource("publish.php?title="+stateShot.title+"&uri="+stateShot.uri,send);
 }
 
 function getActiveStateIds(){
@@ -67,9 +78,9 @@ function showContent(aChange,aURI,aTitle){
 		stateShot.title= aTitle;
 	}
 	refreshMenu();
-	var log = document.getElementById('log');
+	var log = document.getElementById("log");
 	log.innerHTML =JSON.stringify(aChange) + "\n";
-	var dataURI = '';
+	var dataURI = "";
 	var componentDoc = null;
 	var componentNode = null;
 	var xsltURI = '';
@@ -98,6 +109,7 @@ function showContent(aChange,aURI,aTitle){
 		}
 	}
 	if(inState("edit")) switchToEditMode();
+	if(inState("publish")) publishState();
 }
 
 function switchToEditMode(){
@@ -131,11 +143,6 @@ function htmlEditCmd(aCmd,aValue,aPrompt) {
 		value = prompt(aPrompt);
 	document.execCommand(aCmd,bool,value);
 }
-
-function clearData(){
-	alert("clear " + eb.className);
-}
-
 function saveData(){
 	var ss = stateShotAddr2Object(eb.className);
 	var cen =  ss.htmlFragments[0];
@@ -144,7 +151,7 @@ function saveData(){
 	var stag = "<"+nn+">";
 	var etag = "</"+nn+">";
 	send = stag + ss.htmlFragments[0].innerHTML + etag;
-	var doc = getSource(ss.setterURI, send);
+	var doc = getSource(ss.setterURI+"?dataURI="+ss.dataURI, send);
 	fragment = xsltTransform(ss.setterURI, doc);
 	for(var i in fragment.childNodes){
 		if(fragment.childNodes.item(i)){

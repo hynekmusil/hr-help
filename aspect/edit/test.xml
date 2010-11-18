@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<body>
+    <div>
+        <h1>
+            Aktuálně
+        </h1>
+        <p>
+            Dne <strong>10.1.2010</strong> spouštíme portál HR-Help.cz, který Vám pomůže řešit některé body z HR problematiky. Nabízíme tímto velmi zajímavá IT řešení na HR procesy. První funkční aplikace
+            pro Vás bude <a>Průzkum spokojenosti zaměstnanců</a>. Varianta zdarma Vám umožní zadat až 20 otázek a vybrat k nim ze seznamu odpovědí. Zároveň jsou k dispozici další 3 otázky pro kategorizaci
+            odpovědí. Vyhodnocení poté probíhá na sloupcových grafech.
+        </p>
+        <p>
+            Jednotlivé grafy lze uložit jako obrázky, více informací naleznete v <a>příkladech</a> k dané službě.
+        </p>
+        <p>
+            Zároveň jsme udělali vzorový výpočet, který by Vám měl usnadnit rozhodování, zda-li je tato služba pro Vás zajímavá. Podrobný výpočet naleznete <a>zde</a>.
+        </p>
+    </div>
+</body>
+

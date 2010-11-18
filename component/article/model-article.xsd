@@ -22,28 +22,22 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:complexType name="block">
+    <xs:complexType name="block" mixed="true">
         <xs:sequence>
             <xs:element ref="h" minOccurs="0"/>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element ref="p"/>
                 <xs:element ref="article"/>
                 <xs:element ref="l"/>
-                <xs:group ref="inline"/>
+                <xs:group ref="inline" minOccurs="0" maxOccurs="unbounded"/>
             </xs:choice>
         </xs:sequence>
     </xs:complexType>
 
     <xs:element name="h" type="xs:string"/>
     
-    <xs:element name="l">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="li" type="block"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-
+    <xs:element name="l" type="block"/>
+        
     <xs:element name="p" type="inline"/>
     
     <xs:complexType name="inline" mixed="true">

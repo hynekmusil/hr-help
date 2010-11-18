@@ -4,6 +4,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 >
+    <xsl:output encoding="UTF-8"/>
+    
     <xsl:template match="/body">
         <xsl:processing-instruction name="stylesheet">
             <xsl:text>type="text/xsl" href="../view-article.xsl"</xsl:text>
@@ -26,8 +28,16 @@
         <a:p><xsl:apply-templates/></a:p>
     </xsl:template>
     
+    <xsl:template match="ul | ol">
+        <xsl:apply-templates/>
+    </xsl:template>
+    
+    <xsl:template match="li">
+        <a:l><xsl:apply-templates/></a:l>
+    </xsl:template>
+    
     <xsl:template match="a">
-        <a:a href="{@href}" alt="-"><xsl:apply-templates/></a:a>
+        <a:a href="{@href}"><xsl:apply-templates/></a:a>
     </xsl:template>
     
     <xsl:template match="b | strong | span[contains(@style,'font-weight: bold')]">
@@ -42,8 +52,14 @@
         <a:img src="{@src}"/>
     </xsl:template>
     
-    <xsl:template match="h1">
-        <a:h><xsl:apply-templates/></a:h>
+    <xsl:template match="h1 | h2 | h3 | h4 | h5 | h6">
+        <a:h level="substring-afer(name(),'h')">
+            <xsl:apply-templates/>
+        </a:h>
+    </xsl:template>
+    
+    <xsl:template match="text()[normalize-space() = '']">
+        <xsl:text> </xsl:text>
     </xsl:template>
     
 </xsl:stylesheet>

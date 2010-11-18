@@ -12,8 +12,6 @@
 		<insertImage>
 			<prompt>Zadejte odkaz na obrázek</prompt>
 		</insertImage>
-		<insertparagraph/>
-		<insertorderedlist/>
 		<insertunorderedlist/>
         <indent/>
         <outdent/>
@@ -22,7 +20,6 @@
         </createLink>
     </htmlCommands>
     <fxCommands>
-        <clearData/>
         <saveData/>
     </fxCommands>
 </editCommands>

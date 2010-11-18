@@ -12,20 +12,6 @@
         <onentry>
 			<script>setLayout('data/page.xml');</script> 
         </onentry>
-        <state id="editor" initial="preview">
-            <state id="preview">
-                <onentry>
-                    <script>refreshMenu(); switchToPreview();</script>
-                </onentry>  
-            </state>
-            <state id="edit">
-               <onentry>
-                   <script>refreshMenu(); switchToEditMode();</script>
-               </onentry>
-            </state>
-			<transition event="preview" target="preview"/>
-			<transition event="edit" target="edit"/>
-        </state>
         <state id="site" initial="homepage">
             <state id="homepage">
                 <onentry>
@@ -99,6 +85,27 @@
 			<transition event="cenik_sluzeb" target="cenik_sluzeb"/>
 			<transition event="registrace" target="registrace"/>
 			<transition event="prihlaseni" target="prihlaseni"/>
+        </state>
+    
+        <state id="editor" initial="preview">
+            <state id="preview">
+                <onentry>
+                    <script>refreshMenu(); switchToPreview();</script>
+                </onentry>  
+            </state>
+            <state id="edit">
+                <onentry>
+                    <script>refreshMenu(); switchToEditMode();</script>
+                </onentry>
+            </state>
+            <state id="publish">
+                <onentry>
+                    <script>publish();</script>
+                </onentry>
+            </state>
+            <transition event="preview" target="preview"/>
+            <transition event="edit" target="edit"/>
+            <transition event="publish" target="publish"/>
         </state>
     </parallel>
 </scxml>
