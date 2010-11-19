@@ -13,8 +13,8 @@
 	
 	$xslt = new XSLTProcessor();
 	$xslDoc = new DOMDocument();
-	$xslDoc->load( "component/page/filter.xsl");
+	$xslDoc->load( "filter.xsl");
 	$xslt->importStylesheet( $xslDoc); 
 	$xslt->setParameter("","title",$title);
 	
-	$xslt->transformToURI( $xmlDoc, __DIR__."/www/".$uri.".html");
+	$xslt->transformToURI( $xmlDoc, __DIR__."/../../www/".$uri.".html");

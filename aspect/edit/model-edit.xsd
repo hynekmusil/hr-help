@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema attributeFormDefault="qualified" elementFormDefault="qualified"
-    targetNamespace="http://formax.cz/ns/aspect/edit"
-    xmlns="http://formax.cz/ns/aspect/edit"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
->
-    
-    <xs:attribute name="setter" type="xs:anyURI"/>
-</xs:schema>

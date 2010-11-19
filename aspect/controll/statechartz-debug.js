@@ -857,7 +857,7 @@ function debug(aLog,aValue){
 	if (window.XMLHttpRequest) http = new XMLHttpRequest();
 	else if (window.ActiveXObject) http = new ActiveXObject("Microsoft.XMLHTTP");
 	else return;
-	http.open("POST",'log.php?l='+aLog,false);
+	http.open("POST","aspect/controll/log.php?l="+aLog,false);
 	http.send(aValue);
 }
 function getTextContent(aElement){

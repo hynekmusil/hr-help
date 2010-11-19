@@ -8,13 +8,13 @@
     
     <xsl:template match="/body">
         <xsl:processing-instruction name="stylesheet">
-            <xsl:text>type="text/xsl" href="../view-article.xsl"</xsl:text>
+            <xsl:text>type="text/xsl" href="view-article.xsl"</xsl:text>
         </xsl:processing-instruction>
         <xsl:processing-instruction name="setter">
             <xsl:text>href="setter-article.php"</xsl:text>
         </xsl:processing-instruction>
         <a:article
-            xsi:schemaLocation="http://formax.cz/ns/article ../model-article.xsd"
+            xsi:schemaLocation="http://formax.cz/ns/article model-article.xsd"
          >
             <xsl:apply-templates select="div/*"/>
         </a:article>

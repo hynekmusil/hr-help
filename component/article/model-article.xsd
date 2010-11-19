@@ -7,20 +7,8 @@
 >
     <xs:import namespace="http://www.w3.org/XML/1998/namespace"
         schemaLocation="http://www.w3.org/2001/xml.xsd"/>
-    
-    <xs:import namespace="http://formax.cz/ns/aspect/edit"
-        schemaLocation="../../aspect/edit/model-edit.xsd"/>
-    
 
-    <xs:element name="article">
-        <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="block">
-                    <xs:attribute ref="fx:setter"/>
-                </xs:extension>
-            </xs:complexContent>
-        </xs:complexType>
-    </xs:element>
+    <xs:element name="article" type="block"/>
 
     <xs:complexType name="block" mixed="true">
         <xs:sequence>

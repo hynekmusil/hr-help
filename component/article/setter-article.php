@@ -21,13 +21,13 @@
 	print $result;
 	
 	$patterns = array();
-	$patterns[0] = '@(<\?stylesheet type="text\/xsl" href=")(\.\.)?([^"]+"\?>)@';
+	$patterns[0] = '@(<\?stylesheet type="text\/xsl" href=")([^"]+"\?>)@';
 	$patterns[1] = '@(<\?setter href=")([^"]+"\?>)@';
-	$patterns[2] = '@(xsi:schemaLocation="[^ ]+) (\.\.)?([^"]+")@';
+	$patterns[2] = '@(xsi:schemaLocation="[^ ]+)([^"]+")@';
 	$replacements = array();
-	$replacements[0] = '$1../component/article$3';
-	$replacements[1] =  '$1../component/article/edit/$2';
-	$replacements[2] =  '$1 ../component/article$3';
+	$replacements[0] = '$1../component/article/$2';
+	$replacements[1] =  '$1../component/article/$2';
+	$replacements[2] =  '$1 ../component/article/$2';
 	$result = preg_replace($patterns, $replacements, $result);
 	
 	$fp = fopen($baseDir.$dataURI, "w");

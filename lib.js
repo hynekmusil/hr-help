@@ -1,8 +1,4 @@
 //encoding=UTF-8
-var menuDoc = null;
-var menuProc = null;
-var menuUri = "component/menu/controller-menu.xsl";
-var menuNode = null;
 var stateIds = '';
 var stateShot = new Object;
 var eb = null;
@@ -12,8 +8,6 @@ var xsltProcCache = new Array();
 
 window.onload = function(){
 	try{
-		menuProc = new XSLTProcessor();
-		menuProc.importStylesheet(getSource(menuUri));
 		Statechartz.loadFromDocument();
 	}catch(err){
 		var str = "<h1>Váš prohlížeč nepodporuje tuto aplikaci - vyzkoušejte Firefox</h1><span>";
@@ -31,7 +25,7 @@ function publish(){
 
 function publishState(){
 	send = document.body.innerHTML;
-	getSource("publish.php?title="+stateShot.title+"&uri="+stateShot.uri,send);
+	getSource("aspect/publish/publish.php?title="+stateShot.title+"&uri="+stateShot.uri,send);
 }
 
 function getActiveStateIds(){
@@ -59,16 +53,6 @@ function setLayout(aLayoutURI){
 	document.body.appendChild(fragment);
 }
 
-function refreshMenu(){
-	stateIds = getActiveStateIds();
-	menuNode = document.getElementById("menu");
-	menuNode.innerHTML = "";
-	menuProc.setParameter(null, "stateIds", stateIds);
-	var fragment = menuProc.transformToFragment(Statechartz.doc, document);
-	menuNode.appendChild(fragment);
-}
-
-
 function raise(aEvent, aHref){
 	document.statechart.raise(aEvent);
 }
@@ -85,7 +69,6 @@ function changeMenu(aMenu){
 }
 
 function changeContent(aChange, aParams){	
-	//refreshMenu();
 	var log = document.getElementById("log");
 	var result = null;
 	log.innerHTML =JSON.stringify(aChange) + "\n";
@@ -127,18 +110,20 @@ function switchToEditMode(){
 	for(var c in stateShot){
 		if(c!="clone" && c!= "title" && c!= "uri"){
 			for(var i=0; i < stateShot[c].length; i++){
-				stateShot[c][i].ids = new Array();
-				for(var j=0; j < stateShot[c][i].htmlFragments.length; j++){
-					var space = "";
-					if(stateShot[c][i].htmlFragments[j].className) space = " ";
-					stateShot[c][i].htmlFragments[j].className += space+"f-component "+c+"_"+i+"_"+j;
-					stateShot[c][i].htmlFragments[j].onclick = startEditing;
-					if(stateShot[c][i].htmlFragments[j].id == ""){
-						stateShot[c][i].ids[j] = c+"_"+i+"_"+j;
-						stateShot[c][i].htmlFragments[j].id =  c+"_"+i+"_"+j;
-					}
-					else{
-						stateShot[c][i].ids[j] = stateShot[c][i].htmlFragments[j].id;
+				if(stateShot[c][i].setterURI != ""){
+					stateShot[c][i].ids = new Array();
+					for(var j=0; j < stateShot[c][i].htmlFragments.length; j++){
+						var space = "";
+						if(stateShot[c][i].htmlFragments[j].className) space = " ";
+						stateShot[c][i].htmlFragments[j].className += space+"f-component "+c+"_"+i+"_"+j;
+						stateShot[c][i].htmlFragments[j].onclick = startEditing;
+						if(stateShot[c][i].htmlFragments[j].id == ""){
+							stateShot[c][i].ids[j] = c+"_"+i+"_"+j;
+							stateShot[c][i].htmlFragments[j].id =  c+"_"+i+"_"+j;
+						}
+						else{
+							stateShot[c][i].ids[j] = stateShot[c][i].htmlFragments[j].id;
+						}
 					}
 				}
 			}
@@ -163,7 +148,7 @@ function saveData(){
 	var etag = "</"+nn+">";
 	send = stag + ss.htmlFragments[0].innerHTML + etag;
 	var doc = getSource(ss.setterURI+"?dataURI="+ss.dataURI, send);
-	fragment = xsltTransform("", doc);
+	fragment = xsltTransform(ss.setterURI, doc);
 	for(var i in fragment.childNodes){
 		if(fragment.childNodes.item(i)){
 			if(fragment.childNodes.item(i).nodeType == 1){
@@ -322,7 +307,7 @@ function getSource(aUri, aSend, aAsText){
 		if (http.overrideMimeType){
 			http.overrideMimeType('text/xml');
 		}else {
-			uri = 'xml.php?x='+aUri;
+			uri = "aspect/standardsSupport/xml.php?x="+aUri;
 		}
 	}
 	http.open("POST",uri,false);
