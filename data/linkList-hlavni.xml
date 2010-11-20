@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<linkList
-    xmlns="http://formax.cz/ns/linkList"
->
-    <link id="homepage" uri="uvodni-stranka">úvodní strana</link>
-    <link id="nabidka_sluzeb" uri="nabidka-sluzeb">nabídka služeb</link>
-</linkList>

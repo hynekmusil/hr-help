@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../component/articleCmds/view-articleCmds.xsl"?>
+<articleCmds xmlns="http://formax.cz/ns/articleCmds">
+    <htmlCmds>
+        <undo/>
+        <redo/>
+        <bold/>
+        <italic/>
+		<heading>
+			<prompt>Zadejte úroveň nadpisu H1-H6</prompt>
+		</heading>
+		<insertImage>
+			<prompt>Zadejte odkaz na obrázek</prompt>
+		</insertImage>
+		<insertunorderedlist/>
+        <indent/>
+        <outdent/>
+        <createLink>
+            <prompt>Zadejte odkaz.</prompt>
+        </createLink>
+    </htmlCmds>
+    <fxCmds>
+        <saveData/>
+    </fxCmds>
+</articleCmds>

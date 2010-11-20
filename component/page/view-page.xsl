@@ -5,11 +5,17 @@
     xmlns="http://www.w3.org/1999/xhtml"
 >
     <xsl:template match="p:layout">
-        <div id="menuA">
+        <div id="f-pageCmds">
+            <xsl:text> </xsl:text>
+        </div>
+        <div id="menu">
             <xsl:text> </xsl:text>
         </div>
         <div>
             <xsl:apply-templates/>
+        </div>
+        <div id="f-editCmds">
+            <xsl:text> </xsl:text>
         </div>
         <pre id="log">
             <xsl:text> </xsl:text>

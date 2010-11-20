@@ -2,7 +2,7 @@
 <scxml version="1.0" initial="cms"
     xmlns="http://www.w3.org/2005/07/scxml"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.w3.org/2005/07/scxml ../../aspect/controller/schema-scxml/scxml-profile-ecma.xsd"
+    xsi:schemaLocation="http://www.w3.org/2005/07/scxml ../../aspect/controll/schema-scxml/scxml-profile-ecma.xsd"
 >
 	 <datamodel>
         <data id="isValid" />
@@ -13,8 +13,8 @@
         <onentry>
 			<script>
 			    setLayout('data/page.xml');
-			    _data.mainMenu = {"menuA":["data/menu-hlavni.xml"]};
-			    _data.editMenu = {"menu":["data/menu-editor.xml"]};
+			    _data.mainMenu = {"menu":["data/menu-hlavni.xml"]};
+			    _data.editMenu = {"f-pageCmds":["data/menu-editor.xml"]};
 			</script> 
         </onentry>
         <state id="site" initial="homepage">
@@ -36,9 +36,6 @@
                     changeContent([{"content":["data/article-nabidka_sluzeb.xml"]}]);
                     </script>
                 </onentry>
-                <!--transition event="test">
-                    <script>document.getElementById('stateId').innerHTML += 'transition test'</script>
-                </transition-->
             </state>
             <state id="cenik_sluzeb">
                 <onentry>
@@ -104,10 +101,27 @@
                     <script>switchToPreview();</script>
                 </onentry>  
             </state>
-            <state id="edit">
+            <state id="edit" initial="ready">
                 <onentry>
                     <script>switchToEditMode();</script>
                 </onentry>
+                <state id="ready"/>
+                <state id="articleEdit">
+                    <onentry>
+                        <script>
+                           changeContent([{"f-editCmds":["data/articleCmds.xml"]}]); 
+                        </script>
+                    </onentry>
+                </state>
+                <state id="menuEdit">
+                    <onentry>
+                        <script>
+                           changeContent([{"f-editCmds":["data/menuCmds.xml"]}]); 
+                        </script>
+                    </onentry>
+                </state>
+                <transition event="edit.article" target="articleEdit"/>
+                <transition event="edit.menu" target="menuEdit"/>
             </state>
             <state id="publish">
                 <onentry>

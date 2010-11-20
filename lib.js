@@ -47,10 +47,10 @@ function inState(aStateId){
 }
 
 function setLayout(aLayoutURI){
-	//document.body.innerHTML = '';
 	//stateShot = {"layout": aLayoutURI};
 	var fragment = xsltTransform(aLayoutURI);
 	document.body.appendChild(fragment);
+	document.body.removeChild(document.body.firstChild);
 }
 
 function raise(aEvent, aHref){
@@ -101,8 +101,8 @@ function changeContent(aChange, aParams){
 			}
 		}
 	}
-	if(inState("edit")) switchToEditMode();
-	if(inState("publish")) publishState();
+	//if(inState("edit")) switchToEditMode();
+	//if(inState("publish")) publishState();
 	return result;
 }
 
@@ -177,9 +177,9 @@ function stateShotAddr2Object(aAddr){
 }
 
 function switchToPreview(){
-	eb =  document.getElementById("editButtons");
+	eb =  document.getElementById("f-editButtons");
 	if(eb)
-		document.body.removeChild(eb);
+		eb.parentNode.removeChild(eb);
 	for(var c in stateShot){
 		if(c!="clone" && c!= "title" && c!= "uri"){
 			for(var i=0; i < stateShot[c].length; i++){
@@ -197,18 +197,16 @@ function switchToPreview(){
 }
 
 function startEditing(){
-	eb =  document.getElementById("editButtons");
-	if(eb == undefined) {
-		var fragment = xsltTransform("data/editCommands.xml");
-		document.body.appendChild(fragment);
-		eb = document.getElementById("editButtons");
-	}
+	var objectName = this.className.substring(this.className.indexOf("f-component") + 12);
+	var componentName = stateShotAddr2Object(objectName).setterURI.split("/")[1];
+	raise("edit."+componentName);
+	eb =  document.getElementById("f-editButtons");
 	var ebHeight = getElementHeight(eb);
 	var coo = getElementCoordinate(this);
 	eb.style.position = "absolute";
 	eb.style.top = String(coo[0] - ebHeight)+"px";
 	eb.style.left = String(coo[1])+"px";
-	eb.className = this.className.substring(this.className.indexOf("f-component") + 12);
+	eb.className = objectName;
 	this.contentEditable = true;
 }
 
