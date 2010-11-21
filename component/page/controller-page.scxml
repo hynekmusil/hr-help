@@ -112,6 +112,7 @@
                            changeContent([{"f-editCmds":["data/articleCmds.xml"]}]); 
                         </script>
                     </onentry>
+                    <transition event="edit.article.keyUp"/>
                 </state>
                 <state id="menuEdit">
                     <onentry>
@@ -119,6 +120,11 @@
                            changeContent([{"f-editCmds":["data/menuCmds.xml"]}]); 
                         </script>
                     </onentry>
+                    <transition event="edit.menu.keyUp">
+                        <script>
+                            editMenu();
+                        </script>
+                    </transition>
                 </state>
                 <transition event="edit.article" target="articleEdit"/>
                 <transition event="edit.menu" target="menuEdit"/>

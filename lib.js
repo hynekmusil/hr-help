@@ -87,12 +87,19 @@ function changeContent(aChange, aParams){
 						stateShot[cn][j] = new Object;
 						stateShot[cn][j].dataURI = aChange[i][cn][j];
 						stateShot[cn][j].setterURI = transformResult.setterURI;
-						stateShot[cn][j].htmlFragments = new Array;
+						if(stateShot[cn][j].setterURI != "") stateShot[cn][j].ids = new Array;
 						for(var k = 0; k < fragment.childNodes.length; k++){
 							if(fragment.childNodes.item(k).nodeType == 8 && (fragment.childNodes.item(k).data.indexOf("f-result") === 0)){
 								result = eval(fragment.childNodes.item(k).data.substring(9));
-							} else {
-								stateShot[cn][j].htmlFragments[k] = fragment.childNodes.item(k);
+							} else if(stateShot[cn][j].ids) 
+							{
+								if(fragment.childNodes.item(k).id == ""){
+									stateShot[cn][j].ids[k] = cn+"_"+j+"_"+k;
+									fragment.childNodes.item(k).id =  cn+"_"+j+"_"+k;
+								}
+								else{
+									stateShot[cn][j].ids[k] = fragment.childNodes.item(k).id;
+								}
 							}
 						}
 						componentNode.appendChild(fragment);
@@ -107,23 +114,20 @@ function changeContent(aChange, aParams){
 }
 
 function switchToEditMode(){
+	var node = null;
+	var space = "";
 	for(var c in stateShot){
 		if(c!="clone" && c!= "title" && c!= "uri"){
 			for(var i=0; i < stateShot[c].length; i++){
-				if(stateShot[c][i].setterURI != ""){
-					stateShot[c][i].ids = new Array();
-					for(var j=0; j < stateShot[c][i].htmlFragments.length; j++){
-						var space = "";
-						if(stateShot[c][i].htmlFragments[j].className) space = " ";
-						stateShot[c][i].htmlFragments[j].className += space+"f-component "+c+"_"+i+"_"+j;
-						stateShot[c][i].htmlFragments[j].onclick = startEditing;
-						if(stateShot[c][i].htmlFragments[j].id == ""){
-							stateShot[c][i].ids[j] = c+"_"+i+"_"+j;
-							stateShot[c][i].htmlFragments[j].id =  c+"_"+i+"_"+j;
-						}
-						else{
-							stateShot[c][i].ids[j] = stateShot[c][i].htmlFragments[j].id;
-						}
+				if(stateShot[c][i].ids){
+					//stateShot[c][i].ids = new Array();
+					for(var j=0; j < stateShot[c][i].ids.length; j++){
+						space = "";
+						node = document.getElementById(stateShot[c][i].ids[j]);
+						if(node.className) space = " ";
+						node.className += space+"f-component "+c+"_"+i+"_"+j;
+						node.onclick = startEditing;
+						node.onkeyup = keyUpEditing;
 					}
 				}
 			}
@@ -141,12 +145,12 @@ function htmlEditCmd(aCmd,aValue,aPrompt) {
 }
 function saveData(){
 	var ss = stateShotAddr2Object(eb.className);
-	var cen =  ss.htmlFragments[0];
 	var id = ss.ids[0];
+	var cen =  document.getElementById(id);
 	var nn = cen.nodeName;
 	var stag = "<"+nn+">";
 	var etag = "</"+nn+">";
-	send = stag + ss.htmlFragments[0].innerHTML + etag;
+	send = stag + cen.innerHTML + etag;
 	var doc = getSource(ss.setterURI+"?dataURI="+ss.dataURI, send);
 	fragment = xsltTransform(ss.setterURI, doc);
 	for(var i in fragment.childNodes){
@@ -160,7 +164,6 @@ function saveData(){
 			}
 		}
 	}
-	ss.htmlFragments[0] = document.getElementById(id);
 }
 
 function stateShotAddr2Object(aAddr){
@@ -177,18 +180,25 @@ function stateShotAddr2Object(aAddr){
 }
 
 function switchToPreview(){
+	var node = null;
 	eb =  document.getElementById("f-editButtons");
 	if(eb)
 		eb.parentNode.removeChild(eb);
 	for(var c in stateShot){
 		if(c!="clone" && c!= "title" && c!= "uri"){
 			for(var i=0; i < stateShot[c].length; i++){
-				for(var j=0; j < stateShot[c][i].htmlFragments.length; j++){
-					var icn = stateShot[c][i].htmlFragments[j].className.indexOf("f-component");
-					if(icn > -1){
-						stateShot[c][i].htmlFragments[j].className = stateShot[c][i].htmlFragments[j].className.substring(0,icn);
-						stateShot[c][i].htmlFragments[j].onclick = null;
-						stateShot[c][i].htmlFragments[j].contentEditable = false;
+				if(stateShot[c][i].ids){
+					for(var j=0; j < stateShot[c][i].ids.length; j++){
+						node = document.getElementById(stateShot[c][i].ids[j]);
+						if(node){
+							var icn = node.className.indexOf("f-component");
+							if(icn > -1){
+								node.className = node.className.substring(0, icn);
+								node.onclick = null;
+								node.onkeyup = null;
+								node.contentEditable = false;
+							}
+						}
 					}
 				}
 			}
@@ -197,19 +207,52 @@ function switchToPreview(){
 }
 
 function startEditing(){
-	var objectName = this.className.substring(this.className.indexOf("f-component") + 12);
-	var componentName = stateShotAddr2Object(objectName).setterURI.split("/")[1];
-	raise("edit."+componentName);
+	var info = getInfoAboutEditedObject(this);
+	raise("edit."+info.componentName);
 	eb =  document.getElementById("f-editButtons");
 	var ebHeight = getElementHeight(eb);
 	var coo = getElementCoordinate(this);
 	eb.style.position = "absolute";
 	eb.style.top = String(coo[0] - ebHeight)+"px";
 	eb.style.left = String(coo[1])+"px";
-	eb.className = objectName;
+	eb.className = info.objectName;
 	this.contentEditable = true;
 }
-
+function keyUpEditing(e){
+	var evt = e || window.event;
+	var info = getInfoAboutEditedObject(this);
+	document.statechart.raise("edit." + info.componentName + ".keyUp",false,{"key":evt.keyCode,"object":info.object});
+	//raise("edit." + info.componentName + ".keyUp");
+}
+function editMenu(){
+	var data = document.statechart.event.data;
+	if(data.key == 13){
+		var oldNode = document.getElementById(data.object.ids[0]);
+		var doc = null;
+		if(document.implementation && document.implementation.createDocument) {
+			doc = document.implementation.createDocument("", "", null);
+			var node = doc.importNode(oldNode, true);
+			doc.appendChild(node);
+		}
+		else  {
+			send = oldNode.outerHTML;
+			doc = getSource("aspect/standardsSupport/xml.php", send);
+		}
+		var fragment = xslt(doc, "component/menuCmds/edit-newPage.xsl");
+		var newNode = fragment.childNodes.item(0);
+		newNode.onkeyup = keyUpEditing;
+		newNode.onclick = startEditing;
+		oldNode.parentNode.replaceChild(newNode, oldNode);
+	}
+	//alert(document.statechart.event.data.key);
+}
+function getInfoAboutEditedObject(aElement){
+	var result = new Object;
+	result.objectName = aElement.className.substring(aElement.className.indexOf("f-component") + 12);
+	result.object = stateShotAddr2Object(result.objectName);
+	result.componentName = result.object.setterURI.split("/")[1];
+	return result;
+}
 function resolveURI(aBaseURI, aURI){
 	var uriArray = aURI.split("/");
 	var baseURIArray = aBaseURI.split("/");
@@ -245,17 +288,20 @@ function xsltTransform(aDataURI, aDataDoc, aParams){
 		dataDoc = aDataDoc;
 	}
 	var xsltURI = getXSLTURI(aDataURI,dataDoc);
+	return xslt(dataDoc, xsltURI, aParams);
+}
+
+function xslt(aDataDoc, aXSLTURI, aParams){
 	var xsltProc = null;
-	if(xsltProcCache[xsltURI] != undefined){
-		if(xsltProcCache[xsltURI].constructor == XSLTProcessor){
-			xsltProc = xsltProcCache[xsltURI];
+	if(xsltProcCache[aXSLTURI] != undefined){
+		if(xsltProcCache[aXSLTURI].constructor == XSLTProcessor){
+			xsltProc = xsltProcCache[aXSLTURI];
 		}
 		else xsltProc = null;
 	}
 	if(xsltProc == null){
-		xsltProc = addToXSLTProcCache(xsltURI);
+		xsltProc = addToXSLTProcCache(aXSLTURI);
 	}
-	xsltProc.setParameter(null, "stateIds", stateIds);
 	if(aParams){
 		if(aParams.constructor == Array){
 			for(var i = 0; i < aParams.length; i++){
@@ -263,7 +309,7 @@ function xsltTransform(aDataURI, aDataDoc, aParams){
 			}
 		}
 	}
-	return xsltProc.transformToFragment(dataDoc, document);
+	return xsltProc.transformToFragment(aDataDoc, document);
 }
 
 function getXSLTURI(aDataURI, aDataDoc){
@@ -304,7 +350,7 @@ function getSource(aUri, aSend, aAsText){
 	if(aAsText == undefined){
 		if (http.overrideMimeType){
 			http.overrideMimeType('text/xml');
-		}else {
+		}else if(uri.indexOf("aspect/standardsSupport/xml.php") === -1) {
 			uri = "aspect/standardsSupport/xml.php?x="+aUri;
 		}
 	}
