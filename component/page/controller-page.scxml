@@ -13,7 +13,7 @@
         <onentry>
 			<script>
 			    setLayout('data/page.xml');
-			    _data.mainMenu = {"menu":["data/menu-hlavni.xml"]};
+			    _data.mainMenu = {"before-menu":["data/menu-hlavni.xml"]};
 			    _data.editMenu = {"f-pageCmds":["data/menu-editor.xml"]};
 			</script> 
         </onentry>
@@ -25,7 +25,7 @@
                 <onentry>
                     <script>
                      changeContent(
-                     [{"content":["data/article-aktualne.xml",
+                     [{"maincol":["data/article-aktualne.xml",
                     "data/article-jak_zacit.xml"]}]);
                     </script>
                 </onentry>
@@ -33,51 +33,7 @@
             <state id="nabidka_sluzeb">
                 <onentry>
                     <script>
-                    changeContent([{"content":["data/article-nabidka_sluzeb.xml"]}]);
-                    </script>
-                </onentry>
-            </state>
-            <state id="cenik_sluzeb">
-                <onentry>
-                    <script>
-                   changeContent([{"content":["data/priceList.xml"]}]);
-                    </script>
-                </onentry>
-            </state>
-            <state id="registrace">
-                <onentry>
-                    <script>
-                    changeContent([{"content":["data/registration.xml"]}]);
-                    </script>
-                </onentry>
-                <transition event="send">
-                    <script>
-                  /*  fillAndValidate(_data.isValid,{['f':'content','d':_event.value]});*/
-                    </script>
-                </transition>
-                <transition event="send" cond="_data.isValid = true" target="success"/>
-            </state>
-            <state id="prihlaseni">
-                <onentry>
-                    <script>
-                    changeContent(
-                    [{"content":["data/registration.xml"]},
-                    {"sidebar":["data/login.xml"]}]);
-                    </script>
-                </onentry>
-                <onexit>
-                    <script>
-                     changeContent(
-                     [{"sidebar":["data/news.xml",
-                    "../data/article-sluzby.xml"]}]);
-                    </script>
-                </onexit>
-            </state>
-            
-            <state id="success">
-                <onentry>
-                    <script>
-                   /* changeTemplateAndShow(_data.page,'content','success.xsl');*/
+                    changeContent([{"maincol":["data/article-nabidka_sluzeb.xml"]}]);
                     </script>
                 </onentry>
             </state>
@@ -87,9 +43,6 @@
 			<transition event="nabidka_sluzeb" target="nabidka_sluzeb">
 			    <script>changeMenu(_data.mainMenu);</script>
 			</transition>
-			<transition event="cenik_sluzeb" target="cenik_sluzeb"/>
-			<transition event="registrace" target="registrace"/>
-			<transition event="prihlaseni" target="prihlaseni"/>
         </state>
     
         <state id="editor" initial="preview">

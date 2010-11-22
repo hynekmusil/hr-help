@@ -71,6 +71,7 @@ function changeMenu(aMenu){
 function changeContent(aChange, aParams){	
 	var log = document.getElementById("log");
 	var result = null;
+	var insertMethod = "append";
 	log.innerHTML =JSON.stringify(aChange) + "\n";
 	var componentNode = null;
 	for(var i=0; i < aChange.length; i++){
@@ -79,7 +80,8 @@ function changeContent(aChange, aParams){
 				componentNode = document.getElementById(cn);
 				if(componentNode){
 					stateShot[cn] = new Array;
-					componentNode.innerHTML = '';
+					if(componentNode.nodeName == "HR") insertMethod = "before";
+					if(insertMethod == "append") componentNode.innerHTML = "";
 					log.innerHTML += aChange[i][cn] + ": \n";
 					for(var j=0; j < aChange[i][cn].length; j++){
 						var transformResult = xsltTransform4Edit(aChange[i][cn][j], aParams);
@@ -93,16 +95,21 @@ function changeContent(aChange, aParams){
 								result = eval(fragment.childNodes.item(k).data.substring(9));
 							} else if(stateShot[cn][j].ids) 
 							{
+								var idc = "";
 								if(fragment.childNodes.item(k).id == ""){
-									stateShot[cn][j].ids[k] = cn+"_"+j+"_"+k;
-									fragment.childNodes.item(k).id =  cn+"_"+j+"_"+k;
+									idc =  cn+"_"+j+"_"+k;
+									stateShot[cn][j].ids[k] = idc;
+									fragment.childNodes.item(k).id =  idc;
 								}
 								else{
-									stateShot[cn][j].ids[k] = fragment.childNodes.item(k).id;
+									idc = fragment.childNodes.item(k).id;
+									stateShot[cn][j].ids[k] = idc;
 								}
+								if(removeNode = document.getElementById(idc)) removeNode.parentNode.removeChild(removeNode);
 							}
 						}
-						componentNode.appendChild(fragment);
+						if(insertMethod == "append") componentNode.appendChild(fragment);
+						else componentNode.parentNode.insertBefore(fragment, componentNode);
 					}
 				}
 			}
@@ -124,10 +131,12 @@ function switchToEditMode(){
 					for(var j=0; j < stateShot[c][i].ids.length; j++){
 						space = "";
 						node = document.getElementById(stateShot[c][i].ids[j]);
-						if(node.className) space = " ";
-						node.className += space+"f-component "+c+"_"+i+"_"+j;
-						node.onclick = startEditing;
-						node.onkeyup = keyUpEditing;
+						if(node){
+							if(node.className) space = " ";
+							node.className += space+"f-component "+c+"_"+i+"_"+j;
+							node.onclick = startEditing;
+							node.onkeyup = keyUpEditing;
+						}
 					}
 				}
 			}
@@ -222,11 +231,11 @@ function keyUpEditing(e){
 	var evt = e || window.event;
 	var info = getInfoAboutEditedObject(this);
 	document.statechart.raise("edit." + info.componentName + ".keyUp",false,{"key":evt.keyCode,"object":info.object});
-	//raise("edit." + info.componentName + ".keyUp");
 }
 function editMenu(){
 	var data = document.statechart.event.data;
 	if(data.key == 13){
+		markEditedElement()
 		var oldNode = document.getElementById(data.object.ids[0]);
 		var doc = null;
 		if(document.implementation && document.implementation.createDocument) {
@@ -244,7 +253,21 @@ function editMenu(){
 		newNode.onclick = startEditing;
 		oldNode.parentNode.replaceChild(newNode, oldNode);
 	}
-	//alert(document.statechart.event.data.key);
+}
+function markEditedElement(){
+	var sel = null;
+	var editedNode = null;
+	if (window.getSelection){
+		sel =  window.getSelection();
+		editedNode = sel.anchorNode;
+		if(editedNode.nodeType == 3){
+			editedNode = editedNode.parentNode;
+		}
+	} else if (document.selection){
+		sel = document.selection.createRange();
+		editedNode = sel.parentElement();
+	}
+	editedNode.className += " f-edited";
 }
 function getInfoAboutEditedObject(aElement){
 	var result = new Object;

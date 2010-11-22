@@ -7,7 +7,9 @@
     <xsl:param name="event"/>
     
     <xsl:template match="m:menu">
+        <h3 class="blind">Menu</h3>
         <ul>
+            <xsl:copy-of select="@id"/>
             <xsl:apply-templates select="m:item"/>
         </ul>
         <xsl:apply-templates select="m:item[@id = $event]" mode="instruction"/>
@@ -23,21 +25,21 @@
                     <xsl:apply-templates select="." mode="selected"/>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:apply-templates select="." mode="unselected"/>
+                    <xsl:apply-templates select="." mode="item"/>
                 </xsl:otherwise>
             </xsl:choose> 
         </li>
     </xsl:template>
     
-    <xsl:template match="m:item" mode="selected">
-        <xsl:attribute name="style">background-color: yellow;</xsl:attribute>
-        <span><xsl:value-of select="normalize-space(text())"/>*</span>
+    <xsl:template match="m:item" mode="item">
+        <a href="javascript:raise('{@id}','{@href}')">
+            <span><span><xsl:value-of select="normalize-space(text())"/></span></span>
+        </a>
     </xsl:template>
     
-    <xsl:template match="m:item" mode="unselected">
-        <a href="javascript:raise('{@id}','{@href}')">
-            <xsl:value-of select="normalize-space(text())"/> 
-        </a>
+    <xsl:template match="m:item" mode="selected">
+        <xsl:attribute name="class">active</xsl:attribute>
+        <xsl:apply-templates select="." mode="item"/>
     </xsl:template>
     
     <xsl:template match="m:item" mode="instruction">

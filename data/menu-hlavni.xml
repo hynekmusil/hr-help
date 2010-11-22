@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?stylesheet type="text/xsl" href="../component/menu/view-menu.xsl"?>
 <?setter href="../component/menu/setter-menu.php"?>
-<menu
+<menu id="menu"
     xmlns="http://formax.cz/ns/menu"
 >
     <item id="homepage" href="uvodni-stranka" selected="">úvodní strana

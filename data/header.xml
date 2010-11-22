@@ -3,6 +3,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://formax.cz/ns/header ../component/header/model-header.xsd"
 >
-    <home href="/">HR-Help.cz</home>
-    <slogan>Developed by JS</slogan>
+    <home href="/">HR-Help</home>
+	<menuJump>Skočit na navigaci</menuJump>
+	<category>Název kategorie</category>
+    <slogan>
+		<strong>Your company's welcome message or slogan. Lorem ipsum dolor sit amet, consectur el.</strong>
+		Donec metus lacus, porta id, auctor sit amet, aliquam eu, lacus. Quisque sagittis vulputate orci.
+	</slogan>
 </header>

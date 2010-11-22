@@ -5,13 +5,10 @@
     xmlns="http://www.w3.org/1999/xhtml"
 >
     <xsl:template match="p:layout">
-        <div id="f-pageCmds">
+        <div id="f-pageCmds" style="position: absolute; top: 0; left: 0;">
             <xsl:text> </xsl:text>
         </div>
-        <div id="menu">
-            <xsl:text> </xsl:text>
-        </div>
-        <div>
+        <div id="container">
             <xsl:apply-templates/>
         </div>
         <div id="f-editCmds">
@@ -30,9 +27,19 @@
         </div>
     </xsl:template>
     
+    <xsl:template match="p:field[@xml:id = 'menu']">
+        <hr id="before-menu"/>
+    </xsl:template>
+    
     <xsl:template match="p:column">
-        <div class="column" id="{@xml:id}">
-            <xsl:apply-templates/>
+        <div id="{@xml:id}">
+            <div id="main-content">
+                <xsl:apply-templates/>
+                <div class="cleaner">
+                    <xsl:comment>~</xsl:comment>
+                </div>
+            </div>
         </div>
     </xsl:template>
+    
 </xsl:stylesheet>

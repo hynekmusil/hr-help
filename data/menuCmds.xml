@@ -2,8 +2,6 @@
 <?xml-stylesheet type="text/xsl" href="../component/menuCmds/view-menuCmds.xsl"?>
 <articleCmds xmlns="http://formax.cz/ns/articleCmds">
     <fxCmds>
-        <insertAfterItem/>
-        <insertBeforeItem/>
         <saveData/>
     </fxCmds>
 </articleCmds>

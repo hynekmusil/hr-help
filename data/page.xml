@@ -6,9 +6,10 @@
     xsi:schemaLocation="http://formax.cz/ns/page ../component/page/model-page.xsd"
 >
     <field xml:id="header"/>
-    <column xml:id="page">
-        <field xml:id="content"/>
-        <field xml:id="sidebar"/>
+    <column xml:id="main">
+        <field xml:id="maincol"/>
+        <field xml:id="leftcol"/>
     </column>
+    <field xml:id="menu"/>
     <field xml:id="footer"/>
 </layout>
