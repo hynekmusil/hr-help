@@ -11,18 +11,22 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="h:li[normalize-space(.) = '']" priority="1">
+    <xsl:template name="item">
         <li>
-            <a href="#"><xsl:value-of select="normalize-space()"/> new_page</a>
+            <a href="#">
+                <span><span><xsl:value-of select="normalize-space(.)"/> new page</span></span>
+            </a>  
         </li>
     </xsl:template>
     
+    <xsl:template match="h:li[normalize-space(.) = '']" priority="1">
+        <xsl:call-template name="item"/>
+    </xsl:template>
+    
     <xsl:template match="h:li[descendant-or-self::*[contains(@class,' f-edited')]]
-        [not(normalize-space(preceding-sibling::h:li) = '')] | 
+        [preceding-sibling::h:li[1][normalize-space(.) != '']] | 
         li[descendant-or-self::*[contains(@class,' f-edited')]]">
-        <li>
-            <a href="#"><xsl:value-of select="normalize-space()"/> new_page</a>
-        </li>
+        <xsl:call-template name="item"/>
     </xsl:template>
     
     <xsl:template match="@class[contains(.,'f-edited')]">
@@ -32,6 +36,9 @@
             </xsl:attribute>
         </xsl:if>
     </xsl:template>
+    
+    <xsl:template match="h:br"/>
+    <xsl:template match="text()[parent::h:br]"/>
     
     <xsl:template match="@*">
         <xsl:copy-of select="."/>

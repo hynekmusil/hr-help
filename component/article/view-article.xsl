@@ -11,7 +11,7 @@
     </xsl:template>
     
     <xsl:template match="a:h[parent::a:article]">
-        <h1><xsl:value-of select="."/></h1>
+        <h1 class="title"><xsl:value-of select="."/></h1>
     </xsl:template>
     
     <xsl:template match="a:h">

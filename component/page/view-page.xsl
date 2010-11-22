@@ -27,8 +27,8 @@
         </div>
     </xsl:template>
     
-    <xsl:template match="p:field[@xml:id = 'menu']">
-        <hr id="before-menu"/>
+    <xsl:template match="p:field[(@xml:id = 'menu') or (@xml:id = 'header')]">
+        <hr id="before-{@xml:id}" class="blind"/>
     </xsl:template>
     
     <xsl:template match="p:column">

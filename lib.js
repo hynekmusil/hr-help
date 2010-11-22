@@ -93,17 +93,19 @@ function changeContent(aChange, aParams){
 						for(var k = 0; k < fragment.childNodes.length; k++){
 							if(fragment.childNodes.item(k).nodeType == 8 && (fragment.childNodes.item(k).data.indexOf("f-result") === 0)){
 								result = eval(fragment.childNodes.item(k).data.substring(9));
-							} else if(stateShot[cn][j].ids) 
+							} else if(stateShot[cn][j].ids || (insertMethod == "before")) 
 							{
 								var idc = "";
 								if(fragment.childNodes.item(k).id == ""){
 									idc =  cn+"_"+j+"_"+k;
-									stateShot[cn][j].ids[k] = idc;
+									if(stateShot[cn][j].ids) 
+										stateShot[cn][j].ids[k] = idc;
 									fragment.childNodes.item(k).id =  idc;
 								}
 								else{
 									idc = fragment.childNodes.item(k).id;
-									stateShot[cn][j].ids[k] = idc;
+									if(stateShot[cn][j].ids) 
+										stateShot[cn][j].ids[k] = idc;
 								}
 								if(removeNode = document.getElementById(idc)) removeNode.parentNode.removeChild(removeNode);
 							}
@@ -236,12 +238,14 @@ function editMenu(){
 	var data = document.statechart.event.data;
 	if(data.key == 13){
 		markEditedElement()
-		var oldNode = document.getElementById(data.object.ids[0]);
+		var oldNode = document.getElementById(data.object.ids[1]);
 		var doc = null;
 		if(document.implementation && document.implementation.createDocument) {
 			doc = document.implementation.createDocument("", "", null);
 			var node = doc.importNode(oldNode, true);
 			doc.appendChild(node);
+			var serializer = new XMLSerializer();
+			alert(serializer.serializeToString(doc));
 		}
 		else  {
 			send = oldNode.outerHTML;
@@ -249,6 +253,7 @@ function editMenu(){
 		}
 		var fragment = xslt(doc, "component/menuCmds/edit-newPage.xsl");
 		var newNode = fragment.childNodes.item(0);
+		alert(newNode.innerHTML);
 		newNode.onkeyup = keyUpEditing;
 		newNode.onclick = startEditing;
 		oldNode.parentNode.replaceChild(newNode, oldNode);

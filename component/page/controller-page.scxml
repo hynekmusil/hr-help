@@ -19,7 +19,10 @@
         </onentry>
         <state id="site" initial="homepage">
             <onentry>
-                <script>changeMenu(_data.mainMenu);</script>
+                <script>
+                    changeMenu(_data.mainMenu);
+                    changeContent([{"before-header":["data/header.xml"]}]);
+                </script>
             </onentry>
             <state id="homepage">
                 <onentry>
