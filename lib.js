@@ -185,9 +185,9 @@ function stateShotAddr2Object(aAddr){
 	var addrArray = aAddr.split("_");
 	if(addrArray.length != 3) return null;
 	var result = stateShot[addrArray[0]];
-	if(result != undefined){
+	if(result){
 		result = result[addrArray[1]];
-		if(result != undefined){
+		if(result){
 			return result;
 		}
 	}
@@ -282,7 +282,9 @@ function getInfoAboutEditedObject(aElement){
 	var result = new Object;
 	result.objectName = aElement.className.substring(aElement.className.indexOf("f-component") + 12);
 	result.object = stateShotAddr2Object(result.objectName);
-	result.componentName = result.object.setterURI.split("/")[1];
+	if(result.object){
+		result.componentName = result.object.setterURI.split("/")[1];
+	}
 	return result;
 }
 function resolveURI(aBaseURI, aURI){
