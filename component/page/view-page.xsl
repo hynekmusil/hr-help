@@ -14,7 +14,7 @@
         <div id="f-editCmds">
             <xsl:text> </xsl:text>
         </div>
-        <pre id="log">
+        <pre id="f-log">
             <xsl:text> </xsl:text>
 		</pre>
     </xsl:template>

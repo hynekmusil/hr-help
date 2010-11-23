@@ -2,8 +2,9 @@
 	header("Content-type: application/xml");
 	$html = $GLOBALS["HTTP_RAW_POST_DATA"];
 	$dataURI = $_REQUEST["dataURI"];
+	$dir = dirname(__FILE__);
 	
-	$baseDir = substr(__DIR__,0,strpos(__DIR__,"component"));
+	$baseDir = substr($dir,0,strpos($dir,"component"));
 	
 	$config = array("indent"=> false,"output-xhtml"=> true, "wrap"=> 200);
 	$tidy = new tidy();

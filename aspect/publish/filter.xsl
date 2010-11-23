@@ -15,8 +15,16 @@
     <xsl:template match="/">
         <html>
             <head>
-                <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                 <title><xsl:value-of select="$title"/></title>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                <meta name="description" content="" />
+                <meta name="keywords" content="" />
+                <meta name="author" content="FormaxDesign.cz" />
+                <link rel="shortcut icon" type="image/x-icon" href="html/favicon.ico" />
+                <link rel="stylesheet" type="text/css" href="html/css/base.css" />
+                <xsl:comment>
+                    <xsl:text disable-output-escaping="yes"><![CDATA[[if lt IE 9]><link rel="stylesheet" type="text/css" href="www/css/ie8.css" /><![endif]]]></xsl:text>
+                </xsl:comment>
             </head>
             <xsl:apply-templates select="*"/>
         </html>
@@ -29,11 +37,11 @@
         </xsl:element>
     </xsl:template>
     
-    <xsl:template match="@href[starts-with(.,'javascript:document.statechart.raise(')]">
+    <xsl:template match="@href[starts-with(.,'javascript:raise(')]">
         <xsl:variable name="apos">'</xsl:variable>
         <xsl:variable name="event">
             <xsl:value-of select="substring-before(
-                substring-after(.,concat('javascript:document.statechart.raise(',$apos)),$apos)"/>
+                substring-after(.,concat('javascript:raise(',$apos)),$apos)"/>
         </xsl:variable>
         <xsl:attribute name="href">
             <xsl:value-of select="concat($linkList//*[@id = $event]/@uri,'.html')"/>
@@ -43,5 +51,8 @@
     <xsl:template match="@*">
         <xsl:copy-of select="."/>
     </xsl:template>
+    
+    <xsl:template match="*[starts-with(@id,'f-')]"/>
+    <xsl:template match="hr[@class='blind']"/>
     
 </xsl:stylesheet>

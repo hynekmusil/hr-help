@@ -16,5 +16,6 @@
 	$xslDoc->load( "filter.xsl");
 	$xslt->importStylesheet( $xslDoc); 
 	$xslt->setParameter("","title",$title);
-	
-	$xslt->transformToURI( $xmlDoc, __DIR__."/../../www/".$uri.".html");
+	$dir = dirname(__FILE__);
+	echo $dir."/../../www/".$uri.".html";
+	$xslt->transformToURI( $xmlDoc, $dir."/../../www/".$uri.".html");

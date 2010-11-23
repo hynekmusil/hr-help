@@ -19,13 +19,15 @@ window.onload = function(){
 
 function publish(){
 	for(var i = 0; i < events4Publish.length;  i++){
-		document.statechart.raise(events4Publish[i]);
+		document.statechart.raise(events4Publish[i],false,{"publish":true});
 	}
 }
 
 function publishState(){
-	send = document.body.innerHTML;
-	getSource("aspect/publish/publish.php?title="+stateShot.title+"&uri="+stateShot.uri,send);
+	if(stateShot.uri != ""){
+		send = document.body.innerHTML;
+		getSource("aspect/publish/publish.php?title="+stateShot.title+"&uri="+stateShot.uri,send);
+	}
 }
 
 function getActiveStateIds(){
@@ -57,7 +59,7 @@ function raise(aEvent, aHref){
 	document.statechart.raise(aEvent);
 }
 function changeMenu(aMenu){
-	var info = changeContent([aMenu], [["","event",document.statechart.event.name]]);
+	var info = changeContent([aMenu], [["","event",document.statechart.event.name]], true);
 	if(info){
 		if(info.constructor == Array && info.length == 2){
 			document.title = info[0];
@@ -68,11 +70,11 @@ function changeMenu(aMenu){
 	}	
 }
 
-function changeContent(aChange, aParams){	
-	var log = document.getElementById("log");
+function changeContent(aChange, aParams, aNoPublish){
+	var log = document.getElementById("f-log");
 	var result = null;
 	var insertMethod = "append";
-	log.innerHTML =JSON.stringify(aChange) + "\n";
+	if(log) log.innerHTML =JSON.stringify(aChange) + "\n";
 	var componentNode = null;
 	for(var i=0; i < aChange.length; i++){
 		for(var cn in aChange[i]){
@@ -82,7 +84,7 @@ function changeContent(aChange, aParams){
 					stateShot[cn] = new Array;
 					if(componentNode.nodeName == "HR") insertMethod = "before";
 					if(insertMethod == "append") componentNode.innerHTML = "";
-					log.innerHTML += aChange[i][cn] + ": \n";
+					if(log) log.innerHTML += aChange[i][cn] + ": \n";
 					for(var j=0; j < aChange[i][cn].length; j++){
 						var transformResult = xsltTransform4Edit(aChange[i][cn][j], aParams);
 						var fragment = transformResult.fragment;
@@ -118,7 +120,9 @@ function changeContent(aChange, aParams){
 		}
 	}
 	//if(inState("edit")) switchToEditMode();
-	//if(inState("publish")) publishState();
+	if(aNoPublish == undefined){
+		if(inState("publish")) publishState();
+	}
 	return result;
 }
 
