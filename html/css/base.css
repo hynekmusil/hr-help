@@ -174,7 +174,7 @@ legend {
 	margin: 4px 0 8px 0;
 }
 #maincol li {
-	background: url('../img/arrow_green.gif') no-repeat 0 0.6em;
+	/*background: url('../img/arrow_green.gif') no-repeat 0 0.6em;*/
 	padding-left: 13px;
 	margin: 0 0 0 20px;
 }
@@ -195,7 +195,7 @@ legend {
 #footer {
 	overflow: hidden;
 	margin: 15px 0;
-	background: url('../img/footer.jpg') no-repeat;
+	/*background: url('../img/footer.jpg') no-repeat;*/
 	color: gray;
 	text-align: center;
 	font-size: 11px;

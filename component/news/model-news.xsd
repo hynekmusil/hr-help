@@ -14,8 +14,7 @@
     <xs:element name="news">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="h"/>
-                <xs:element ref="new" maxOccurs="unbounded" minOccurs="0"/>
+                <xs:element ref="new" maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:attributeGroup ref="xml:specialAttrs"/>
         </xs:complexType>
@@ -25,17 +24,12 @@
        <xs:complexType>
            <xs:sequence>
                <xs:element name="h"/>
-               <xs:element name="date" type="xs:date"/>
-               <xs:element ref="a:p"/>
-               <xs:element ref="more" minOccurs="0"/>
+               <xs:choice maxOccurs="unbounded">
+                   <xs:element ref="a:p"/>
+                   <xs:element ref="a:l"/>
+               </xs:choice>
            </xs:sequence>
        </xs:complexType> 
-    </xs:element>
-    
-    <xs:element name="more">
-        <xs:complexType mixed="true">
-            <xs:attribute name="href"/>
-        </xs:complexType>
     </xs:element>
 
 </xs:schema>

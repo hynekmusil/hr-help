@@ -83,6 +83,7 @@ function changeContent(aChange, aParams, aNoPublish){
 				if(componentNode){
 					stateShot[cn] = new Array;
 					if(componentNode.nodeName == "HR") insertMethod = "before";
+					else insertMethod = "append";
 					if(insertMethod == "append") componentNode.innerHTML = "";
 					if(log) log.innerHTML += aChange[i][cn] + ": \n";
 					for(var j=0; j < aChange[i][cn].length; j++){
@@ -248,8 +249,8 @@ function editMenu(){
 			doc = document.implementation.createDocument("", "", null);
 			var node = doc.importNode(oldNode, true);
 			doc.appendChild(node);
-			var serializer = new XMLSerializer();
-			alert(serializer.serializeToString(doc));
+			//var serializer = new XMLSerializer();
+			//alert(serializer.serializeToString(doc));
 		}
 		else  {
 			send = oldNode.outerHTML;
@@ -257,7 +258,7 @@ function editMenu(){
 		}
 		var fragment = xslt(doc, "component/menuCmds/edit-newPage.xsl");
 		var newNode = fragment.childNodes.item(0);
-		alert(newNode.innerHTML);
+		//alert(newNode.innerHTML);
 		newNode.onkeyup = keyUpEditing;
 		newNode.onclick = startEditing;
 		oldNode.parentNode.replaceChild(newNode, oldNode);

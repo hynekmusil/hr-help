@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<news xmlns="http://formax.cz/ns/news"
- xmlns:a="http://formax.cz/ns/article"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://formax.cz/ns/news ../component/news/model-news.xsd"
->
-    <h>Novinky</h>
-</news>
+<?xml-stylesheet type="text/xsl" href="../component/news/view-news.xsl"?>
+<?setter href="../component/news/news.php"?>
+<n:news
+    xmlns:n="http://formax.cz/ns/news"
+    xmlns:a="http://formax.cz/ns/article" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://formax.cz/ns/news ../component/news/model-news.xsd">
+    <n:new>
+        <n:h>Lorem ipsum...</n:h>
+        <a:p>
+            Lorem Ipsum is simply <a:a href="#">dummy text</a:a> of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. 
+        </a:p>
+    </n:new>
+    <n:new>
+        <n:h>Lorem ipsum...</n:h>
+        <a:l>Donec metus lacus, porta id, auctor sit amet, aliquam eu, lacus. Quisque sagittis vulputate orci.</a:l>
+        <a:l>Lorem Ipsum is simply dummy text of the printing and <a:a href="#">typesetting industry</a:a>. Donec metus lacus, porta id, auctor sit amet, aliquam eu, lacus. Quisque sagittis vulputate orci.</a:l>
+        <a:l>Donec metus lacus, porta id, auctor sit amet, aliquam eu, lacus. Quisque sagittis vulputate orci.</a:l>
+    </n:new>
+</n:news>

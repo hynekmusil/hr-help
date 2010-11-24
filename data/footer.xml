@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../component/footer/view-footer.xsl"?>
 <footer xmlns="http://formax.cz/ns/footer"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://formax.cz/ns/footer ../component/footer/model-footer.xsd"
 >
-    <copyright from="2009"><strong>HR help</strong>. Všechna práva vyhrazena.</copyright>
-    <developedBy href="http://www.formax-design.cz/">FormaxDesign.cz</designBy>
+    <copyright from="2009" to="2010"><strong>HR help</strong>. Všechna práva vyhrazena.</copyright>
+    <developedBy href="http://www.formax-design.cz/">FormaxDesign.cz</developedBy>
 	<a href="#">Home</a>
 	<a href="#">Kontakt</a>
 	<a href="#">RSS</a>

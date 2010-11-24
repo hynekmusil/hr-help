@@ -14,9 +14,9 @@
         <div id="f-editCmds">
             <xsl:text> </xsl:text>
         </div>
-        <pre id="f-log">
+        <!--pre id="f-log">
             <xsl:text> </xsl:text>
-		</pre>
+		</pre-->
     </xsl:template>
     
     <xsl:template match="p:field">
@@ -27,7 +27,7 @@
         </div>
     </xsl:template>
     
-    <xsl:template match="p:field[(@xml:id = 'menu') or (@xml:id = 'header')]">
+    <xsl:template match="p:field[(@xml:id = 'menu') or (@xml:id = 'header') or (@xml:id = 'footer')]">
         <hr id="before-{@xml:id}" class="blind"/>
     </xsl:template>
     

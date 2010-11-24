@@ -1,3 +1,7 @@
+#f-pageCmds  .active{
+	font-weight: bold;
+	background-color: yellow;
+}
 .f-component:hover{
 	/*background-color: yellow;*/
 }

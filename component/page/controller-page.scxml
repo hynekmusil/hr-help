@@ -21,7 +21,7 @@
             <onentry>
                 <script>
                     changeMenu(_data.mainMenu);
-                    changeContent([{"before-header":["data/header.xml"]}]);
+                    changeContent([{"before-header":["data/header.xml"]},{"leftcol":["data/news.xml"]},{"before-footer":["data/footer.xml"]}]);
                 </script>
             </onentry>
             <state id="homepage">
