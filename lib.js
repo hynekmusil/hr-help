@@ -161,12 +161,24 @@ function htmlEditCmd(aCmd,aValue,aPrompt) {
 }
 function saveData(){
 	var ss = stateShotAddr2Object(eb.className);
-	var id = ss.ids[0];
-	var cen =  document.getElementById(id);
-	var nn = cen.nodeName;
-	var stag = "<"+nn+">";
-	var etag = "</"+nn+">";
-	send = stag + cen.innerHTML + etag;
+	var id = "";
+	var cen = null;
+	var send="";
+	for(var i=0;  i < ss.ids.length;  i++){
+		cen =  document.getElementById(ss.ids[i]);
+		if(cen){
+			if(cen.outerHTML) send += cen.outerHTML;
+			else {
+				nn = cen.nodeName.toLowerCase();
+				send += "<"+nn;
+				for(var  a=0;  a < cen.attributes.length; a++){
+					send += " "+cen.attributes.item(a).nodeName+'="'+cen.attributes.item(a).value+'"';
+				}
+				send += ">"+cen.innerHTML+"</"+nn+">";
+			}
+		}
+	}
+	alert(send+" "+ss.setterURI);
 	var doc = getSource(ss.setterURI+"?dataURI="+ss.dataURI, send);
 	fragment = xsltTransform(ss.setterURI, doc);
 	for(var i in fragment.childNodes){

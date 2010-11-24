@@ -31,6 +31,6 @@
 	$replacements[2] =  '$1 ../component/article/$2';
 	$result = preg_replace($patterns, $replacements, $result);
 	
-	$fp = fopen($baseDir.$dataURI, "w");
+	/*$fp = fopen($baseDir.$dataURI, "w");
 	fwrite($fp, $result);
-	fclose($fp);
+	fclose($fp);*/
