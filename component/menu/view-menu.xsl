@@ -32,14 +32,22 @@
     </xsl:template>
     
     <xsl:template match="m:item" mode="item">
+        <xsl:param name="active"/>
+        <xsl:variable name="fid">
+            <xsl:if test="@xml:id">f-id-</xsl:if>
+        </xsl:variable>
+        <xsl:if test="concat($active,$fid,@xml:id) != ''">
+            <xsl:attribute name="class"><xsl:value-of select="normalize-space(concat($active,$fid,@xml:id))"/></xsl:attribute>
+        </xsl:if>
         <a href="javascript:raise('{@id}','{@href}')">
             <span><span><xsl:value-of select="normalize-space(text())"/></span></span>
         </a>
     </xsl:template>
     
     <xsl:template match="m:item" mode="selected">
-        <xsl:attribute name="class">active</xsl:attribute>
-        <xsl:apply-templates select="." mode="item"/>
+        <xsl:apply-templates select="." mode="item">
+            <xsl:with-param name="active" select="'active '"/>
+        </xsl:apply-templates>
     </xsl:template>
     
     <xsl:template match="m:item" mode="instruction">

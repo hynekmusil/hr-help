@@ -3,5 +3,7 @@
 <articleCmds xmlns="http://formax.cz/ns/articleCmds">
     <fxCmds>
         <saveData/>
+        <insertBefore/>
+        <insertAfter/>
     </fxCmds>
 </articleCmds>

@@ -12,7 +12,7 @@
 	$tidy->cleanRepair();
 	
 	$xmlDoc = new DOMDocument("1.0","utf-8");
-	$xmlDoc->loadXML(str_replace("&nbsp;","&#160;",$tidy->body()->value)); 
+	$xmlDoc->loadXML(str_replace("&nbsp;","&#160;",$tidy->body()->child[0]->value)); 
 	
 	$xslt = new XSLTProcessor();
 	$xslDoc = new DOMDocument();
@@ -21,16 +21,16 @@
 	$result = $xslt->transformToXML( $xmlDoc );
 	print $result;
 	
-	$patterns = array();
+	/*$patterns = array();
 	$patterns[0] = '@(<\?stylesheet type="text\/xsl" href=")([^"]+"\?>)@';
 	$patterns[1] = '@(<\?setter href=")([^"]+"\?>)@';
-	$patterns[2] = '@(xsi:schemaLocation="[^ ]+)([^"]+")@';
+	$patterns[2] = '@(xsi:schemaLocation="[^ ]+)(\s)([^"]+")@';
 	$replacements = array();
 	$replacements[0] = '$1../component/article/$2';
 	$replacements[1] =  '$1../component/article/$2';
-	$replacements[2] =  '$1 ../component/article/$2';
-	$result = preg_replace($patterns, $replacements, $result);
+	$replacements[2] =  '$1 ../component/article/$3';
+	$result = preg_replace($patterns, $replacements, $result);*/
 	
-	/*$fp = fopen($baseDir.$dataURI, "w");
+	$fp = fopen($baseDir.$dataURI, "w");
 	fwrite($fp, $result);
-	fclose($fp);*/
+	fclose($fp);

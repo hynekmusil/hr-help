@@ -4,10 +4,10 @@
 <menu id="menu"
     xmlns="http://formax.cz/ns/menu"
 >
-    <item id="homepage" href="uvodni-stranka" selected="">úvodní strana
-        <title>úvod</title>
+    <item id="homepage" href="uvodni-stranka" selected="" xml:id="i1">úvodní strana
+        <title xml:id="t1">úvod</title>
     </item>
-    <item id="nabidka_sluzeb" href="nabidka-sluzeb">nabídka služeb
-        <title>služby</title>
+    <item id="nabidka_sluzeb" href="nabidka-sluzeb" xml:id="i2">nabídka služeb
+        <title xml:id="t2">služby</title>
     </item>
 </menu>

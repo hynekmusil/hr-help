@@ -69,6 +69,9 @@
                         </script>
                     </onentry>
                     <transition event="edit.article.keyUp"/>
+                    <transition event="edit.article.saveData">
+                        <script>saveData();</script>
+                    </transition>
                 </state>
                 <state id="menuEdit">
                     <onentry>
@@ -77,9 +80,16 @@
                         </script>
                     </onentry>
                     <transition event="edit.menu.keyUp">
-                        <script>
-                            editMenu();
-                        </script>
+                        <script>editMenu();</script>
+                    </transition>
+                    <transition event="edit.menu.insertBefore">
+                        <script>insertBeforeMenu();</script>
+                    </transition>
+                    <transition event="edit.menu.insertAter">
+                        <script>insertAfterMenu();</script>
+                    </transition>
+                    <transition event="edit.menu.saveData">
+                        <script>saveData();</script>
                     </transition>
                 </state>
                 <transition event="edit.article" target="articleEdit"/>

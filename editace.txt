@@ -1,0 +1,24 @@
+1) XSLT prevede do html
+2) Modifikujem html prostrednictvim contentEditable
+	2.1) Zaznamenavame seznam opereei nad html
+	2.2) Na nektere uzivatelske operace je treba uplatnit filtr - jak konfigurovat? 
+			
+			Pri switchToEditMode se pro vsechny elementy, ktere podlehaji editaci prirazuje 
+			obsluha udalosti onKeyUp - keyUpEditing.
+			(maji setterURI (deklarovany v xml jako processing instruction) - 
+			zjistuje se v stateShot, kam jej zaznamenava funkce changeContent)
+			Tato obsluha keyUpEditing vyhazuje udalost do stavoveho stroje
+			Udalost se jmenuje edit.{nazev komponenty}.keyUp .
+			
+			Ve stavovem stroji pak muzem tuto udalost obslouzit specifickou metodou pro tento ucel takto:
+			<state id="menuEdit">
+				...
+				<transition event="edit.menu.keyUp">
+					<script>
+						editMenu();
+					</script>
+				</transition>
+			</state>
+			
+			editMenu() pak obsahuje funkci - specialne pro editaci menu.
+			Tuto opereci je nutno poslat k vyhodnoceni na serveru - potom ale ztracim fokus !
