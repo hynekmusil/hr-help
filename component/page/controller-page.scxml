@@ -85,7 +85,7 @@
                     <transition event="edit.menu.insertBefore">
                         <script>insertBeforeMenu();</script>
                     </transition>
-                    <transition event="edit.menu.insertAter">
+                    <transition event="edit.menu.insertAfter">
                         <script>insertAfterMenu();</script>
                     </transition>
                     <transition event="edit.menu.saveData">

@@ -128,31 +128,34 @@ function changeContent(aChange, aParams, aNoPublish){
 }
 
 function switchToEditMode(){
+	parseStateShot(function(aId, aC, aI, aJ){
+		var space = "";
+		var node = document.getElementById(aId);
+		if(node){
+			if(node.className.indexOf("f-component") == -1){
+				if(node.className) space = " ";
+				node.className += space+"f-component "+aC+"_"+aI+"_"+aJ;
+				node.onclick = startEditing;
+				node.onkeyup = keyUpEditing;
+			}
+		}
+	});
+}
+function parseStateShot(callback){
 	var node = null;
 	var space = "";
 	for(var c in stateShot){
 		if(c!="clone" && c!= "title" && c!= "uri"){
 			for(var i=0; i < stateShot[c].length; i++){
 				if(stateShot[c][i].ids){
-					//stateShot[c][i].ids = new Array();
 					for(var j=0; j < stateShot[c][i].ids.length; j++){
-						space = "";
-						node = document.getElementById(stateShot[c][i].ids[j]);
-						if(node){
-							if(node.className.indexOf("f-component") == -1){
-								if(node.className) space = " ";
-								node.className += space+"f-component "+c+"_"+i+"_"+j;
-								node.onclick = startEditing;
-								node.onkeyup = keyUpEditing;
-							}
-						}
+						callback(stateShot[c][i].ids[j], c, i, j);
 					}
 				}
 			}
 		}
 	}
 }
-
 function htmlEditCmd(aCmd,aValue,aPrompt) {
 	var bool = false;
 	var value = null;
@@ -217,30 +220,21 @@ function stateShotAddr2Object(aAddr){
 }
 
 function switchToPreview(){
-	var node = null;
 	eb =  document.getElementById("f-editButtons");
 	if(eb)
 		eb.parentNode.removeChild(eb);
-	for(var c in stateShot){
-		if(c!="clone" && c!= "title" && c!= "uri"){
-			for(var i=0; i < stateShot[c].length; i++){
-				if(stateShot[c][i].ids){
-					for(var j=0; j < stateShot[c][i].ids.length; j++){
-						node = document.getElementById(stateShot[c][i].ids[j]);
-						if(node){
-							var icn = node.className.indexOf("f-component");
-							if(icn > -1){
-								node.className = node.className.substring(0, icn);
-								node.onclick = null;
-								node.onkeyup = null;
-								node.contentEditable = false;
-							}
-						}
-					}
-				}
+	parseStateShot(function(aId, aC, aI, aJ){
+		var node = document.getElementById(aId);
+		if(node){
+			var icn = node.className.indexOf("f-component");
+			if(icn > -1){
+				node.className = node.className.substring(0, icn);
+				node.onclick = null;
+				node.onkeyup = null;
+				node.contentEditable = false;
 			}
 		}
-	}
+	});
 }
 
 function startEditing(){
@@ -253,6 +247,15 @@ function startEditing(){
 	eb.style.top = String(coo[0] - ebHeight)+"px";
 	eb.style.left = String(coo[1])+"px";
 	eb.className = info.objectName;
+	var node = null;
+	parseStateShot(function(aId, aC, aI, aJ){
+		node = document.getElementById(aId);
+		if(node) node.onclick = startEditing;
+	});
+	for(var i=0; i< info.object.ids.length; i++){
+		node = document.getElementById(info.object.ids[i]);
+		if(node) node.onclick = null;
+	}
 	this.contentEditable = true;
 }
 function keyUpEditing(e){
@@ -287,15 +290,34 @@ function editMenu(){
 }
 function insertBeforeMenu(){
 	var data = document.statechart.event.data;
+	var nId = getEditedNodeId(data.object.object.ids);
+	alert(nId);
+}
+function getEditedNodeId(aIds){
 	var node = getEditedNode();
 	while(node.className.indexOf("f-id-") == -1){
 		node = node.parentNode;
+		if(node.className == undefined) break;
+		if(aIds.indexOf(node.id) != -1) break;
 	}
-	alert(node.className);
+	var nId = "";
+	if(node.className){
+		nId = node.className;
+		var ni = nId.indexOf("f-id-");
+		if(ni != -1){
+			nId = nId.substring(ni + 5);
+			ni = nId.indexOf(" ");
+			if(ni != -1){
+				nId = nId.substring(0, ni);
+			}
+		}
+	}
+	return nId;
 }
 function insertAfterMenu(){
 	var data = document.statechart.event.data;
-	alert(getEditedNode().id);
+	var nId = getEditedNodeId(data.object.object.ids);
+	alert(nId);
 }
 function markEditedElement(){
 	var sel = null;
@@ -465,4 +487,26 @@ if (!window.getComputedStyle) {
         }
         return this;
     }
+}
+if (!Array.prototype.indexOf)
+{
+  Array.prototype.indexOf = function(elt /*, from*/)
+  {
+    var len = this.length;
+
+    var from = Number(arguments[1]) || 0;
+    from = (from < 0)
+         ? Math.ceil(from)
+         : Math.floor(from);
+    if (from < 0)
+      from += len;
+
+    for (; from < len; from++)
+    {
+      if (from in this &&
+          this[from] === elt)
+        return from;
+    }
+    return -1;
+  };
 }
