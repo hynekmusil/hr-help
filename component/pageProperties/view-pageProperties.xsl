@@ -30,7 +30,7 @@
                 <tr>
                     <th>title</th>
                     <td>
-                        <input type="text" name="url" value="{m:title}"/>
+                        <input type="text" name="title" value="{m:title}"/>
                     </td>
                 </tr>
                 <tr>
