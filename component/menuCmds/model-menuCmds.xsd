@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://formax.cz/ns/menuCmds"
+    elementFormDefault="qualified"     
+    xmlns="http://formax.cz/ns/menuCmds"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace"
+        schemaLocation="http://www.w3.org/2001/xml.xsd"
+    />
+    <xs:element name="menuCmds">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="saveData"/>
+                <xs:element name="insertBefore"/>
+                <xs:element name="insertAfter"/>
+                <xs:element name="field">
+                    <xs:complexType>
+                        <xs:attribute ref="xml:id"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

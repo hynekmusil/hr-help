@@ -288,10 +288,22 @@ function editMenu(){
 		oldNode.parentNode.replaceChild(newNode, oldNode);
 	}
 }
-function insertBeforeMenu(){
+function insertBeforeMenu(aField, aDataURI){
 	var data = document.statechart.event.data;
 	var nId = getEditedNodeId(data.object.object.ids);
-	alert(nId);
+	var change = new Array;
+	change[0] = new Object;
+	change[0][aField] = new Array;
+	change[0][aField][0] = aDataURI + "?id=" + nId;
+	changeContent(change);
+	var eNode = document.getElementById(data.object.object.ids[1]);
+	var pNode = document.getElementById(aField);
+	var coo = getElementCoordinate(eNode);
+	var eNodeHeight = getElementHeight(eNode);
+	pNode.style.position = "absolute";
+	pNode.style.top = String(coo[0] + eNodeHeight)+"px";
+	pNode.style.left = String(coo[1])+"px";
+	pNode.className = eb.className;
 }
 function getEditedNodeId(aIds){
 	var node = getEditedNode();
@@ -442,10 +454,12 @@ function getSource(aUri, aSend, aAsText){
 		send = aSend;
 	}
 	if(aAsText == undefined){
-		if (http.overrideMimeType){
-			http.overrideMimeType('text/xml');
-		}else if(uri.indexOf("aspect/standardsSupport/xml.php") === -1) {
-			uri = "aspect/standardsSupport/xml.php?x="+aUri;
+		if(uri.indexOf(".php") === -1){
+			if (http.overrideMimeType){
+				http.overrideMimeType('text/xml');
+			}else {
+				uri = "aspect/standardsSupport/xml.php?x="+aUri;
+			}
 		}
 	}
 	http.open("POST",uri,false);

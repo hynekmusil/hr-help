@@ -83,7 +83,7 @@
                         <script>editMenu();</script>
                     </transition>
                     <transition event="edit.menu.insertBefore">
-                        <script>insertBeforeMenu();</script>
+                        <script>insertBeforeMenu("f-editProperties","data/pageProperties.php");</script>
                     </transition>
                     <transition event="edit.menu.insertAfter">
                         <script>insertAfterMenu();</script>

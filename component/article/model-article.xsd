@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema targetNamespace="http://formax.cz/ns/article" 
     xmlns="http://formax.cz/ns/article"
-    xmlns:fx="http://formax.cz/ns/aspect/edit"
     elementFormDefault="qualified" 
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
 >

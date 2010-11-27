@@ -1,44 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="ac"
+<xsl:stylesheet version="1.0" exclude-result-prefixes="mc"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:ac="http://formax.cz/ns/articleCmds"
+    xmlns:mc="http://formax.cz/ns/menuCmds"
     xmlns="http://www.w3.org/1999/xhtml"
 >
     <xsl:param name="data"/>
     <xsl:output encoding="UTF-8"/>
     
-    <xsl:template match="/ac:articleCmds">
+    <xsl:template match="mc:menuCmds">
        <form id="f-editButtons">
-           <fieldset>
-               <xsl:apply-templates select="ac:fxCmds/*"/>
-           </fieldset>
-       </form> 
+           <xsl:apply-templates select="*[not(self::mc:field)]"/>
+       </form>
+       <xsl:apply-templates select="mc:field"/>
     </xsl:template>
     
-    <xsl:template match="*[parent::ac:htmlCmds]">
-        <input type="button" value="{local-name()}">
-            <xsl:attribute name="onclick">
-                <xsl:text>htmlEditCmd('</xsl:text>
-                <xsl:value-of select="local-name()"/>
-                <xsl:text>'</xsl:text>
-                <xsl:if test="@value">
-                    <xsl:text>,'</xsl:text>
-                    <xsl:value-of select="@value"/>
-                    <xsl:text>'</xsl:text>
-                </xsl:if>
-                <xsl:if test="ac:prompt">
-                    <xsl:if test="not(@value)">,''</xsl:if>
-                    <xsl:text>,'</xsl:text>
-                    <xsl:value-of select="normalize-space(ac:prompt)"/>
-                    <xsl:text>'</xsl:text>
-                </xsl:if>
-                <xsl:text>);</xsl:text>
-            </xsl:attribute>
-        </input>
+    <xsl:template match="mc:field">
+        <div id="{@xml:id}">
+            <xsl:text> </xsl:text>
+        </div>
     </xsl:template>
     
-    <xsl:template match="*[parent::ac:fxCmds]">
-        <input type="button" value="{local-name()}" onclick="fxEditCmd('{local-name()}','{$data}');"/>
+    <xsl:template match="*">
+        <input type="button" value="{.}" onclick="fxEditCmd('{local-name()}','{$data}');"/>
     </xsl:template>
 
 </xsl:stylesheet>

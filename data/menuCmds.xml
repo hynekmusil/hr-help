@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="../component/menuCmds/view-menuCmds.xsl"?>
-<articleCmds xmlns="http://formax.cz/ns/articleCmds">
-    <fxCmds>
-        <saveData/>
-        <insertBefore/>
-        <insertAfter/>
-    </fxCmds>
-</articleCmds>
+<menuCmds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://formax.cz/ns/menuCmds ../component/menuCmds/model-menuCmds.xsd"
+ xmlns="http://formax.cz/ns/menuCmds"
+>
+    <saveData>uložit</saveData>
+    <insertBefore>vložit před</insertBefore>
+    <insertAfter>vložit za</insertAfter>
+    <field xml:id="f-editProperties"/>
+</menuCmds>
