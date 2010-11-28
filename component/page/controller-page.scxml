@@ -91,6 +91,9 @@
                     <transition event="edit.menu.saveData">
                         <script>saveData();</script>
                     </transition>
+                    <transition event="edit.menu.change">
+                        <script>changeMenuItemProperty("f-editProperties","data/pageProperties.php");</script>
+                    </transition>
                 </state>
                 <transition event="edit.article" target="articleEdit"/>
                 <transition event="edit.menu" target="menuEdit"/>

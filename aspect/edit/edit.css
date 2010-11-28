@@ -2,6 +2,12 @@
 	font-weight: bold;
 	background-color: yellow;
 }
+#f-editProperties{
+	background-color: white;
+}
+.error p{
+	background-color: yellow;
+}
 .f-component:hover{
 	/*background-color: yellow;*/
 }

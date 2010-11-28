@@ -204,6 +204,7 @@ function fxEditCmd(aCmdName, aData){
 	info.object = stateShotAddr2Object(eb.className)
 	info.data = aData;
 	info.componentName = info.object.setterURI.split("/")[1];
+	//alert("edit." + info.componentName + "." + aCmdName);
 	document.statechart.raise("edit." + info.componentName + "." + aCmdName, false, {"object":info});
 }
 function stateShotAddr2Object(aAddr){
@@ -288,43 +289,71 @@ function editMenu(){
 		oldNode.parentNode.replaceChild(newNode, oldNode);
 	}
 }
+function changeMenuItemProperty(aField, aDataURI){
+	var data = document.statechart.event.data;
+	var nId = getEditedNodeId(data.object.object.ids);
+	if(nId != ""){
+		var cNode = getEditedNode();
+		var change = new Array;
+		change[0] = new Object;
+		change[0][aField] = new Array;
+		change[0][aField][0] = aDataURI + "?id=" + nId;
+		changeContent(change);
+		var eNode = document.getElementById(data.object.object.ids[1]);
+		var pNode = document.getElementById(aField);
+		var eCoo = getElementCoordinate(eNode);
+		var cCoo = getElementCoordinate(cNode);
+		var eNodeHeight = getElementHeight(eNode);
+		pNode.style.position = "absolute";
+		pNode.style.top = String(eCoo[0] + eNodeHeight)+"px";
+		pNode.style.left = String(cCoo[1])+"px";
+		pNode.className = eb.className;
+	}
+}
 function insertBeforeMenu(aField, aDataURI){
 	var data = document.statechart.event.data;
 	var nId = getEditedNodeId(data.object.object.ids);
-	var change = new Array;
-	change[0] = new Object;
-	change[0][aField] = new Array;
-	change[0][aField][0] = aDataURI + "?id=" + nId;
-	changeContent(change);
-	var eNode = document.getElementById(data.object.object.ids[1]);
-	var pNode = document.getElementById(aField);
-	var coo = getElementCoordinate(eNode);
-	var eNodeHeight = getElementHeight(eNode);
-	pNode.style.position = "absolute";
-	pNode.style.top = String(coo[0] + eNodeHeight)+"px";
-	pNode.style.left = String(coo[1])+"px";
-	pNode.className = eb.className;
+	if(nId != ""){
+		var cNode = getEditedNode();
+		var change = new Array;
+		change[0] = new Object;
+		change[0][aField] = new Array;
+		change[0][aField][0] = aDataURI + "?id=" + nId;
+		changeContent(change);
+		var eNode = document.getElementById(data.object.object.ids[1]);
+		var pNode = document.getElementById(aField);
+		var eCoo = getElementCoordinate(eNode);
+		var cCoo = getElementCoordinate(cNode);
+		var eNodeHeight = getElementHeight(eNode);
+		pNode.style.position = "absolute";
+		pNode.style.top = String(eCoo[0] + eNodeHeight)+"px";
+		pNode.style.left = String(cCoo[1])+"px";
+		pNode.className = eb.className;
+	}
 }
 function getEditedNodeId(aIds){
 	var node = getEditedNode();
-	while(node.className.indexOf("f-id-") == -1){
-		node = node.parentNode;
-		if(node.className == undefined) break;
-		if(aIds.indexOf(node.id) != -1) break;
-	}
-	var nId = "";
-	if(node.className){
-		nId = node.className;
-		var ni = nId.indexOf("f-id-");
-		if(ni != -1){
-			nId = nId.substring(ni + 5);
-			ni = nId.indexOf(" ");
+	if(node){
+		while(node.className.indexOf("f-id-") == -1){
+			node = node.parentNode;
+			if(node.className == undefined) break;
+			if(aIds.indexOf(node.id) != -1) break;
+		}
+		var nId = "";
+		if(node.className){
+			nId = node.className;
+			var ni = nId.indexOf("f-id-");
 			if(ni != -1){
-				nId = nId.substring(0, ni);
+				nId = nId.substring(ni + 5);
+				ni = nId.indexOf(" ");
+				if(ni != -1){
+					nId = nId.substring(0, ni);
+				}
 			}
 		}
+		return nId;
 	}
-	return nId;
+	return "";
 }
 function insertAfterMenu(){
 	var data = document.statechart.event.data;
@@ -341,6 +370,10 @@ function getEditedNode(){
 	if(window.getSelection){
 		sel =  window.getSelection();
 		editedNode = sel.anchorNode;
+		if(editedNode.nodeName == "BODY"){
+			alert("Je potřeba kliknout do textu, tak aby se v něm objevil kurzor, pak můžete začít editovat.");
+			return null;
+		}
 		if(editedNode.nodeType == 3){
 			editedNode = editedNode.parentNode;
 		}

@@ -11,6 +11,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="saveData"/>
+                <xs:element name="change"/>
                 <xs:element name="insertBefore"/>
                 <xs:element name="insertAfter"/>
                 <xs:element name="field">

@@ -5,6 +5,7 @@
  xmlns="http://formax.cz/ns/menuCmds"
 >
     <saveData>uložit</saveData>
+    <change>změnit</change>
     <insertBefore>vložit před</insertBefore>
     <insertAfter>vložit za</insertAfter>
     <field xml:id="f-editProperties"/>
