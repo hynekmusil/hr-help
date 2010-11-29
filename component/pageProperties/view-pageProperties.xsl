@@ -16,18 +16,20 @@
             });
             $("#pageProperties").validator({lang:"cz"}).submit(function(e){
 		        var form = $(this);
-				alert(form.serialize());
+		        var params = form.serialize();
+				refreshData(currComponentInfo, null, params, true);
 				return false;
 		    });
         </script>
         <form id="pageProperties" name="pageProperties">
             <input name="itemName" value="{normalize-space(text())}" type="hidden"/>
             <input name="itemId" value="t1" type="hidden"/>
+            <input name="operation" value="change" type="hidden"/>
             <table>
                 <tr>
                     <th>uri</th>
                     <td>
-                        <input type="text" pattern="^([a-zA-Z0-9\-_]+\/?)*(\.html)?$" name="url" value="{@href}" required="required"/>
+                        <input type="text" pattern="^([a-zA-Z0-9\-_]+\/?)*(\.html)?$" name="uri" value="{@href}" required="required"/>
                     </td>
                 </tr>
                 <tr>

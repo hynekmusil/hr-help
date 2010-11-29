@@ -799,24 +799,6 @@ Statechartz = {
 				document.statechart = Statechartz.loadScxml(xmlDoc);
 				Statechartz.doc = xmlDoc;
 				document.statechart.start();
-                /*var href = link.getAttribute("href");
-                if (window.XMLHttpRequest) xhttp = new XMLHttpRequest();
-                else xhttp = new ActiveXObject("Microsoft.XMLHTTP");
-                xhttp.open("GET", href, false);
-                xhttp.setRequestHeader("Content-Type", "application/xml;charset=UTF8");
-                xhttp.send("");
-                if (xhttp.readyState == 4) {
-                    var xmlDoc = xhttp.responseXML;
-                    if (xmlDoc == null) {
-                        var parser = new DOMParser();
-                        xmlDoc = parser.parseFromString(xhttp.responseText, "text/xml");
-                    }
-                    if (xmlDoc != null) {
-                        document.statechart = Statechartz.loadScxml(xmlDoc);
-						Statechartz.doc = xmlDoc;
-                        document.statechart.start();
-                    }
-                }*/
             }
         }
     }

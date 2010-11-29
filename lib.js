@@ -1,6 +1,7 @@
 //encoding=UTF-8
 var stateIds = '';
 var stateShot = new Object;
+var currComponentInfo = null;
 var eb = null;
 
 var presentationCache = new Array();
@@ -69,7 +70,6 @@ function changeMenu(aMenu){
 		}
 	}	
 }
-
 function changeContent(aChange, aParams, aNoPublish){
 	var log = document.getElementById("f-log");
 	var result = null;
@@ -90,6 +90,7 @@ function changeContent(aChange, aParams, aNoPublish){
 						var transformResult = xsltTransform4Edit(aChange[i][cn][j], aParams);
 						var fragment = transformResult.fragment;
 						stateShot[cn][j] = new Object;
+						stateShot[cn][j].name = cn+"_"+j;
 						stateShot[cn][j].dataURI = aChange[i][cn][j];
 						stateShot[cn][j].setterURI = transformResult.setterURI;
 						if(stateShot[cn][j].setterURI != "") stateShot[cn][j].ids = new Array;
@@ -126,7 +127,6 @@ function changeContent(aChange, aParams, aNoPublish){
 	}
 	return result;
 }
-
 function switchToEditMode(){
 	parseStateShot(function(aId, aC, aI, aJ){
 		var space = "";
@@ -183,18 +183,41 @@ function saveData(){
 			}
 		}
 	}
-	var doc = getSource(ss.setterURI+"?dataURI="+ss.dataURI, send);
+	refreshData(ss, send);
+}
+function refreshData(aComponentInfo, aSend, aQueryString, aNoModify){
+	var queryString = "";
+	if(aQueryString) queryString += "&" + aQueryString;
+	var doc = getSource(aComponentInfo.setterURI+"?dataURI="+aComponentInfo.dataURI+ queryString, aSend);
 	fragment = xsltTransform("data", doc);
-	for(var i in fragment.childNodes){
-		if(fragment.childNodes.item(i)){
-			if(fragment.childNodes.item(i).nodeType == 1){
-				var n = fragment.childNodes.item(i);
-				n.id = ss.ids[i];
-				var space = "";
-				if(n.className) space = " ";
-				n.className += space+"f-component " + eb.className;
-				n.contentEditable = true;
-				cen.parentNode.replaceChild(n, cen);
+	if(!aNoModify){
+		var j = 0;
+		for(var i in fragment.childNodes){
+			if(fragment.childNodes.item(i)){
+				if(fragment.childNodes.item(i).nodeType == 1){
+					var n = fragment.childNodes.item(i);
+					var space = "";
+					if(n.className) space = " ";
+					n.className += space+"f-component " + aComponentInfo.name + "_" + j;
+					n.contentEditable = true;
+					if(j < aComponentInfo.ids.length) {
+						if(!n.id) n.id = aComponentInfo.ids[j];
+						var oldElement = document.getElementById(aComponentInfo.ids[j]);
+						oldElement.parentNode.replaceChild(n, oldElement);
+					}
+					else{
+						if(!n.id) n.id = aComponentInfo.name+ "_" + j;
+						var targetElement = document.getElementById(aComponentInfo.ids[aComponentInfo.ids.length - 1]);
+						var parentElement = targetElement.parentNode;
+						if(parentElement.lastchild == targetElement)
+							parentElement.appendChild(n);
+						else {
+							parentElement.insertBefore(n, targetElement.nextSibling);
+						}
+						aComponentInfo.ids[j] = n.id;
+					}
+					j++;
+				}
 			}
 		}
 	}
@@ -224,6 +247,9 @@ function switchToPreview(){
 	eb =  document.getElementById("f-editButtons");
 	if(eb)
 		eb.parentNode.removeChild(eb);
+	var ep =  document.getElementById("f-editProperties");
+	if(ep)
+		ep.parentNode.removeChild(ep);
 	parseStateShot(function(aId, aC, aI, aJ){
 		var node = document.getElementById(aId);
 		if(node){
@@ -266,40 +292,25 @@ function keyUpEditing(e){
 }
 function editMenu(){
 	var data = document.statechart.event.data;
-	if(data.key == 13){
-		markEditedElement()
-		var oldNode = document.getElementById(data.object.ids[1]);
-		var doc = null;
-		if(document.implementation && document.implementation.createDocument) {
-			doc = document.implementation.createDocument("", "", null);
-			var node = doc.importNode(oldNode, true);
-			doc.appendChild(node);
-			//var serializer = new XMLSerializer();
-			//alert(serializer.serializeToString(doc));
-		}
-		else  {
-			send = oldNode.outerHTML;
-			doc = getSource("aspect/standardsSupport/xml.php", send);
-		}
-		var fragment = xslt(doc, "component/menuCmds/edit-newPage.xsl");
-		var newNode = fragment.childNodes.item(0);
-		//alert(newNode.innerHTML);
-		newNode.onkeyup = keyUpEditing;
-		newNode.onclick = startEditing;
-		oldNode.parentNode.replaceChild(newNode, oldNode);
+	if(document.getElementById("pageProperties")){
+		var id = "f-id-" + document.forms["pageProperties"].itemId.value;
+		var editedNode = getEditedNode();
+		var itemNode = editedNode;
+		while(itemNode.nodeName != "LI") itemNode = itemNode.parentNode;
+		if(itemNode.className.indexOf(id) > -1)
+			document.forms["pageProperties"].itemName.value = getEditedNode().innerHTML;
 	}
 }
 function changeMenuItemProperty(aField, aDataURI){
 	var data = document.statechart.event.data;
 	var nId = getEditedNodeId(data.object.object.ids);
-	alert(nId);
 	if(nId != ""){
 		var cNode = getEditedNode();
 		var change = new Array;
 		change[0] = new Object;
 		change[0][aField] = new Array;
 		change[0][aField][0] = aDataURI + "?id=" + nId;
-		changeContent(change);
+		changeContent(change, null, true);
 		document.forms["pageProperties"].itemName.value = cNode.innerHTML;
 		document.forms["pageProperties"].itemId.value = nId;
 		var eNode = document.getElementById(data.object.object.ids[1]);
@@ -311,6 +322,7 @@ function changeMenuItemProperty(aField, aDataURI){
 		pNode.style.top = String(eCoo[0] + eNodeHeight)+"px";
 		pNode.style.left = String(cCoo[1])+"px";
 		pNode.className = eb.className;
+		currComponentInfo = data.object.object;
 	}
 }
 function insertBeforeMenu(aField, aDataURI){

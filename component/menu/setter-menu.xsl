@@ -5,11 +5,18 @@
     xmlns:s="http://exslt.org/strings"
     xmlns="http://formax.cz/ns/menu"
 >
+    <xsl:output encoding="UTF-8"/>
     <xsl:param name="itemName"/>
     <xsl:param name="itemId"/>
     <xsl:param name="uri"/>
     <xsl:param name="title"/>
     <xsl:param name="operation">change</xsl:param>
+    
+    <xsl:template match="/">
+        <xsl:processing-instruction name="xml-stylesheet">type="text/xsl" href="../component/menu/view-menu.xsl"</xsl:processing-instruction>
+        <xsl:processing-instruction name="setter">href="../component/menu/setter-menu.php"</xsl:processing-instruction>
+        <xsl:apply-templates select="*"/>
+    </xsl:template>
     
     <xsl:template match="*">
         <xsl:choose>
