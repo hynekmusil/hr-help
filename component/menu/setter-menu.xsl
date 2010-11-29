@@ -25,7 +25,7 @@
                     <xsl:when test="$operation = 'change'">
                         <xsl:copy>
                             <xsl:apply-templates select="@*" mode="edited"/>
-                            <xsl:apply-templates mode="edited"/>
+                            <xsl:apply-templates select="*" mode="edited"/>
                         </xsl:copy> 
                     </xsl:when>
                     <xsl:when test="$operation = 'insertAfter'">
@@ -56,16 +56,13 @@
             <xsl:attribute name="id">
                 <xsl:call-template name="id"/>
             </xsl:attribute>
-            <xsl:value-of select="$itemName"/>
+            <xsl:value-of select="normalize-space($itemName)"/>
             <title><xsl:value-of select="$title"/></title>
         </item>
     </xsl:template>
     
-    <xsl:template match="text()" mode="edited">
-        <xsl:value-of select="normalize-space($itemName)"/>
-    </xsl:template>
-    
     <xsl:template match="m:title" mode="edited">
+        <xsl:value-of select="normalize-space($itemName)"/>
         <title><xsl:value-of select="$title"/></title>
     </xsl:template>
     
