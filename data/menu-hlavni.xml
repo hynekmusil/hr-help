@@ -5,9 +5,9 @@
     xmlns="http://formax.cz/ns/menu"
 >
     <item id="homepage" href="uvodni-stranka" selected="" xml:id="i1">úvodní strana
-        <title xml:id="t1">úvod</title>
+        <title>úvod</title>
     </item>
     <item id="nabidka_sluzeb" href="nabidka-sluzeb" xml:id="i2">nabídka služeb
-        <title xml:id="t2">služby</title>
+        <title>služby</title>
     </item>
 </menu>

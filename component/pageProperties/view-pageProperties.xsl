@@ -17,14 +17,17 @@
             $("#pageProperties").validator({lang:"cz"}).submit(function(e){
 		        var form = $(this);
 				alert(form.serialize());
+				return false;
 		    });
         </script>
-        <form id="pageProperties">
+        <form id="pageProperties" name="pageProperties">
+            <input name="itemName" value="{normalize-space(text())}" type="hidden"/>
+            <input name="itemId" value="t1" type="hidden"/>
             <table>
                 <tr>
                     <th>uri</th>
                     <td>
-                        <input type="url" name="url" value="{@href}" required="required"/>
+                        <input type="text" pattern="^([a-zA-Z0-9\-_]+\/?)*(\.html)?$" name="url" value="{@href}" required="required"/>
                     </td>
                 </tr>
                 <tr>
@@ -34,7 +37,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><button type="submit">Submit form</button></td>
+                    <td><button type="submit">Odeslat</button></td>
                     <td><button type="reset">Reset</button></td>
                 </tr>
             </table>

@@ -292,6 +292,7 @@ function editMenu(){
 function changeMenuItemProperty(aField, aDataURI){
 	var data = document.statechart.event.data;
 	var nId = getEditedNodeId(data.object.object.ids);
+	alert(nId);
 	if(nId != ""){
 		var cNode = getEditedNode();
 		var change = new Array;
@@ -299,6 +300,8 @@ function changeMenuItemProperty(aField, aDataURI){
 		change[0][aField] = new Array;
 		change[0][aField][0] = aDataURI + "?id=" + nId;
 		changeContent(change);
+		document.forms["pageProperties"].itemName.value = cNode.innerHTML;
+		document.forms["pageProperties"].itemId.value = nId;
 		var eNode = document.getElementById(data.object.object.ids[1]);
 		var pNode = document.getElementById(aField);
 		var eCoo = getElementCoordinate(eNode);
