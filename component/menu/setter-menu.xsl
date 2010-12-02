@@ -70,7 +70,10 @@
     </xsl:template>
     
     <xsl:template name="new">
-        <item href="{$uri}" xml:id="{generate-id()}">
+        <item href="{$uri}">
+            <xsl:attribute name="xml:id">
+                <xsl:value-of select="generate-id()"/>
+            </xsl:attribute>
             <xsl:attribute name="id">
                 <xsl:call-template name="id"/>
             </xsl:attribute>
