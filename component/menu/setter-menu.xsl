@@ -18,10 +18,24 @@
         <xsl:apply-templates select="*"/>
     </xsl:template>
     
-    <xsl:template match="*">
+    <xsl:template match="*">       
         <xsl:choose>
+            <xsl:when test="($operation = 'shiftLeft') and following-sibling::*[1][@xml:id = $itemId]">
+                <xsl:apply-templates select="following-sibling::*[1]" mode="copy"/>
+                <xsl:call-template name="copy"/>
+            </xsl:when>
+            <xsl:when test="($operation = 'shiftRight') and preceding-sibling::*[1][@xml:id = $itemId]">
+                <xsl:call-template name="copy"/>
+                <xsl:apply-templates select="preceding-sibling::*[1]" mode="copy"/>
+            </xsl:when>
             <xsl:when test="@xml:id = $itemId">
                 <xsl:choose>
+                    <xsl:when test="($operation = 'shiftLeft') and not(preceding-sibling::*)">
+                        <xsl:call-template name="copy"/>
+                    </xsl:when>
+                    <xsl:when test="($operation = 'shiftRight') and not(following-sibling::*)">
+                        <xsl:call-template name="copy"/>
+                    </xsl:when>
                     <xsl:when test="$operation = 'change'">
                         <xsl:copy>
                             <xsl:apply-templates select="@*" mode="edited"/>
@@ -32,16 +46,20 @@
                         <xsl:call-template name="copy"/>
                         <xsl:call-template name="new"/>
                     </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:call-template name="copy"/>
+                    <xsl:when test="$operation = 'insertBefore'">
                         <xsl:call-template name="new"/>
-                    </xsl:otherwise>
+                        <xsl:call-template name="copy"/>
+                    </xsl:when>
                 </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="copy"/>
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>
+    
+    <xsl:template match="*" mode="copy">
+        <xsl:call-template name="copy"/>
     </xsl:template>
     
     <xsl:template name="copy">
@@ -72,12 +90,6 @@
         </xsl:attribute>
     </xsl:template>
     
-    <xsl:template match="@id" mode="edited">
-        <xsl:attribute name="id">
-            <xsl:call-template name="id"/>
-        </xsl:attribute>
-    </xsl:template>
-    
     <xsl:template name="id">
         <xsl:variable name="smallcase" select="'abcdefghijklmnopqrstuvwxyz'" />
         <xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
@@ -97,11 +109,11 @@
     </xsl:template>
     
     <xsl:template match="@*">
-        <xsl:copy-of select="."/>
+        <xsl:copy/>
     </xsl:template>
     
     <xsl:template match="@*" mode="edited">
-        <xsl:copy-of select="."/>
+        <xsl:copy/>
     </xsl:template>
     
     <xsl:template match="text()[normalize-space() = '']"/>

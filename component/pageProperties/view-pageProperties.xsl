@@ -17,7 +17,7 @@
             $("#pageProperties").validator({lang:"cz"}).submit(function(e){
 		        var form = $(this);
 		        var params = form.serialize();
-				refreshData(currComponentInfo, null, params, true);
+				refreshData(currComponentInfo, null, params);
 				return false;
 		    });
         </script>

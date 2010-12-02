@@ -4,13 +4,14 @@
     xmlns="http://www.w3.org/1999/xhtml"
 >
     <xsl:param name="title"/>
+    <xsl:param name="baseOutputDir"/>
     
     <xsl:output omit-xml-declaration="yes"
         doctype-public="-//W3C//DTD XHTML 1.0 Strict" 
         doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
     />
     
-    <xsl:variable name="linkList" select="document('../../data/linkList.xml')"/>
+    <xsl:variable name="linkList" select="document('../../data/menu-hlavni.xml')"/>
     
     <xsl:template match="/">
         <html>
@@ -20,8 +21,8 @@
                 <meta name="description" content="" />
                 <meta name="keywords" content="" />
                 <meta name="author" content="FormaxDesign.cz" />
-                <link rel="shortcut icon" type="image/x-icon" href="html/favicon.ico" />
-                <link rel="stylesheet" type="text/css" href="html/css/base.css" />
+                <link rel="shortcut icon" type="image/x-icon" href="{$baseOutputDir}html/favicon.ico" />
+                <link rel="stylesheet" type="text/css" href="{$baseOutputDir}html/css/base.css" />
                 <xsl:comment>
                     <xsl:text disable-output-escaping="yes"><![CDATA[[if lt IE 9]><link rel="stylesheet" type="text/css" href="www/css/ie8.css" /><![endif]]]></xsl:text>
                 </xsl:comment>
@@ -44,7 +45,7 @@
                 substring-after(.,concat('javascript:raise(',$apos)),$apos)"/>
         </xsl:variable>
         <xsl:attribute name="href">
-            <xsl:value-of select="concat($linkList//*[@id = $event]/@uri,'.html')"/>
+            <xsl:value-of select="concat($baseOutputDir,$linkList//*[@id = $event]/@href)"/>
         </xsl:attribute>
     </xsl:template>
     

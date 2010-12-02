@@ -20,3 +20,7 @@
 	$result = $xslt->transformToXML( $xmlDoc );
 	
 	print $result;
+	
+	$fp = fopen($baseDir.$dataURI, "w");
+	fwrite($fp, $result);
+	fclose($fp);

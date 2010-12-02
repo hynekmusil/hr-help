@@ -19,17 +19,8 @@
 	$xslDoc->load( 'setter-article.xsl');
 	$xslt->importStylesheet( $xslDoc); 
 	$result = $xslt->transformToXML( $xmlDoc );
-	print $result;
 	
-	/*$patterns = array();
-	$patterns[0] = '@(<\?stylesheet type="text\/xsl" href=")([^"]+"\?>)@';
-	$patterns[1] = '@(<\?setter href=")([^"]+"\?>)@';
-	$patterns[2] = '@(xsi:schemaLocation="[^ ]+)(\s)([^"]+")@';
-	$replacements = array();
-	$replacements[0] = '$1../component/article/$2';
-	$replacements[1] =  '$1../component/article/$2';
-	$replacements[2] =  '$1 ../component/article/$3';
-	$result = preg_replace($patterns, $replacements, $result);*/
+	print $result;
 	
 	$fp = fopen($baseDir.$dataURI, "w");
 	fwrite($fp, $result);

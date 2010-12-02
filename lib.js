@@ -325,26 +325,10 @@ function changeMenuItemProperty(aField, aDataURI){
 		currComponentInfo = data.object.object;
 	}
 }
-function insertBeforeMenu(aField, aDataURI){
+function modifyMenu(aOperation){
 	var data = document.statechart.event.data;
 	var nId = getEditedNodeId(data.object.object.ids);
-	if(nId != ""){
-		var cNode = getEditedNode();
-		var change = new Array;
-		change[0] = new Object;
-		change[0][aField] = new Array;
-		change[0][aField][0] = aDataURI + "?id=" + nId;
-		changeContent(change);
-		var eNode = document.getElementById(data.object.object.ids[1]);
-		var pNode = document.getElementById(aField);
-		var eCoo = getElementCoordinate(eNode);
-		var cCoo = getElementCoordinate(cNode);
-		var eNodeHeight = getElementHeight(eNode);
-		pNode.style.position = "absolute";
-		pNode.style.top = String(eCoo[0] + eNodeHeight)+"px";
-		pNode.style.left = String(cCoo[1])+"px";
-		pNode.className = eb.className;
-	}
+	refreshData(data.object.object, null, "operation="+aOperation+"&itemId="+nId+"&itemName=nová položka&uri=nova-stranka.html&title=nová stránka");
 }
 function getEditedNodeId(aIds){
 	var node = getEditedNode();
@@ -369,11 +353,6 @@ function getEditedNodeId(aIds){
 		return nId;
 	}
 	return "";
-}
-function insertAfterMenu(){
-	var data = document.statechart.event.data;
-	var nId = getEditedNodeId(data.object.object.ids);
-	alert(nId);
 }
 function markEditedElement(){
 	var sel = null;

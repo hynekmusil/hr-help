@@ -8,5 +8,8 @@
     <change>změnit</change>
     <insertBefore>vložit před</insertBefore>
     <insertAfter>vložit za</insertAfter>
+    <shiftRight>posun doprava</shiftRight>
+    <shiftLeft>posun doleva</shiftLeft>
+    <remove>odstraň</remove>
     <field xml:id="f-editProperties"/>
 </menuCmds>
