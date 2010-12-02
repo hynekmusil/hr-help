@@ -24,7 +24,9 @@
                 <link rel="shortcut icon" type="image/x-icon" href="{$baseOutputDir}html/favicon.ico" />
                 <link rel="stylesheet" type="text/css" href="{$baseOutputDir}html/css/base.css" />
                 <xsl:comment>
-                    <xsl:text disable-output-escaping="yes"><![CDATA[[if lt IE 9]><link rel="stylesheet" type="text/css" href="www/css/ie8.css" /><![endif]]]></xsl:text>
+                    <xsl:text disable-output-escaping="yes"><![CDATA[[if lt IE 9]><link rel="stylesheet" type="text/css" href="]]></xsl:text>
+                    <xsl:value-of select="$baseOutputDir"/>
+                    <xsl:text disable-output-escaping="yes"><![CDATA[html/css/ie8.css" /><![endif]]]></xsl:text>
                 </xsl:comment>
             </head>
             <xsl:apply-templates select="*"/>
