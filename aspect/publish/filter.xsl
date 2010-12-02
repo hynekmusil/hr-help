@@ -53,6 +53,7 @@
         <xsl:copy-of select="."/>
     </xsl:template>
     
+    <xsl:template match="@contenteditable"/>
     <xsl:template match="*[starts-with(@id,'f-')]"/>
     <xsl:template match="hr[@class='blind']"/>
     
