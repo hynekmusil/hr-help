@@ -9,8 +9,8 @@
     
     <xsl:template match="/ac:articleCmds">
        <form id="f-editButtons">
-			<xsl:apply-templates select="ac:htmlCmds/*"/>
-			<xsl:apply-templates select="ac:fxCmds/*"/>
+           <xsl:apply-templates select="ac:htmlCmds/*"/>
+           <xsl:apply-templates select="ac:fxCmds/*"/>
        </form> 
     </xsl:template>
     

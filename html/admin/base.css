@@ -51,9 +51,21 @@
 	text-align: right;
 }
 #f-editButtons {
-	background: #E0E0E0;
+	background: #E0E0E0 url('icons/arrow_out.png') no-repeat 9px 9px;
 	-moz-box-shadow: 0 0 12px #000;
-	padding: 3px;
+	padding: 3px 3px 3px 30px;
+	white-space: nowrap;
+	z-index: 1000000;
+}
+#f-editButtons .move {
+	position: absolute;
+	left: 9px;
+	top: 9px;
+	width: 16px;
+	height: 16px;
+	color: transparent;
+	-moz-user-select: none;
+	cursor: move;
 }
 #f-editButtons input {
 	background-color: #fff;
@@ -105,7 +117,24 @@
 	background-image: url('icons/link.png');
 }
 #f-editButtons input[value="saveData"],
-#f-editButtons input[value="uložit"] {
+#f-editButtons .saveData {
 	background-image: url('icons/database_save.png');
 }
-
+#f-editButtons .insertBefore {
+	background-image: url('icons/arrow_left.png');
+}
+#f-editButtons .insertAfter {
+	background-image: url('icons/arrow_right.png');
+}
+#f-editButtons .shiftRight {
+	background-image: url('icons/arrow_right.png');
+}
+#f-editButtons .shiftLeft {
+	background-image: url('icons/arrow_left.png');
+}
+#f-editButtons .remove {
+	background-image: url('icons/cancel.png');
+}
+#f-editButtons .change {
+	background-image: url('icons/page_white_edit.png');
+}
