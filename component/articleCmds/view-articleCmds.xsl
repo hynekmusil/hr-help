@@ -9,12 +9,8 @@
     
     <xsl:template match="/ac:articleCmds">
        <form id="f-editButtons">
-           <fieldset>
-               <xsl:apply-templates select="ac:htmlCmds/*"/>
-           </fieldset>
-           <fieldset>
-               <xsl:apply-templates select="ac:fxCmds/*"/>
-           </fieldset>
+			<xsl:apply-templates select="ac:htmlCmds/*"/>
+			<xsl:apply-templates select="ac:fxCmds/*"/>
        </form> 
     </xsl:template>
     
@@ -37,6 +33,7 @@
                 </xsl:if>
                 <xsl:text>);</xsl:text>
             </xsl:attribute>
+            <xsl:attribute name="class"><xsl:value-of select="local-name()"/></xsl:attribute>
         </input>
     </xsl:template>
     

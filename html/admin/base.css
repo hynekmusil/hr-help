@@ -1,0 +1,111 @@
+/* Admin toolbar */
+
+#f-pageCmds {
+	background: #625B76;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	padding: 0px;
+	opacity: 0.3;
+	font-size: 11px;
+	color: #fff;
+	z-index: 10000;
+}
+#f-pageCmds:hover {
+	opacity: 1;
+}
+#f-pageCmds a {
+	color: #fff;
+}
+#f-pageCmds ul {
+	list-style: none;
+}
+#f-pageCmds li {
+	float: left;
+	border-style: solid;
+	border-width: 0 1px 0 1px;
+	border-color: transparent #505050 transparent #B0B0B0;
+}
+#f-pageCmds li:first-child {
+	border-left: 0;
+}
+#f-pageCmds li a {
+	float: left;
+	padding: 5px 10px;
+	color: #fff;
+	font-weight: bold;
+	text-decoration: none;
+}
+#f-pageCmds li a:hover {
+	background: #827B97;
+}
+#f-pageCmds li.active a {
+	color: #000;
+}
+#f-pageCmds li.active a:hover {
+	background: yellow;
+}
+#user-info {
+	padding: 4px;
+	text-align: right;
+}
+#f-editButtons {
+	background: #E0E0E0;
+	-moz-box-shadow: 0 0 12px #000;
+	padding: 3px;
+}
+#f-editButtons input {
+	background-color: #fff;
+	background-position: 2px 50%;
+	background-repeat: no-repeat;
+	border: 1px outset black;
+	height: 22px;
+	padding: 0 2px 0 20px;
+	margin: 3px;
+	font-size: 11px;
+}
+#f-editButtons input:hover {
+	opacity: .7;
+}
+#f-editButtons input:active {
+	border-style: inset;
+}
+#f-editButtons input::-moz-focus-inner {
+	border: 0;
+}
+#f-editButtons .undo {
+	background-image: url('icons/arrow_undo.png');
+}
+#f-editButtons .redo {
+	background-image: url('icons/arrow_redo.png');
+}
+#f-editButtons .bold {
+	background-image: url('icons/text_bold.png');
+}
+#f-editButtons .italic {
+	background-image: url('icons/text_italic.png');
+}
+#f-editButtons .heading {
+	background-image: url('icons/text_heading_1.png');
+}
+#f-editButtons .insertImage {
+	background-image: url('icons/image_add.png');
+}
+#f-editButtons .insertunorderedlist {
+	background-image: url('icons/text_list_bullets.png');
+}
+#f-editButtons .indent {
+	background-image: url('icons/text_indent.png');
+}
+#f-editButtons .outdent {
+	background-image: url('icons/text_indent_remove.png');
+}
+#f-editButtons .createLink {
+	background-image: url('icons/link.png');
+}
+#f-editButtons input[value="saveData"],
+#f-editButtons input[value="uložit"] {
+	background-image: url('icons/database_save.png');
+}
+

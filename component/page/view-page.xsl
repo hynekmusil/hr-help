@@ -5,7 +5,7 @@
     xmlns="http://www.w3.org/1999/xhtml"
 >
     <xsl:template match="p:layout">
-        <div id="f-pageCmds" style="position: absolute; top: 0; left: 0;">
+        <div id="f-pageCmds">
             <xsl:text> </xsl:text>
         </div>
         <div id="container">

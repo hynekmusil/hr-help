@@ -21,7 +21,7 @@
     </xsl:template>
     
     <xsl:template match="*">
-        <input type="button" value="{.}" onclick="fxEditCmd('{local-name()}','{$data}');"/>
+        <input type="button" class="{local-name()}" value="{.}" onclick="fxEditCmd('{local-name()}','{$data}');"/>
     </xsl:template>
 
 </xsl:stylesheet>
