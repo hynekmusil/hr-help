@@ -1,12 +1,46 @@
-function Cache(){}
-Cache.prototype = {
-	list: new Array();
+/* Zdroje xml dokumentu a xslt procesoru */
+function SourceList(){}
+SourceList.prototype = {
+	list: new Array(),
+	addXSLTProc: function(aURI){
+		var xsltProc = new XSLTProcessor();
+		xsltProc.importStylesheet(getSource(aXSLTURI));
+		xsltProcCache[aXSLTURI] = xsltProc;
+		return xsltProc;
+	},
+	getXSLTProc: function(aURI){
+		if(this.list[aURI] != undefined){
+			if(this.list[aURI].constructor == XSLTProcessor)
+				return this.list[aURI];
+			return null;
+		}
+		return addXSLTProc(aURI);
+	},
+	getDocument(aURI, aSend, callback){
+		var http = new XMLHttpRequest(); 
+		var uri = aUri;
+		var send = null;
+		if(aSend != undefined) send = aSend;
+		if(uri.indexOf(".php") === -1){
+			if (http.overrideMimeType) http.overrideMimeType('text/xml');
+			else uri = "aspect/standardsSupport/xml.php?x="+aUri;
+		}
+		var isAsync = false;
+		if(callback != undefined){
+			httpRequest.onreadystatechange = callback();
+			isAsync = true;
+		}
+		http.open("POST", uri, isAsync);
+		http.send(send);
+		if(isAsync == false) return http.responseXML;
+		return null;
+	},
+	loadingDocument
 	add: function(aURI, aObject){
 		this.list[aURI] = aObject;
 		return aObject;
 	}
 }
-
 
 function XMLProcessor(){}
 XMLProcessor.prototype = {

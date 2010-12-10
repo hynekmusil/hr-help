@@ -328,7 +328,7 @@ function changeMenuItemProperty(aField, aDataURI){
 function modifyMenu(aOperation){
 	var data = document.statechart.event.data;
 	var nId = getEditedNodeId(data.object.object.ids);
-	refreshData(data.object.object, null, "operation="+aOperation+"&itemId="+nId+"&itemName=nová položka&uri=nova-stranka.html&title=nová stránka");
+	refreshData(data.object.object, null, "operation="+aOperation+"&itemId="+nId+"&itemName=nová položka&uri=homepage&title=nová stránka");
 }
 function getEditedNodeId(aIds){
 	var node = getEditedNode();
