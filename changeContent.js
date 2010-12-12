@@ -1,137 +1,124 @@
-/* Zdroje xml dokumentu a xslt procesoru */
-function SourceList(){}
-SourceList.prototype = {
-	list: new Array(),
-	addXSLTProc: function(aURI){
-		var xsltProc = new XSLTProcessor();
-		xsltProc.importStylesheet(getSource(aXSLTURI));
-		xsltProcCache[aXSLTURI] = xsltProc;
-		return xsltProc;
-	},
-	getXSLTProc: function(aURI){
-		if(this.list[aURI] != undefined){
-			if(this.list[aURI].constructor == XSLTProcessor)
-				return this.list[aURI];
+//encoding=UTF-8
+var formax = new function() {
+	var uri = new function() {
+		this.getXSLTURI = function(aURI, aDoc){
+			var nodeInstruction = aDoc.firstChild;
+			while(nodeInstruction.target.indexOf("stylesheet") == -1){
+				nodeInstruction = nodeInstruction.nextSibling;
+				if(nodeInstruction.nodeType != 7) break;
+			}
+			if(nodeInstruction.data == undefined) return '';
+			var instructionURI = nodeInstruction.data;
+			instructionURI = instructionURI.substring(instructionURI.indexOf('href')+6);
+			instructionURI = instructionURI.substring(0,instructionURI.indexOf('"'));
+			return uri.resolveURI(aURI, instructionURI);
+		};
+		this.resolveURI = function(aBaseURI, aURI){
+			var uriArray = aURI.split("/");
+			var baseURIArray = aBaseURI.split("/");
+			var countToParents = 0;
+			var i = 0;
+			for(i=0; i<uriArray.length; i++){
+				if(uriArray[i] == '..') countToParents++;
+				else break;
+			}
+			for(i=0; i<countToParents; i++){
+				uriArray.shift();
+				baseURIArray.pop();
+			}
+			baseURIArray.pop();
+			var baseURI = baseURIArray.join("/");
+			if(baseURI != "") baseURI += "/";
+			return baseURI + uriArray.join("/") ;
+		};
+	};
+	var sourceList = new function() {
+		this.list = new Array();
+		this.addDoc = function(aURI, aSend, aCallback, aPipeResult){
+			var send = null;
+			if(aSend != undefined) send = aSend;
+			for(var i=0; i < this.list.length; i++){
+				if((aURI == this.list[i].uri) && (send == this.list[i].send)) break;
+			}
+			if(i == this.list.length){
+				this.list[i]= {"uri": aURI, "send": send, "callback": aCallback};
+				if(aPipeResult == undefined) this.getDocument(i); 
+				else this.getDocument(i, aPipeResult);
+			}
+			return i;
+		},
+		this.getDocument = function(aId, aPipeResult){
+			var URI = this.list[aId].uri;
+			var uri = URI;
+			var send = this.list[aId].send;
+			var callback = this.list[aId].callback;
+			var http = new XMLHttpRequest(); 
+			if(uri.indexOf(".php") === -1){
+				if(http.overrideMimeType) http.overrideMimeType("text/xml");
+				else uri = "aspect/standardsSupport/xml.php?x=" + URI;
+			}
+			var isAsync = false;
+			var docInfo = this.list[aId];
+			if(callback != undefined){
+				http.onreadystatechange = function(){
+					if (http.readyState == 4) {  
+						if (http.status == 200) 
+							if(aPipeResult == undefined) callback.call(this, docInfo);  
+							else callback.call(this, docInfo, aPipeResult);
+						else alert('There was a problem with the request.');  
+					}  
+				};
+				isAsync = true;
+			}
+			http.open("POST", uri, isAsync);
+			http.send(send);
+			if(isAsync == false) return http.responseXML;
 			return null;
-		}
-		return addXSLTProc(aURI);
-	},
-	getDocument(aURI, aSend, callback){
-		var http = new XMLHttpRequest(); 
-		var uri = aUri;
-		var send = null;
-		if(aSend != undefined) send = aSend;
-		if(uri.indexOf(".php") === -1){
-			if (http.overrideMimeType) http.overrideMimeType('text/xml');
-			else uri = "aspect/standardsSupport/xml.php?x="+aUri;
-		}
-		var isAsync = false;
-		if(callback != undefined){
-			httpRequest.onreadystatechange = callback();
-			isAsync = true;
-		}
-		http.open("POST", uri, isAsync);
-		http.send(send);
-		if(isAsync == false) return http.responseXML;
-		return null;
-	},
-	loadingDocument
-	add: function(aURI, aObject){
-		this.list[aURI] = aObject;
-		return aObject;
-	}
-}
-
-function XMLProcessor(){}
-XMLProcessor.prototype = {
-	getProcessingURI: function(aProc, aDataURI, aDataDoc){
-		var nodeInstruction = aDataDoc.firstChild;
-		while(nodeInstruction.target.indexOf(aProc) == -1){
-			nodeInstruction = nodeInstruction.nextSibling;
-			if(nodeInstruction.nodeType != 7) break;
-		}
-		if(nodeInstruction.data == undefined) return '';
-		var styleInstruction = nodeInstruction.data;
-		styleInstruction = styleInstruction.substring(styleInstruction.indexOf('href')+6);
-		styleInstruction = styleInstruction.substring(0,styleInstruction.indexOf('"'));
-		return resolveURI(aDataURI, styleInstruction);
-	}
-}
-
-function XSLTransformer(){}
-XSLTransformer.prototype = {
-	exec: function(aDataURI, aDataDoc, aParams)
-	{
-		var dataDoc = null;
-		if(aDataDoc == undefined)
-			dataDoc = getSource(aDataURI);
-		else
-			dataDoc = aDataDoc;
-		return xslt(dataDoc, this._getXSLTURI(aDataURI, dataDoc), aParams);
-	},
-	_getXSLTURI: function(aDataURI, aDataDoc)
-	{
-		var xmlProc = new XMLProcessor();
-		return xmlProc.getProcessingURI("stylesheet", aDataURI, aDataDoc);
-	},
-	function xslt(aDataDoc, aXSLTURI, aParams){
-		var xsltProc = null;
-		if(xsltProcCache[aXSLTURI] != undefined){
-			if(xsltProcCache[aXSLTURI].constructor == XSLTProcessor){
-				xsltProc = xsltProcCache[aXSLTURI];
+		};
+	};
+	var xslt = new function() {
+		this.transform = function(aDataDoc, aXSLTDoc, aParams) {
+			var xsltProc = new XSLTProcessor();
+			xsltProc.importStylesheet(aXSLTDoc);
+			if(aParams){
+				if(aParams.constructor == Array)
+					for(var i = 0; i < aParams.length; i++)
+						xsltProc.setParameter(aParams[i][0], aParams[i][1], aParams[i][2]);
 			}
-			else xsltProc = null;
+			return xsltProc.transformToFragment(aDataDoc, document);
 		}
-		if(xsltProc == null){
-			xsltProc = addToXSLTProcCache(aXSLTURI);
-		}
-		if(aParams){
-			if(aParams.constructor == Array){
-				for(var i = 0; i < aParams.length; i++){
-					xsltProc.setParameter(aParams[i][0], aParams[i][1], aParams[i][2]);
-				}
-			}
-		}
-		return xsltProc.transformToFragment(aDataDoc, document);
-}
-}
-
-function changeContent(aChange, aParams){
-	var result = null;
-	var insertMethod = "append";
-	var componentNode = null;
-	for(var i=0; i < aChange.length; i++){
-		for(var cn in aChange[i]){
-			if(cn != 'clone'){
-				componentNode = document.getElementById(cn);
-				if(componentNode){
-					if(componentNode.nodeName == "HR") insertMethod = "before";
-					else insertMethod = "append";
-					if(insertMethod == "append") componentNode.innerHTML = "";
-					for(var j=0; j < aChange[i][cn].length; j++){
-						var transformResult = xsltTransform(aChange[i][cn][j], aParams);
-						var fragment = transformResult.fragment;
-						for(var k = 0; k < fragment.childNodes.length; k++){
-							if(fragment.childNodes.item(k).nodeType == 8 && (fragment.childNodes.item(k).data.indexOf("f-result") === 0)){
-								result = eval(fragment.childNodes.item(k).data.substring(9));
-							}
-						if(insertMethod == "append") componentNode.appendChild(fragment);
-						else componentNode.parentNode.insertBefore(fragment, componentNode);
+	};
+	var content = new function(){
+		this.change = function(aId, aFragment){
+			var result = null;
+			var insertMethod = "append";
+			var componentNode = document.getElementById(aId);
+			if(componentNode){
+				if(componentNode.nodeName == "HR") insertMethod = "before";
+				else insertMethod = "append";
+				if(insertMethod == "append") componentNode.innerHTML = "";
+				for(var k = 0; k < aFragment.childNodes.length; k++){
+					if(aFragment.childNodes.item(k).nodeType == 8 && (aFragment.childNodes.item(k).data.indexOf("f-result") === 0)){
+						result = eval(aFragment.childNodes.item(k).data.substring(9));
 					}
 				}
+				if(insertMethod == "append") componentNode.appendChild(fragment);
+				else componentNode.parentNode.insertBefore(fragment, componentNode);
 			}
 		}
 	}
-	return result;
-}
-
-function xsltTransform(aDataURI, aDataDoc, aParams){
-	var dataDoc = null;
-	if(aDataDoc == undefined){
-		dataDoc = getSource(aDataURI);
-	} else {
-		dataDoc = aDataDoc;
+	
+	function getXSLTURI(aDocInfo){
+		aDocInfo.doc = this.responseXML;
+		var xsltURI = uri.getXSLTURI(aDocInfo.uri, aDocInfo.doc);
+		aDocInfo.xsltDocId = sourceList.addDoc(xsltURI, null, xsltTransform, aDocInfo.doc);
 	}
-	var xsltURI = getXSLTURI(aDataURI,dataDoc);
-	return xslt(dataDoc, xsltURI, aParams);
-}
+	
+	function xsltTransform(aDocInfo, aPipeResult){
+		aDocInfo.doc = this.responseXML;
+		fragment = xslt.transform(aPipeResult, aDocInfo.doc);
+		content.change("content", fragment);
+	}
+	
+	sourceList.addDoc("data/page.xml", null, getXSLTURI);
+};

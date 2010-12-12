@@ -1,3 +1,15 @@
+function Thing(name) {
+    this.name = name;
+}
+Thing.prototype.doSomething = function(callback, salutation) {
+    // Call our callback, but using our own instance as the context
+    callback.call(this, salutation);
+}
+
+function foo(salutation) {
+    alert(salutation + " " + this.name);
+}
+
 function Document(){}
 Document.prototype = {
 _id: 0,
@@ -49,6 +61,9 @@ jQuery.aop.around( {target: Document, method: 'open'},
 	return result;
   }
 );
+
+var t = new Thing('Joe');
+t.doSomething(foo, 'Hi;');  // Alerts "Hi Joe" via `foo`
 
 doc = new Document();
 var test = doc.open("i1");
