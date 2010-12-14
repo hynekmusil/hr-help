@@ -1,6 +1,6 @@
 //encoding=UTF-8
 var formax = new function() {
-	var uri = new function() {
+	var uriResolver = new function() {
 		this.getXSLTURI = function(aURI, aDoc){
 			var nodeInstruction = aDoc.firstChild;
 			while(nodeInstruction.target.indexOf("stylesheet") == -1){
@@ -11,7 +11,7 @@ var formax = new function() {
 			var instructionURI = nodeInstruction.data;
 			instructionURI = instructionURI.substring(instructionURI.indexOf('href')+6);
 			instructionURI = instructionURI.substring(0,instructionURI.indexOf('"'));
-			return uri.resolveURI(aURI, instructionURI);
+			return uriResolver.resolveURI(aURI, instructionURI);
 		};
 		this.resolveURI = function(aBaseURI, aURI){
 			var uriArray = aURI.split("/");
@@ -32,39 +32,26 @@ var formax = new function() {
 			return baseURI + uriArray.join("/") ;
 		};
 	};
-	var sourceList = new function() {
-		this.list = new Array();
-		this.addDoc = function(aURI, aSend, aCallback, aPipeResult){
+	var source = new function() {
+		this.getDocument = function(aURI, aSend, aCallback, aCallbackParams){
+			var uri = aURI;
 			var send = null;
 			if(aSend != undefined) send = aSend;
-			for(var i=0; i < this.list.length; i++){
-				if((aURI == this.list[i].uri) && (send == this.list[i].send)) break;
-			}
-			if(i == this.list.length){
-				this.list[i]= {"uri": aURI, "send": send, "callback": aCallback};
-				if(aPipeResult == undefined) this.getDocument(i); 
-				else this.getDocument(i, aPipeResult);
-			}
-			return i;
-		},
-		this.getDocument = function(aId, aPipeResult){
-			var URI = this.list[aId].uri;
-			var uri = URI;
-			var send = this.list[aId].send;
-			var callback = this.list[aId].callback;
+			var callback = aCallback;
+			
 			var http = new XMLHttpRequest(); 
 			if(uri.indexOf(".php") === -1){
 				if(http.overrideMimeType) http.overrideMimeType("text/xml");
-				else uri = "aspect/standardsSupport/xml.php?x=" + URI;
+				else uri = "aspect/standardsSupport/xml.php?x=" + aURI;
 			}
 			var isAsync = false;
-			var docInfo = this.list[aId];
 			if(callback != undefined){
 				http.onreadystatechange = function(){
 					if (http.readyState == 4) {  
 						if (http.status == 200) 
-							if(aPipeResult == undefined) callback.call(this, docInfo);  
-							else callback.call(this, docInfo, aPipeResult);
+							if(aCallbackParams == undefined) callback.call(this);
+							else if(aCallbackParams.constructor == Array) callback.apply(this, aCallbackParams);
+							else callback.call(this, aCallbackParams);
 						else alert('There was a problem with the request.');  
 					}  
 				};
@@ -106,19 +93,19 @@ var formax = new function() {
 				else componentNode.parentNode.insertBefore(fragment, componentNode);
 			}
 		}
+	};
+	
+	var dataURI = "data/page.xml";
+	source.getDocument(dataURI, null, getXSLTURI);
+	
+	function getXSLTURI(){
+		var xsltURI = uriResolver.getXSLTURI(dataURI, this.responseXML);
+		source.getDocument(xsltURI, null, xsltTransform, this.responseXML);
 	}
 	
-	function getXSLTURI(aDocInfo){
-		aDocInfo.doc = this.responseXML;
-		var xsltURI = uri.getXSLTURI(aDocInfo.uri, aDocInfo.doc);
-		aDocInfo.xsltDocId = sourceList.addDoc(xsltURI, null, xsltTransform, aDocInfo.doc);
-	}
-	
-	function xsltTransform(aDocInfo, aPipeResult){
-		aDocInfo.doc = this.responseXML;
-		fragment = xslt.transform(aPipeResult, aDocInfo.doc);
+	function xsltTransform(aDocunent){
+		fragment = xslt.transform(aDocunent, this.responseXML);
 		content.change("content", fragment);
 	}
 	
-	sourceList.addDoc("data/page.xml", null, getXSLTURI);
 };
