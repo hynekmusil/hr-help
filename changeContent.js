@@ -33,12 +33,19 @@ var formax = new function() {
 		};
 	};
 	var source = new function() {
-		this.getDocument = function(aURI, aSend, aCallback, aCallbackParams){
+		this.list = [];
+		this.getDocument = function(aURI, aSend, aCallback, aCallbackParams, aHasSave){
+			if(aHasSave){
+				if(this.list[aURI]) {
+					alert("* davam z chache "+ aURI);
+					return this.list[aURI];
+				}
+				else alert("* neni v chache "+ aURI);
+			}
 			var uri = aURI;
 			var send = null;
 			if(aSend != undefined) send = aSend;
 			var callback = aCallback;
-			
 			var http = new XMLHttpRequest(); 
 			if(uri.indexOf(".php") === -1){
 				if(http.overrideMimeType) http.overrideMimeType("text/xml");
@@ -50,7 +57,6 @@ var formax = new function() {
 					if (http.readyState == 4) {  
 						if (http.status == 200) 
 							if(aCallbackParams == undefined) callback.call(this);
-							else if(aCallbackParams.constructor == Array) callback.apply(this, aCallbackParams);
 							else callback.call(this, aCallbackParams);
 						else alert('There was a problem with the request.');  
 					}  
@@ -64,6 +70,7 @@ var formax = new function() {
 		};
 	};
 	var xslt = new function() {
+		var xsltProcList = [];
 		this.transform = function(aDataDoc, aXSLTDoc, aParams) {
 			var xsltProc = new XSLTProcessor();
 			xsltProc.importStylesheet(aXSLTDoc);
@@ -73,17 +80,16 @@ var formax = new function() {
 						xsltProc.setParameter(aParams[i][0], aParams[i][1], aParams[i][2]);
 			}
 			return xsltProc.transformToFragment(aDataDoc, document);
-		}
+		};
 	};
-	var content = new function(){
-		this.change = function(aId, aFragment){
+	var contents = new function(){
+		this.changeById = function(aId, aFragment){
 			var result = null;
 			var insertMethod = "append";
 			var componentNode = document.getElementById(aId);
 			if(componentNode){
 				if(componentNode.nodeName == "HR") insertMethod = "before";
 				else insertMethod = "append";
-				if(insertMethod == "append") componentNode.innerHTML = "";
 				for(var k = 0; k < aFragment.childNodes.length; k++){
 					if(aFragment.childNodes.item(k).nodeType == 8 && (aFragment.childNodes.item(k).data.indexOf("f-result") === 0)){
 						result = eval(aFragment.childNodes.item(k).data.substring(9));
@@ -92,20 +98,47 @@ var formax = new function() {
 				if(insertMethod == "append") componentNode.appendChild(fragment);
 				else componentNode.parentNode.insertBefore(fragment, componentNode);
 			}
+		};
+		this.change = function(aChange, aParams, aNoPublish){
+			for(var i=0; i < aChange.length; i++){
+				for(var cn in aChange[i]){
+					if(cn != 'clone'){
+						componentNode = document.getElementById(cn);
+						if(!(aParams && aParams.constructor == Array)) aParams = [];
+						if(componentNode){
+							for(var j=0; j < aChange[i][cn].length; j++){
+								var params = [["","componentId", cn],["","baseURI", aChange[i][cn][j]]].concat(aParams);
+								source.getDocument(aChange[i][cn][j], null, contents.getXSLTURI, params);
+							}
+						}	
+					}
+				}
+			}
+		};
+		this.getXSLTURI = function(aCallBackParams){
+			for(var i=0; i < aCallBackParams.length; i++) if(aCallBackParams[i][1] == "baseURI") break;
+			var xsltURI = uriResolver.getXSLTURI(aCallBackParams[i][2], this.responseXML);
+			if(source.list[xsltURI]) {
+				alert("je tam " + xsltURI);
+			} else {
+				var params = [["","xsltBaseURI", xsltURI]].concat(aCallBackParams);
+				alert("neni tam " + xsltURI);
+				source.getDocument(xsltURI, null, contents.xsltTransform, [this.responseXML, params], true);
+			}
+		};
+		this.xsltTransform = function(aCallBackParams){
+			for(var i=0; i < aCallBackParams[1].length; i++) if(aCallBackParams[1][i][1] == "xsltBaseURI") break;
+			
+			source.list[aCallBackParams[1][i][2]] = this.responseXML;
+			for(var i=0; i < aCallBackParams[1].length; i++) if(aCallBackParams[1][i][1] == "componentId") break;
+			var componentId = aCallBackParams[1][i][2];
+			fragment = xslt.transform(aCallBackParams[0], this.responseXML, aCallBackParams[1]);
+			contents.changeById(componentId, fragment);
 		}
+		
 	};
 	
-	var dataURI = "data/page.xml";
-	source.getDocument(dataURI, null, getXSLTURI);
-	
-	function getXSLTURI(){
-		var xsltURI = uriResolver.getXSLTURI(dataURI, this.responseXML);
-		source.getDocument(xsltURI, null, xsltTransform, this.responseXML);
+	window.onload = function(){
+		contents.change([{"maincol":["data/article-aktualne.xml","data/article-jak_zacit.xml","data/article-aktualne.xml"]}]);
 	}
-	
-	function xsltTransform(aDocunent){
-		fragment = xslt.transform(aDocunent, this.responseXML);
-		content.change("content", fragment);
-	}
-	
 };
