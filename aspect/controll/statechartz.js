@@ -304,6 +304,40 @@ Statechartz = {
             historyValues: {},
             processing: false,
             doContinue: false,
+/* Pridane metody */
+			getStateByName: function(name) {
+				states = this.rootState.states;
+				for (var i = 0; i < states.length; i++) {
+					if (states[i].id == name) {
+						return states[i];
+					}
+					if (states[i].states.length > 0) {
+						for (var j = 0; j < states[i].states.length; j++) {
+							states[states.length] = states[i].states[j];
+						}
+					}
+				}
+				return null;
+			},
+			addState: function(newState, parentState, index) {
+				if (!parentState) {
+					parentState = this.rootState;
+				} else if (typeof(parentState) == 'string') {
+					var state = this.getStateByName(parentState);
+					if (state != null) {
+						parentState = state;
+					}
+				}
+				if (!index || index >= parentState.states.length) {
+					parentState.states[parentState.states.length] = newState;
+				} else {
+					for (var i = parentState.states.length-1; i > index; i--) {
+						parentState.states[i+1] = parentState.states[i];
+					}
+					parentState.states[index] = newState;
+				}
+			},
+/* Pridane metody */
             raise: function raise(event, external, payload) {
                 if (this.externalQueue == undefined) {
                     start();
