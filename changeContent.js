@@ -1,6 +1,9 @@
 //encoding=UTF-8
 try{
 var formax = new function() {
+	var threadId = 0;
+	var startProc = null;
+	var nowProc = null;
 	var uriResolver = new function() {
 		this.getXSLTURI = function(aURI, aDoc){
 			var nodeInstruction = aDoc.firstChild;
@@ -91,51 +94,58 @@ var formax = new function() {
 		this.xsltProc = null;
 		this.params = aParams;
 		this.placeId = aPlaceId;
+		this.threadId = "";
 	};
 	Content.prototype = {
-		load: function(){
-			source.getDocument(this.dataURI, null, this.loadData, this);
+		load: function(aThis, aThreadId){
+			var newEl = document.createElement("div");
+			aThis.threadId = "thread" + aThreadId;
+			newEl.id = aThis.threadId;
+			newEl.style.cssFloat = "left";
+			newEl.style.width = "25%";
+			var el = document.getElementById("process");
+			el.parentNode.insertBefore(newEl, el);
+			source.getDocument(aThis.dataURI, null, aThis.loadData, aThis);
 		},
 		loadData: function(aThis){
 			source.list[aThis.dataURI] =  this.responseXML;
 			aThis.dataDoc = source.list[aThis.dataURI];
 			aThis.templateURI = uriResolver.getXSLTURI(aThis.dataURI, aThis.dataDoc);
 			if(source.list[aThis.templateURI] === null){
-				document.getElementById("process").innerHTML += "loading of template " + aThis.templateURI + " was already initiated <br/>";
-				threadStart(aThis.saveReturnedFragment, aThis);
+				var time = new Date() - startProc;
+				document.getElementById(aThis.threadId).innerHTML += "<b style=\"color: red;\">" + time + "</b> loading of template " + aThis.templateURI + " was already initiated <br/>";
+				aThis.saveReturnedFragment(aThis);
 			} else{
-				document.getElementById("process").innerHTML += "loading of template "+ aThis.templateURI + " is initiated <br/>";
+				var time = new Date() - startProc;
+				document.getElementById(aThis.threadId).innerHTML += "<b style=\"color: red;\">" + time + "</b> loading of template "+ aThis.templateURI + " is initiated <br/>";
 				source.list[aThis.templateURI] = null;
 				source.getDocument(aThis.templateURI, null, aThis.loadFragment, aThis);
 			}
 		},
 		loadFragment: function(aThis){
 			source.list[aThis.templateURI] = xslt.getProc(this.responseXML);
-			document.getElementById("process").innerHTML += "xslt processor for: "+ aThis.templateURI + "  was loaded<br/>";
+			var time = new Date() - startProc;
+			document.getElementById(aThis.threadId).innerHTML += "<b style=\"color: red;\">" + time + "</b> xslt processor for: "+ aThis.templateURI + "  was loaded<br/>";
 			aThis.xsltProc = source.list[aThis.templateURI];
 			var fragment = xslt.transform(aThis.dataDoc, aThis.xsltProc, aThis.params);
 			aThis.saveFragment(fragment);
 		},
-		saveReturnedFragment: function(aThis){
+		saveReturnedFragment: function(aThis, aThreadId){
 			var start = null;
 			var now = null;
 			var i = 0;
-			while(source.list[aThis.templateURI] === null){
-				document.getElementById("process").innerHTML += "waiting on load xslt processor for: "+ aThis.templateURI + " " + i + "<br/>";
-				start = new Date();
-				do {now = new Date(); } 
-				while(now - start < 10);
-				if(i > 10) throw "too long waiting for the xslt processor";
-				i++;
-			}
-			if(source.list[aThis.templateURI].constructor == XSLTProcessor){
-				aThis.xsltProc = source.list[aThis.templateURI];
-				document.getElementById("process").innerHTML += "xslt processor for: "+ aThis.templateURI + "  is available<br/>"
-				var fragment = xslt.transform(aThis.dataDoc, aThis.xsltProc, aThis.params);
-				aThis.saveFragment(fragment);
-			} else {
-				throw "bad xslt processor";
-			}
+			var waiting = setInterval(function(){
+				if(source.list[aThis.templateURI].constructor == XSLTProcessor){
+					clearInterval(waiting);
+					aThis.xsltProc = source.list[aThis.templateURI];
+					var time = new Date() - startProc;
+					document.getElementById(aThis.threadId).innerHTML += "<b style=\"color: red;\">" + time + "</b> xslt processor for: "+ aThis.templateURI + "  is available<br/>"
+					var fragment = xslt.transform(aThis.dataDoc, aThis.xsltProc, aThis.params);
+					aThis.saveFragment(fragment);
+				}
+				var time = new Date() - startProc;
+				document.getElementById(aThis.threadId).innerHTML += "<b style=\"color: red;\">" + time + "</b> waiting on load xslt processor for: "+ aThis.templateURI + " " + i + "<br/>";
+			},10);
 		},
 		saveFragment: function(aFragment){
 			var componentNode = document.getElementById(this.placeId);
@@ -150,15 +160,19 @@ var formax = new function() {
 				}
 				if(insertMethod == "append") {
 					componentNode.appendChild(aFragment);
-					document.getElementById("process").innerHTML += "fragment for: "+ this.dataURI +" was <b>appended into</b> element with id <b>" + this.placeId + "</b><br/>";
+					var time = new Date() - startProc;
+					document.getElementById(this.threadId).innerHTML += "<b style=\"color: red;\">" + time + "</b> fragment for: "+ this.dataURI +" was <b>appended into</b> element with id <b>" + this.placeId + "</b><br/>";
 				}
 				else{
 					componentNode.parentNode.insertBefore(aFragment, componentNode);
-					document.getElementById("process").innerHTML += "fragment for: "+ this.dataURI +" was <b>inserted before</b> element with  id <b>" + this.placeId + "</b><br/>";
+					var time = new Date() - startProc;
+					document.getElementById(this.threadId).innerHTML += "<b style=\"color: red;\">" + time + "</b> fragment for: "+ this.dataURI +" was <b>inserted before</b> element with  id <b>" + this.placeId + "</b><br/>";
 				}
 			}
-			else
-				document.getElementById("process").innerHTML += "fragment for: "+ this.dataURI +" was not inserted<br/>";
+			else {
+				var time = new Date() - startProc;
+				document.getElementById(this.threadId).innerHTML += "<b style=\"color: red;\">" + time + "</b> fragment for: "+ this.dataURI +" was not inserted<br/>";
+			}
 		}
 	};
 	var contents = new function(){
@@ -169,7 +183,7 @@ var formax = new function() {
 						if(!(aParams && aParams.constructor == Array)) aParams = [];
 						for(var j=0; j < aChange[i][cn].length; j++){
 							var content = new Content(aChange[i][cn][j], cn, aParams);
-							content.load();
+							threadStart(content.load, content);
 						}	
 					}
 				}
@@ -178,11 +192,13 @@ var formax = new function() {
 	};
 	
 	window.onload = function(){
+		startProc = new Date();
 		contents.change([{"leftcol":["data/article-aktualne.xml"]},{"maincol":["data/article-jak_zacit.xml","data/article-aktualne.xml"]}]);
 	}
 	
 	function threadStart(aCallback, aObject){
-		setTimeout(aCallback, 1, aObject);
+		setTimeout(aCallback, 0, aObject, threadId);
+		threadId++;
 		return true;
 	}
 };
