@@ -330,12 +330,35 @@ Statechartz = {
 				}
 				if (!index || index >= parentState.states.length) {
 					parentState.states[parentState.states.length] = newState;
+					return ++parentState.states[parentState.states.length - 2].sort_index;
 				} else {
 					for (var i = parentState.states.length-1; i > index; i--) {
 						parentState.states[i+1] = parentState.states[i];
+						parentState.states[i+1].sort_index++;
 					}
 					parentState.states[index] = newState;
+					return index;
 				}
+			},
+			removeState: function(state, parentState) {
+			    if (typeof(state) != 'string') {
+			        return;
+			    }
+			    if (!parentState) {
+			        parentState = this.rootState;
+			    }
+			    for (var i = 0; i < parentState.states.length; i++) {
+			        if (parentState.states[i].id == state) {
+			            for (var j = i; j < parentState.states.length-1; j++) {
+			                parentState.states[j] = parentState.states[j+1];
+			                parentState.states[j].sort_index--;
+			            }
+			            parentState.states.pop();
+			            return;
+			        } else if (parentState.states[i].states.length > 0) {
+			            this.removeState(state, parentState.states[i]);
+			        }
+			    }
 			},
 /* Pridane metody */
             raise: function raise(event, external, payload) {

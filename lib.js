@@ -329,7 +329,13 @@ function modifyMenu(aOperation){
 	var data = document.statechart.event.data;
 	var nId = getEditedNodeId(data.object.object.ids);
 	if(aOperation == "insertAfter"){
-		document.statechart.addState("newState", "site", 50);
+		var sourceState = document.statechart.getStateByName("site");
+		var newState = Statechartz.buildState("S",["newState"]).obj;
+		newState.parent = sourceState;
+		newState.sort_index = document.statechart.addState(newState, sourceState);
+		var newRegExp = new RegExp("^" + "newEvent" + "($|(\\.[A-Za-z0-9_]+)+$)");
+		var newTransition = Statechartz.buildFromArgs([{event: "newEvent", source: sourceState, targets: [newState], regexp : newRegExp}]);
+		sourceState.transitions.push(newTransition);
 	}
 	refreshData(data.object.object, null, "operation="+aOperation+"&itemId="+nId+"&itemName=nová položka&uri=homepage&title=nová stránka");
 }
