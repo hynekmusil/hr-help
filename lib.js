@@ -325,19 +325,33 @@ function changeMenuItemProperty(aField, aDataURI){
 		currComponentInfo = data.object.object;
 	}
 }
+function createFunctionFromExecutionContext(args) {
+   if (args.length == 0) return {};
+   var f = "function(_event){with(this){" + (args.join(';')) + ";}}";
+	if (window.execScript) {
+		window.execScript('code_evaled = '+f);
+		return code_evaled;
+	}
+	var result = eval("("+f+")");
+   return result;
+}
 function modifyMenu(aOperation){
 	var data = document.statechart.event.data;
 	var nId = getEditedNodeId(data.object.object.ids);
 	if(aOperation == "insertAfter"){
 		var sourceState = document.statechart.getStateByName("site");
 		var newState = Statechartz.buildState("S",["newState"]).obj;
+		newState.onentry =  createFunctionFromExecutionContext(["changeContent([{maincol: [\"data/article-jak_zacit.xml\"]}]);"]);
 		newState.parent = sourceState;
 		newState.sort_index = document.statechart.addState(newState, sourceState);
-		var newRegExp = new RegExp("^" + "newEvent" + "($|(\\.[A-Za-z0-9_]+)+$)");
-		var newTransition = Statechartz.buildFromArgs([{event: "newEvent", source: sourceState, targets: [newState], regexp : newRegExp}]);
+		
+		var newTransition = Statechartz.buildFromArgs([createFunctionFromExecutionContext(["changeMenu(_data.mainMenu);"]), Statechartz.Event("newState")], "ontrigger");
+		newTransition.source = sourceState;
+		newTransition.targets = [newState];
+		newTransition.regexp = new RegExp("^" + "newState" + "($|(\\.[A-Za-z0-9_]+)+$)");
 		sourceState.transitions.push(newTransition);
 	}
-	refreshData(data.object.object, null, "operation="+aOperation+"&itemId="+nId+"&itemName=nová položka&uri=homepage&title=nová stránka");
+	refreshData(data.object.object, null, "operation="+aOperation+"&itemId="+nId+"&itemName=nová položka&uri=newState&title=nová stránka");
 }
 function getEditedNodeId(aIds){
 	var node = getEditedNode();

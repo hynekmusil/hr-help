@@ -203,7 +203,6 @@ Statechartz = {
         }
     },
     Entry: function (f) {
-		//debug('run','onentry: '+f);
         return {
             onentry: this.resolveFunction(f)
         };
@@ -305,6 +304,63 @@ Statechartz = {
             historyValues: {},
             processing: false,
             doContinue: false,
+/* Pridane metody */
+			getStateByName: function(name) {
+				states = this.rootState.states;
+				for (var i = 0; i < states.length; i++) {
+					if (states[i].id == name) {
+						return states[i];
+					}
+					if (states[i].states.length > 0) {
+						for (var j = 0; j < states[i].states.length; j++) {
+							states[states.length] = states[i].states[j];
+						}
+					}
+				}
+				return null;
+			},
+			addState: function(newState, parentState, index) {
+				if (!parentState) {
+					parentState = this.rootState;
+				} else if (typeof(parentState) == 'string') {
+					var state = this.getStateByName(parentState);
+					if (state != null) {
+						parentState = state;
+					}
+				}
+				if (!index || index >= parentState.states.length) {
+					parentState.states[parentState.states.length] = newState;
+					return ++parentState.states[parentState.states.length - 2].sort_index;
+				} else {
+					for (var i = parentState.states.length-1; i > index; i--) {
+						parentState.states[i+1] = parentState.states[i];
+						parentState.states[i+1].sort_index++;
+					}
+					parentState.states[index] = newState;
+					return index;
+				}
+			},
+			removeState: function(state, parentState) {
+			    if (typeof(state) != 'string') {
+			        return;
+			    }
+			    if (!parentState) {
+			        parentState = this.rootState;
+			    }
+			    for (var i = 0; i < parentState.states.length; i++) {
+			        if (parentState.states[i].id == state) {
+			            for (var j = i; j < parentState.states.length-1; j++) {
+			                parentState.states[j] = parentState.states[j+1];
+			                parentState.states[j].sort_index--;
+			            }
+			            parentState.states.pop();
+			            return;
+			        } else if (parentState.states[i].states.length > 0) {
+			            this.removeState(state, parentState.states[i]);
+			        }
+			    }
+			},
+/* Pridane metody */
             raise: function raise(event, external, payload) {
 				debug('run','raise: '+event);
                 if (this.externalQueue == undefined) {
@@ -652,6 +708,7 @@ Statechartz = {
                 return false;
             },
             func: function func(f, e) {
+				debug("run", "je to fci: " + typeof(f));
                 if (typeof(f) == "function"){
 					debug('run','fce: '+f);
 					return f.call(this, e);
@@ -699,10 +756,6 @@ Statechartz = {
 				var allNodes = el.childNodes;
 				for (var i = 0; i < allNodes.length; i++) {
 					if(allNodes[i].nodeType == 1){
-					/*var m = allNodes[i].tagName;
-					for (var n = 0; n<allNodes[i].attributes.length; n++)
-						if(allNodes[i].attributes[n] != undefined) m += ' '+allNodes[i].attributes[n].nodeName+'='+allNodes[i].attributes[n].nodeValue+'; ';
-					debug('e',m);*/
 						args.push(resolveElement(allNodes[i]));
 					}
 				}
@@ -742,6 +795,8 @@ Statechartz = {
                 }
                 return sc;
             } else if (tagName == "state" || tagName == "initial") {
+				debug('build','state id= ' + el.getAttribute("id"));
+				debug('build','state args: '+dump(args));
                 args.push(el.getAttribute("id"));
                 return Statechartz.buildState("S", args);
             } else if (tagName == "parallel") {
@@ -789,6 +844,7 @@ Statechartz = {
                 if (target != null) {
                     args.push(Statechartz.Targets(target.split(' ')));
                 }
+				debug('build','transition args: '+dump(args));
                 var t = {
                     cls: "transitions",
                     obj: Statechartz.buildFromArgs(args, "ontrigger")
@@ -827,27 +883,13 @@ Statechartz = {
             var link = links[i];
             var rel = link.getAttribute("rel");
             if (rel == "statechart") {
-                var href = link.getAttribute("href");
-                if (window.XMLHttpRequest) xhttp = new XMLHttpRequest();
-                else xhttp = new ActiveXObject("Microsoft.XMLHTTP");
-                xhttp.open("GET", href, false);
-                xhttp.setRequestHeader("Content-Type", "application/xml;charset=UTF8");
-                xhttp.send("");
-                if (xhttp.readyState == 4) {
-                    var xmlDoc = xhttp.responseXML;
-                    if (xmlDoc == null) {
-                        var parser = new DOMParser();
-                        xmlDoc = parser.parseFromString(xhttp.responseText, "text/xml");
-                    }
-                    if (xmlDoc != null) {
+				xmlDoc = getSource(link.getAttribute("href"));
                         document.statechart = Statechartz.loadScxml(xmlDoc);
 						Statechartz.doc = xmlDoc;
                         document.statechart.start();
                     }
                 }
             }
-        }
-    }
 };
 
 window.onload = Statechartz.loadFromDocument;
@@ -876,6 +918,7 @@ function dump(arr,level) {
 	
 	if(typeof(arr) == 'object') { //Array/Hashes/Objects 
 		for(var item in arr) {
+			if(item == 'clone' || item == 'add') break;
 			var value = arr[item];
 			
 			if(typeof(value) == 'object') { //If it is an array,
