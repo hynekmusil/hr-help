@@ -2,6 +2,10 @@
 	header("Content-type: application/xml");
 	if (isset($_REQUEST["id"])){
 		$id = $_REQUEST["id"];
+		$itemName = "nová položka menu";
+		if(isset($_REQUEST["itemName"])) $itemName = $_REQUEST["itemName"];
+		$operation = "change";
+		if(isset($_REQUEST["operation"])) $change = $_REQUEST["operation"];
 		
 		$menuDoc = new DOMDocument("1.0", "UTF-8");
 		$menuDoc->load("menu-hlavni.xml");
@@ -37,6 +41,8 @@
 		$xslDoc->load("../component/pageProperties/preparer-pageProperties.xsl");
 		$xslt->importStylesheet( $xslDoc); 
 		$xslt->setParameter("","id",$id);
+		$xslt->setParameter("","itemName",$itemName);
+		$xslt->setParameter("","operation",$operation);
 		
 		echo $xslt->transformToXML($ppDoc );
 	}

@@ -6,6 +6,8 @@ var eb = null;
 
 var presentationCache = new Array();
 var xsltProcCache = new Array();
+var dataDocCache = new Array();
+var dataDoc = null;
 
 window.onload = function(){
 	try{
@@ -191,15 +193,22 @@ function refreshData(aComponentInfo, aSend, aQueryString, aNoModify){
 	var doc = getSource(aComponentInfo.setterURI+"?dataURI="+aComponentInfo.dataURI+ queryString, aSend);
 	fragment = xsltTransform("data", doc);
 	if(!aNoModify){
-		var j = 0;
-		for(var i in fragment.childNodes){
-			if(fragment.childNodes.item(i)){
-				if(fragment.childNodes.item(i).nodeType == 1){
-					var n = fragment.childNodes.item(i);
+		modifyData(fragment, aComponentInfo);
+	}
+}
+function modifyData(aFragment, aComponentInfo, aNoScript){
+	var j = 0;
+	for(var i in aFragment.childNodes){
+		if(aFragment.childNodes.item(i)){
+			if(aFragment.childNodes.item(i).nodeType == 1){
+				var n = aFragment.childNodes.item(i);
+				if(n.nodeName != "SCRIPT"){
 					var space = "";
 					if(n.className) space = " ";
 					n.className += space+"f-component " + aComponentInfo.name + "_" + j;
 					n.contentEditable = true;
+				}
+				if(!(n.nodeName == "SCRIPT" && aNoScript != undefined)){
 					if(j < aComponentInfo.ids.length) {
 						if(!n.id) n.id = aComponentInfo.ids[j];
 						var oldElement = document.getElementById(aComponentInfo.ids[j]);
@@ -216,8 +225,8 @@ function refreshData(aComponentInfo, aSend, aQueryString, aNoModify){
 						}
 						aComponentInfo.ids[j] = n.id;
 					}
-					j++;
 				}
+				j++;
 			}
 		}
 	}
@@ -309,10 +318,10 @@ function changeMenuItemProperty(aField, aDataURI){
 		var change = new Array;
 		change[0] = new Object;
 		change[0][aField] = new Array;
-		change[0][aField][0] = aDataURI + "?id=" + nId;
+		change[0][aField][0] = aDataURI + "?id=" + nId + "&itemName=" + cNode.innerHTML + "&operation=change";
 		changeContent(change, null, true);
-		document.forms["pageProperties"].itemName.value = cNode.innerHTML;
-		document.forms["pageProperties"].itemId.value = nId;
+		//document.forms["pageProperties"].itemName.value = cNode.innerHTML;
+		//document.forms["pageProperties"].itemId.value = nId;
 		var eNode = document.getElementById(data.object.object.ids[1]);
 		var pNode = document.getElementById(aField);
 		var eCoo = getElementCoordinate(eNode);
@@ -430,6 +439,7 @@ function resolveURI(aBaseURI, aURI){
 
 function xsltTransform4Edit(aDataURI, aParams){
 	var dataDoc = getSource(aDataURI);
+	dataDocCache[aDataURI] = dataDoc;
 	var result = new Object;
 	result.setterURI = getSetterURI(aDataURI, dataDoc);
 	result.fragment = xsltTransform("", dataDoc, aParams);
@@ -447,7 +457,7 @@ function xsltTransform(aDataURI, aDataDoc, aParams){
 	return xslt(dataDoc, xsltURI, aParams);
 }
 
-function xslt(aDataDoc, aXSLTURI, aParams){
+function xslt(aDataDoc, aXSLTURI, aParams, aResultType){
 	var xsltProc = null;
 	if(xsltProcCache[aXSLTURI] != undefined){
 		if(xsltProcCache[aXSLTURI].constructor == XSLTProcessor){
@@ -458,6 +468,7 @@ function xslt(aDataDoc, aXSLTURI, aParams){
 	if(xsltProc == null){
 		xsltProc = addToXSLTProcCache(aXSLTURI);
 	}
+	xsltProc.clearParameters();
 	if(aParams){
 		if(aParams.constructor == Array){
 			for(var i = 0; i < aParams.length; i++){
@@ -465,6 +476,7 @@ function xslt(aDataDoc, aXSLTURI, aParams){
 			}
 		}
 	}
+	if(aResultType != undefined) return xsltProc.transformToDocument(aDataDoc);
 	return xsltProc.transformToFragment(aDataDoc, document);
 }
 
@@ -533,6 +545,24 @@ function getElementCoordinate(aNode){
 		node = node.offsetParent;
 	}
 	return new Array(top, left);
+}
+
+function modifyPP(aId){
+	var params = null;
+	var dataURI = "data/pageProperties.php?id=" + document.forms["pageProperties"].itemId.value + "&itemName=" 
+	+  document.forms["pageProperties"].itemName.value + "&operation=change";
+	dataDoc = dataDocCache[dataURI];
+	var place = document.forms["pageProperties"].newPlace.value;
+	var uri = document.forms["pageProperties"].newDataURI.value;
+	if(aId == undefined) params = [["","place",place],["","uri",uri]];
+	else params = [["","pos", aId]];
+	dataDoc = xslt(dataDocCache[dataURI],"component/pageProperties/controller-pageProperties.xsl", params,"DOM");
+	var serializer = new XMLSerializer();
+	alert(serializer.serializeToString(dataDocCache[dataURI]));
+	dataDocCache[dataURI] = dataDoc;
+	alert(serializer.serializeToString(dataDocCache[dataURI]));
+	fragment = xsltTransform("data", dataDocCache[dataURI]);
+	modifyData(fragment, stateShot["f-editProperties"][0], true);
 }
 
 if (!window.getComputedStyle) {

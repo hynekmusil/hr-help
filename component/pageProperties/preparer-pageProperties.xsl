@@ -7,13 +7,22 @@
     xmlns:sc="http://www.w3.org/2005/07/scxml"
 >
     <xsl:output encoding="UTF-8"/>
+    <xsl:param name="id"/>
+    <xsl:param name="itemName"/>
+    <xsl:param name="operation"/>
     
     <xsl:template match="/*">
         <xsl:processing-instruction name="xml-stylesheet">
-            <xsl:text>"type="text/xsl" href="../component/pageProperties/view-pageProperties.xsl"</xsl:text>
+            <xsl:text>type="text/xsl" href="../component/pageProperties/view-pageProperties.xsl"</xsl:text>
         </xsl:processing-instruction>
-        <pageProperties>
+        <xsl:processing-instruction name="setter">
+            <xsl:text>href="javascript"</xsl:text>
+        </xsl:processing-instruction>
+        <pageProperties xml:id="{$id}" operation="{$operation}">
+            <xsl:value-of select="$itemName"/>
             <xsl:apply-templates select="m:item | pp:onentry"/>
+            <place id="maincol">hlavní sloupec</place>
+            <place id="leftcol">levý sloupec</place>
         </pageProperties>
     </xsl:template>
     

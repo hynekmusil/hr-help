@@ -17,24 +17,16 @@
             $("#pageProperties").validator({lang:"cz"}).submit(function(e){
 		        var form = $(this);
 		        var params = form.serialize();
+		        alert(params);
 				refreshData(currComponentInfo, null, params);
 				return false;
 		    });
 		    var ppModifier = {};
-		    function modifyPP(){
-		      
-		    }
-		    function addPP(){
-		      alert(document.pageProperties.newPlace.value + " " + document.pageProperties.newDataURI.value);
-		    }
-		    function removePP(aId){
-		      alert(aId);
-		    }
         </script>
         <form id="pageProperties" name="pageProperties">
-            <input name="itemName" value="{normalize-space(text())}" type="hidden"/>
-            <input name="itemId" value="t1" type="hidden"/>
-            <input name="operation" value="change" type="hidden"/>
+            <input name="itemName" value="{normalize-space(text()[1])}" type="hidden"/>
+            <input name="itemId" value="{@xml:id}" type="hidden"/>
+            <input name="operation" value="{@operation}" type="hidden"/>
             <table>
                 <xsl:apply-templates select="pp:uri | pp:title"/>
                 <tr>
@@ -47,15 +39,14 @@
                 <tr>
                     <td>
                         <select name="newPlace">
-                            <option value="maincol" selected="selected">maincol</option>
-                            <option value="leftcol">leftcol</option>
+                            <xsl:apply-templates select="pp:place"/>
                         </select>
                     </td>
                     <td>
-                        <input id="newDataURI" name="newDataURI" value="data/.xml" pattern="^(data\/[a-zA-Z0-9\-_]+)(\.xml)?$"/>
+                        <input id="newDataURI" name="newDataURI" value="data/.xml"/>
                     </td>
                     <td>
-                        <button type="button" onclick="addPP()">Přidat komponentu</button>
+                        <button type="button" onclick="modifyPP()">Přidat</button>
                     </td>
                 </tr>
                 <tr>
@@ -66,25 +57,51 @@
         </form>
     </xsl:template>
     
-    <xsl:template match="*">
+    <xsl:template match="*[parent::pp:onentry]">
+        <xsl:variable name="order" select="count(preceding-sibling::*)"/>
         <tr>
-            <th><xsl:value-of select="local-name()"/></th>
-            <td>
-                <xsl:if test="not(parent::pp:onentry)">
-                    <xsl:attribute name="colspan">2</xsl:attribute>
-                </xsl:if>
-                <input type="text" name="{local-name()}" value="{@value}">
-                    <xsl:attribute name="pattern">
-                        <xsl:apply-templates select="." mode="pattern"/>
-                    </xsl:attribute>
-                </input>
-            </td>
-            <xsl:if test="parent::pp:onentry">
-            <td><button type="button" onclick="removePP('{count(preceding-sibling::*)}')">Odebrat</button></td>
-            </xsl:if>
+        <td>
+            <select name="place{$order}">
+                <xsl:apply-templates select="../../pp:place">
+                    <xsl:with-param name="selected" select="local-name()"/>
+                </xsl:apply-templates>
+            </select> 
+        </td>
+        <td>
+            <input type="text" name="dataURI{$order}" value="{@value}">
+                <xsl:apply-templates select="." mode="pattern"/>
+            </input> 
+        </td>
+        <td><button type="button" onclick="modifyPP('{$order}')">Odebrat</button></td>
         </tr>
     </xsl:template>
     
-    <xsl:template match="pp:uri" mode="pattern">^([a-zA-Z0-9\-_]+\/?)*(\.html)?$</xsl:template>
-    <xsl:template match="pp:title" mode="pattern"/>
+    <xsl:template match="pp:place">
+        <xsl:param name="selected">maincol</xsl:param>
+        <option value="{@id}">
+            <xsl:if test="$selected = @id">
+                <xsl:attribute name="selected">selected</xsl:attribute>
+            </xsl:if>
+            <xsl:value-of select="."/>
+        </option>
+    </xsl:template>
+    
+    <xsl:template match="*">
+        <tr>
+            <th><xsl:value-of select="local-name()"/></th>
+            <td colspan="2">
+                <input type="text" name="{local-name()}" value="{@value}">
+                    <xsl:apply-templates select="." mode="pattern"/>
+                </input>
+            </td>
+        </tr>
+    </xsl:template>
+    
+    <xsl:template match="pp:uri" mode="pattern">
+        <xsl:attribute name="pattern">^([a-zA-Z0-9\-_]+\/?)*(\.html)?$</xsl:attribute>
+    </xsl:template>
+    <xsl:template match="*[parent::pp:onentry]" mode="pattern">
+        <xsl:attribute name="pattern">^(data\/[a-zA-Z0-9\-_]+)(\.xml)?$</xsl:attribute>
+    </xsl:template>
+    <xsl:template match="*" mode="pattern"/>
 </xsl:stylesheet>
