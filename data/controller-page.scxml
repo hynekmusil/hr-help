@@ -2,7 +2,7 @@
 <scxml version="1.0" initial="cms"
     xmlns="http://www.w3.org/2005/07/scxml"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.w3.org/2005/07/scxml ../../aspect/controll/schema-scxml/scxml-profile-ecma.xsd"
+    xsi:schemaLocation="http://www.w3.org/2005/07/scxml ../aspect/controll/schema-scxml/scxml-profile-ecma.xsd"
 >
 	 <datamodel>
         <data id="isValid" />
