@@ -18,7 +18,8 @@
         <xsl:processing-instruction name="setter">
             <xsl:text>href="javascript"</xsl:text>
         </xsl:processing-instruction>
-        <pageProperties xml:id="{$id}" operation="{$operation}">
+        <pageProperties operation="{$operation}">
+			<xsl:attribute name="xml:id"><xsl:value-of select="$id"/></xsl:attribute>
             <xsl:value-of select="$itemName"/>
             <xsl:apply-templates select="m:item | pp:onentry"/>
             <place id="maincol">hlavní sloupec</place>

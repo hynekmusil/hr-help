@@ -36,17 +36,9 @@
                     <th>místo</th><th>data</th>
                 </tr>
                 <xsl:apply-templates select="pp:onentry/*"/>
-                <tr>
-                    <td>
-                        <select name="newPlace">
-                            <xsl:apply-templates select="pp:place"/>
-                        </select>
-                    </td>
-                    <td>
-                        <input id="newDataURI" name="newDataURI" value="data/.xml"/>
-                    </td>
-                    <td>
-                        <button type="button" onclick="modifyPP()">Přidat</button>
+                <tr id="f-addonentry">
+                    <td colspan="3">
+                        <button type="button" onclick="modifyPP('addComponent')">Přidat</button>
                     </td>
                 </tr>
                 <tr>
@@ -59,20 +51,25 @@
     
     <xsl:template match="*[parent::pp:onentry]">
         <xsl:variable name="order" select="count(preceding-sibling::*)"/>
-        <tr>
-        <td>
-            <select name="place{$order}">
-                <xsl:apply-templates select="../../pp:place">
-                    <xsl:with-param name="selected" select="local-name()"/>
-                </xsl:apply-templates>
-            </select> 
-        </td>
-        <td>
-            <input type="text" name="dataURI{$order}" value="{@value}">
-                <xsl:apply-templates select="." mode="pattern"/>
-            </input> 
-        </td>
-        <td><button type="button" onclick="modifyPP('{$order}')">Odebrat</button></td>
+        <tr id="f-onentry{$order}">
+            <td>
+                <select name="place{$order}" onblur="modifyPP('change','{$order}')">
+                    <xsl:apply-templates select="../../pp:place">
+                        <xsl:with-param name="selected" select="local-name()"/>
+                    </xsl:apply-templates>
+                </select> 
+            </td>
+            <td>
+                <xsl:if test="count(../*) = 1">
+                    <xsl:attribute name="colspan">2</xsl:attribute>
+                </xsl:if>
+                <input type="text" name="dataURI{$order}" value="{@value}" onblur="modifyPP('change','{$order}')">
+                    <xsl:apply-templates select="." mode="pattern"/>
+                </input> 
+            </td>
+            <xsl:if test="count(../*) > 1">
+                <td><button type="button" onclick="modifyPP('removeComponent','{$order}')">Odebrat</button></td>
+            </xsl:if>
         </tr>
     </xsl:template>
     
@@ -90,7 +87,7 @@
         <tr>
             <th><xsl:value-of select="local-name()"/></th>
             <td colspan="2">
-                <input type="text" name="{local-name()}" value="{@value}">
+                <input type="text" name="{local-name()}" value="{@value}" onblur="modifyPP('change')">
                     <xsl:apply-templates select="." mode="pattern"/>
                 </input>
             </td>

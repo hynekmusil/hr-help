@@ -7,7 +7,6 @@ var eb = null;
 var presentationCache = new Array();
 var xsltProcCache = new Array();
 var dataDocCache = new Array();
-var dataDoc = null;
 
 window.onload = function(){
 	try{
@@ -137,8 +136,10 @@ function switchToEditMode(){
 			if(node.className.indexOf("f-component") == -1){
 				if(node.className) space = " ";
 				node.className += space+"f-component "+aC+"_"+aI+"_"+aJ;
-				node.onclick = startEditing;
-				node.onkeyup = keyUpEditing;
+				if(stateShot[aC][aI].setterURI != "data/javascript"){
+					node.onclick = startEditing;
+					node.onkeyup = keyUpEditing;
+				}
 			}
 		}
 	});
@@ -206,7 +207,7 @@ function modifyData(aFragment, aComponentInfo, aNoScript){
 					var space = "";
 					if(n.className) space = " ";
 					n.className += space+"f-component " + aComponentInfo.name + "_" + j;
-					n.contentEditable = true;
+					if(aComponentInfo.setterURI != "data/javascript") n.contentEditable = true;
 				}
 				if(!(n.nodeName == "SCRIPT" && aNoScript != undefined)){
 					if(j < aComponentInfo.ids.length) {
@@ -265,9 +266,11 @@ function switchToPreview(){
 			var icn = node.className.indexOf("f-component");
 			if(icn > -1){
 				node.className = node.className.substring(0, icn);
-				node.onclick = null;
-				node.onkeyup = null;
-				node.contentEditable = false;
+				if(stateShot[aC][aI].setterURI != "data/javascript"){
+					node.onclick = null;
+					node.onkeyup = null;
+					node.contentEditable = false;
+				}
 			}
 		}
 	});
@@ -286,7 +289,9 @@ function startEditing(){
 	var node = null;
 	parseStateShot(function(aId, aC, aI, aJ){
 		node = document.getElementById(aId);
-		if(node) node.onclick = startEditing;
+		if(stateShot[aC][aI].setterURI != "data/javascript"){
+			if(node) node.onclick = startEditing;
+		}
 	});
 	for(var i=0; i< info.object.ids.length; i++){
 		node = document.getElementById(info.object.ids[i]);
@@ -547,22 +552,41 @@ function getElementCoordinate(aNode){
 	return new Array(top, left);
 }
 
-function modifyPP(aId){
+function modifyPP(aOperation, aId){
 	var params = null;
-	var dataURI = "data/pageProperties.php?id=" + document.forms["pageProperties"].itemId.value + "&itemName=" 
-	+  document.forms["pageProperties"].itemName.value + "&operation=change";
-	dataDoc = dataDocCache[dataURI];
-	var place = document.forms["pageProperties"].newPlace.value;
-	var uri = document.forms["pageProperties"].newDataURI.value;
-	if(aId == undefined) params = [["","place",place],["","uri",uri]];
-	else params = [["","pos", aId]];
-	dataDoc = xslt(dataDocCache[dataURI],"component/pageProperties/controller-pageProperties.xsl", params,"DOM");
+	var dataDoc = null;
+	var formPP = document.forms["pageProperties"];
+	var dataURI = "data/pageProperties.php?id=" + formPP.itemId.value;
+	var uri = "";
+	for(uri in dataDocCache){
+		if(uri.indexOf(dataURI) === 0) {
+			dataDoc = dataDocCache[uri];
+			break;
+		}
+	}
+	if(aOperation == "addComponent"){
+		params = [["","operation", aOperation],["","place","mainCol"],["","dataURI","data/article-new.xml"]];
+	} else if(aOperation == "removeComponent"){
+		if(aId != undefined){
+			params = [["","operation", aOperation],["","pos", aId]];
+		}
+	}
+	else {
+		params = [["","uri", formPP.uri.value],["","title",formPP.title.value],["","titleItem",formPP.itemName.value]];
+		if(aId != undefined){
+			params.push(["","pos", aId]);
+			params.push(["","place",formPP["place"+aId].value]);
+			params.push(["","dataURI",formPP["dataURI"+aId].value]);
+		}
+	}
+	dataDoc = xslt(dataDoc,"component/pageProperties/controller-pageProperties.xsl", params,"DOM");
 	var serializer = new XMLSerializer();
-	alert(serializer.serializeToString(dataDocCache[dataURI]));
-	dataDocCache[dataURI] = dataDoc;
-	alert(serializer.serializeToString(dataDocCache[dataURI]));
-	fragment = xsltTransform("data", dataDocCache[dataURI]);
-	modifyData(fragment, stateShot["f-editProperties"][0], true);
+	dataDocCache[uri] = dataDoc;
+	//alert(serializer.serializeToString(dataDoc));
+	if(aOperation != "change"){
+		fragment = xsltTransform("data", dataDoc);
+		modifyData(fragment, stateShot["f-editProperties"][0], true);
+	}
 }
 
 if (!window.getComputedStyle) {
