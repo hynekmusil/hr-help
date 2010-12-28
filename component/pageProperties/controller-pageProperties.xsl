@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="m sc pp"
-    xmlns:m="http://formax.cz/ns/menu"
+<xsl:stylesheet version="1.0" exclude-result-prefixes="pp"
     xmlns="http://formax.cz/ns/pageProperties"
     xmlns:pp="http://formax.cz/ns/pageProperties"    
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:sc="http://www.w3.org/2005/07/scxml"
 >
     <xsl:output encoding="UTF-8" indent="yes"/>
     <xsl:param name="pos"/>

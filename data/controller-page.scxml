@@ -1,128 +1,112 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scxml version="1.0" initial="cms"
-    xmlns="http://www.w3.org/2005/07/scxml"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.w3.org/2005/07/scxml ../aspect/controll/schema-scxml/scxml-profile-ecma.xsd"
->
-	 <datamodel>
-        <data id="isValid" />
-	    <data id="mainMenu"/>
-	    <data id="editMenu"/>
-	</datamodel>
-    <parallel id="cms">
+<?xml version="1.0"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" initial="cms" xsi:schemaLocation="http://www.w3.org/2005/07/scxml ../aspect/controll/schema-scxml/scxml-profile-ecma.xsd">
+  <datamodel>
+    <data id="isValid"/>
+    <data id="mainMenu"/>
+    <data id="editMenu"/>
+  </datamodel>
+  <parallel id="cms">
+    <onentry>
+      <script>setLayout('data/page.xml'); _data.mainMenu = {"before-menu":["data/menu-hlavni.xml"]}; _data.editMenu = {"f-pageCmds":["data/menu-editor.xml"]};</script>
+    </onentry>
+    <state id="site" initial="homepage">
+      <onentry>
+        <script>changeMenu(_data.mainMenu); changeContent([{"before-header":["data/header.xml"]},{"leftcol":["data/news.xml"]},{"before-footer":["data/footer.xml"]}]);</script>
+      </onentry>
+      <state id="homepage">
         <onentry>
-			<script>
-			    setLayout('data/page.xml');
-			    _data.mainMenu = {"before-menu":["data/menu-hlavni.xml"]};
-			    _data.editMenu = {"f-pageCmds":["data/menu-editor.xml"]};
-			</script> 
+          <script>changeContent([{"leftcol":["data\/article-aktualne.xml"]},{"maincol":["data\/article-jak_zacit.xml","data\/article-new.xml"]}]);</script>
         </onentry>
-        <state id="site" initial="homepage">
-            <onentry>
-                <script>
-                    changeMenu(_data.mainMenu);
-                    changeContent([{"before-header":["data/header.xml"]},{"leftcol":["data/news.xml"]},{"before-footer":["data/footer.xml"]}]);
-                </script>
-            </onentry>
-            <state id="homepage">
-                <onentry>
-                    <script>
-                     changeContent(
-                     [{"maincol":["data/article-aktualne.xml",
-                    "data/article-jak_zacit.xml"]}]);
-                    </script>
-                </onentry>
-            </state>
-            <state id="nabidka_sluzeb">
-                <onentry>
-                    <script>
-                    changeContent([{"maincol":["data/article-nabidka_sluzeb.xml"]}]);
-                    </script>
-                </onentry>
-            </state>
-			<transition event="homepage" target="homepage">
-			    <script>changeMenu(_data.mainMenu);</script>
-			</transition>
-			<transition event="nabidka_sluzeb" target="nabidka_sluzeb">
-			    <script>changeMenu(_data.mainMenu);</script>
-			</transition>
+      </state>
+      <state id="nabidka_sluzeb">
+        <onentry>
+          <script>changeContent([{"maincol":["data\/article-jak_zacit.xml"]}]);</script>
+        </onentry>
+      </state>
+      <state id="newState0">
+        <onentry>
+          <script>changeContent([{"maincol":["data\/article-new.xml"]}]);</script>
+        </onentry>
+      </state>
+      <transition event="newState0" target="newState0">
+        <script>changeMenu(_data.mainMenu);</script>
+      </transition>
+      <transition event="homepage" target="homepage">
+        <script>changeMenu(_data.mainMenu);</script>
+      </transition>
+      <transition event="nabidka_sluzeb" target="nabidka_sluzeb">
+        <script>changeMenu(_data.mainMenu);</script>
+      </transition>
+    </state>
+    <state id="editor" initial="preview">
+      <onentry>
+        <script>changeMenu(_data.editMenu);</script>
+      </onentry>
+      <state id="preview">
+        <onentry>
+          <script>switchToPreview();</script>
+        </onentry>
+      </state>
+      <state id="edit" initial="ready">
+        <onentry>
+          <script>switchToEditMode();</script>
+        </onentry>
+        <state id="ready"/>
+        <state id="articleEdit">
+          <onentry>
+            <script>changeContent([{"f-editCmds":["data/articleCmds.xml"]}]);</script>
+          </onentry>
+          <transition event="edit.article.keyUp"/>
+          <transition event="edit.article.saveData">
+            <script>saveData();</script>
+          </transition>
         </state>
-    
-        <state id="editor" initial="preview">
-            <onentry>
-                <script>changeMenu(_data.editMenu);</script>
-            </onentry>
-            <state id="preview">
-                <onentry>
-                    <script>switchToPreview();</script>
-                </onentry>  
-            </state>
-            <state id="edit" initial="ready">
-                <onentry>
-                    <script>switchToEditMode();</script>
-                </onentry>
-                <state id="ready"/>
-                <state id="articleEdit">
-                    <onentry>
-                        <script>
-                           changeContent([{"f-editCmds":["data/articleCmds.xml"]}]); 
-                        </script>
-                    </onentry>
-                    <transition event="edit.article.keyUp"/>
-                    <transition event="edit.article.saveData">
-                        <script>saveData();</script>
-                    </transition>
-                </state>
-                <state id="menuEdit">
-                    <onentry>
-                        <script>
-                           changeContent([{"f-editCmds":["data/menuCmds.xml"]}]); 
-                        </script>
-                    </onentry>
-                    <transition event="edit.menu.keyUp">
-                        <script>editMenu();</script>
-                    </transition>
-                    <transition event="edit.menu.insertBefore">
-                        <script>modifyMenu("insertBefore");</script>
-                    </transition>
-                    <transition event="edit.menu.insertAfter">
-                        <script>
-                            modifyMenu("insertAfter");
-                        </script>
-                    </transition>
-                    <transition event="edit.menu.remove">
-                        <script>modifyMenu("remove");</script>
-                    </transition>
-                    <transition event="edit.menu.shiftLeft">
-                        <script>modifyMenu("shiftLeft");</script>
-                    </transition>
-                    <transition event="edit.menu.shiftRight">
-                        <script>modifyMenu("shiftRight");</script>
-                    </transition>
-                    <transition event="edit.menu.saveData">
-                        <script>saveData();</script>
-                    </transition>
-                    <transition event="edit.menu.change">
-                        <script>changeMenuItemProperty("f-editProperties","data/pageProperties.php");</script>
-                    </transition>
-                </state>
-                <transition event="edit.article" target="articleEdit"/>
-                <transition event="edit.menu" target="menuEdit"/>
-            </state>
-            <state id="publish">
-                <onentry>
-                    <script>publish();</script>
-                </onentry>
-            </state>
-            <transition event="preview" target="preview">
-                <script>changeMenu(_data.editMenu);</script>
-            </transition>
-            <transition event="edit" target="edit">
-                <script>changeMenu(_data.editMenu);</script>
-            </transition>
-            <transition event="publish" target="publish">
-                <script>changeMenu(_data.editMenu);</script>
-            </transition>
+        <state id="menuEdit">
+          <onentry>
+            <script>changeContent([{"f-editCmds":["data/menuCmds.xml"]}]);</script>
+          </onentry>
+          <transition event="edit.menu.keyUp">
+            <script>editMenu();</script>
+          </transition>
+          <transition event="edit.menu.insertBefore">
+            <script>modifyMenu("insertBefore");</script>
+          </transition>
+          <transition event="edit.menu.insertAfter">
+            <script>modifyMenu("insertAfter");</script>
+          </transition>
+          <transition event="edit.menu.remove">
+            <script>modifyMenu("remove");</script>
+          </transition>
+          <transition event="edit.menu.shiftLeft">
+            <script>modifyMenu("shiftLeft");</script>
+          </transition>
+          <transition event="edit.menu.shiftRight">
+            <script>modifyMenu("shiftRight");</script>
+          </transition>
+          <transition event="edit.menu.saveData">
+            <script>menuSaveData();</script>
+          </transition>
+          <transition event="edit.menu.change">
+            <script>changeMenuItemProperty("f-editProperties","data/pageProperties.php");</script>
+          </transition>
         </state>
-    </parallel>
+        <transition event="edit.article" target="articleEdit"/>
+        <transition event="edit.menu" target="menuEdit"/>
+      </state>
+      <state id="publish">
+        <onentry>
+          <script>publish();</script>
+        </onentry>
+      </state>
+      <transition event="preview" target="preview">
+        <script>changeMenu(_data.editMenu);</script>
+      </transition>
+      <transition event="edit" target="edit">
+        <script>changeMenu(_data.editMenu);</script>
+      </transition>
+      <transition event="publish" target="publish">
+        <script>changeMenu(_data.editMenu);</script>
+      </transition>
+    </state>
+  </parallel>
 </scxml>

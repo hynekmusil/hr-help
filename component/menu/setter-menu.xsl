@@ -84,12 +84,20 @@
     
     <xsl:template match="m:title" mode="edited">
         <xsl:value-of select="normalize-space($itemName)"/>
-        <title><xsl:value-of select="$title"/></title>
+        <title>
+            <xsl:choose>
+                <xsl:when test="$title = ''"><xsl:value-of select="."/></xsl:when>
+                <xsl:otherwise><xsl:value-of select="$title"/></xsl:otherwise>
+            </xsl:choose>
+        </title>
     </xsl:template>
     
     <xsl:template match="@href" mode="edited">
         <xsl:attribute name="href">
-            <xsl:value-of select="$uri"/>
+            <xsl:choose>
+                <xsl:when test="$uri = ''"><xsl:value-of select="."/></xsl:when>
+                <xsl:otherwise><xsl:value-of select="$uri"/></xsl:otherwise>
+            </xsl:choose>
         </xsl:attribute>
     </xsl:template>
     

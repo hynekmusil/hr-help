@@ -1,8 +1,8 @@
-<?php
+<?php //encoding=UTF-8
 	header("Content-type: application/xml");
 	if (isset($_REQUEST["id"])){
 		$id = $_REQUEST["id"];
-		$itemName = "nová položka menu";
+		$itemName = "novÃ¡ poloÅ¾ka menu";
 		if(isset($_REQUEST["itemName"])) $itemName = $_REQUEST["itemName"];
 		$operation = "change";
 		if(isset($_REQUEST["operation"])) $change = $_REQUEST["operation"];
@@ -23,8 +23,9 @@
 				if (!is_null($elements->item(0))) {
 					$script = trim($elements->item(0)->nodeValue);
 					if(strpos($script,"changeContent(") === 0){
-						$xml = new JSON2XML( json_decode( "{\"onentry\":" . substr($script, 14, -2)."}"),"","http://formax.cz/ns/pageProperties");
+						$xml = new JSON2XML( json_decode( "{\"onentry\":{\"change\":" . substr($script, 14, -2)."}}"),"","http://formax.cz/ns/pageProperties");
 						$changeDoc = new DOMDocument("1.0", "UTF-8");
+						//echo $xml->xml;
 						$changeDoc->loadXML($xml->xml);
 					}
 				}
@@ -34,6 +35,16 @@
 		$ppNode = $ppDoc->createElementNS("http://formax.cz/ns/pageProperties","pageProperties");
 		$ppNode->appendChild($ppDoc->importNode($itemNode, true));
 		if($changeDoc != null) $ppNode->appendChild($ppDoc->importNode($changeDoc->documentElement, true));
+		if ($handle = opendir('.')) {
+			while (false !== ($file = readdir($handle))) {
+				if ($file != "." && $file != "..") {
+					$dataN = $ppDoc->createElementNS("http://formax.cz/ns/pageProperties","data");
+					$dataN->setAttribute("id",$file);
+					$ppNode->appendChild($dataN);
+				}
+			}
+			closedir($handle);
+		}
 		$ppDoc->appendChild($ppNode);
 		
 		$xslt = new XSLTProcessor();

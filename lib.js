@@ -4,6 +4,15 @@ var stateShot = new Object;
 var currComponentInfo = null;
 var eb = null;
 
+var uid = (
+  function(){
+    var id=0; 
+    return function(){
+      return id++ ;
+    };
+  } 
+)();
+
 var presentationCache = new Array();
 var xsltProcCache = new Array();
 var dataDocCache = new Array();
@@ -325,7 +334,7 @@ function changeMenuItemProperty(aField, aDataURI){
 		change[0][aField] = new Array;
 		change[0][aField][0] = aDataURI + "?id=" + nId + "&itemName=" + cNode.innerHTML + "&operation=change";
 		changeContent(change, null, true);
-		//document.forms["pageProperties"].itemName.value = cNode.innerHTML;
+		document.forms["pageProperties"].itemName.value = cNode.textContent;
 		//document.forms["pageProperties"].itemId.value = nId;
 		var eNode = document.getElementById(data.object.object.ids[1]);
 		var pNode = document.getElementById(aField);
@@ -337,6 +346,16 @@ function changeMenuItemProperty(aField, aDataURI){
 		pNode.style.left = String(cCoo[1])+"px";
 		pNode.className = eb.className;
 		currComponentInfo = data.object.object;
+	}
+}
+function menuSaveData(){
+	var data = document.statechart.event.data;
+	var nId = getEditedNodeId(data.object.object.ids);
+	if(nId != ""){
+		var cNode = getEditedNode();
+		var dataURI = "data/pageProperties.php?id=" + nId;
+		var send={operation: "change", itemId: nId, itemName: cNode.textContent, menuURI: data.object.object.dataURI};
+		refreshData(data.object.object, JSON.stringify(send));
 	}
 }
 function createFunctionFromExecutionContext(args) {
@@ -352,20 +371,25 @@ function createFunctionFromExecutionContext(args) {
 function modifyMenu(aOperation){
 	var data = document.statechart.event.data;
 	var nId = getEditedNodeId(data.object.object.ids);
-	if(aOperation == "insertAfter"){
+	var send={operation: aOperation, itemId: nId, menuURI: data.object.object.dataURI}
+	if(aOperation.indexOf("insert") === 0){
+		var id = uid();
+		send.itemName = "new item " + id;
+		send.uri = "newState" + id;
+		send.title = "new title " + id;
+		send.onentry = [{maincol:["data/article-new"+id+".xml"]}];
 		var sourceState = document.statechart.getStateByName("site");
-		var newState = Statechartz.buildState("S",["newState"]).obj;
-		newState.onentry =  createFunctionFromExecutionContext(["changeContent([{maincol: [\"data/article-jak_zacit.xml\"]}]);"]);
+		var newState = Statechartz.buildState("S",[send.uri]).obj;
+		newState.onentry =  createFunctionFromExecutionContext(["changeContent("+JSON.stringify(send.onentry)+");"]);
 		newState.parent = sourceState;
 		newState.sort_index = document.statechart.addState(newState, sourceState);
-		
-		var newTransition = Statechartz.buildFromArgs([createFunctionFromExecutionContext(["changeMenu(_data.mainMenu);"]), Statechartz.Event("newState")], "ontrigger");
+		var newTransition = Statechartz.buildFromArgs([createFunctionFromExecutionContext(["changeMenu(_data.mainMenu);"]), Statechartz.Event(send.uri)], "ontrigger");
 		newTransition.source = sourceState;
 		newTransition.targets = [newState];
-		newTransition.regexp = new RegExp("^" + "newState" + "($|(\\.[A-Za-z0-9_]+)+$)");
+		newTransition.regexp = new RegExp("^" + send.uri + "($|(\\.[A-Za-z0-9_]+)+$)");
 		sourceState.transitions.push(newTransition);
 	}
-	refreshData(data.object.object, null, "operation="+aOperation+"&itemId="+nId+"&itemName=nová položka&uri=newState&title=nová stránka");
+	refreshData(data.object.object, JSON.stringify(send));
 }
 function getEditedNodeId(aIds){
 	var node = getEditedNode();
@@ -481,7 +505,11 @@ function xslt(aDataDoc, aXSLTURI, aParams, aResultType){
 			}
 		}
 	}
-	if(aResultType != undefined) return xsltProc.transformToDocument(aDataDoc);
+	if(aResultType != undefined) {
+		var dom = xsltProc.transformToDocument(aDataDoc);
+		if(aResultType == "DOM") return dom;
+		else return dom.documentElement.childNodes.item(0).nodeValue;
+	}
 	return xsltProc.transformToFragment(aDataDoc, document);
 }
 
@@ -552,20 +580,17 @@ function getElementCoordinate(aNode){
 	return new Array(top, left);
 }
 
-function modifyPP(aOperation, aId){
+function modifyPP(aOperation, aId, aDataURI){
 	var params = null;
-	var dataDoc = null;
 	var formPP = document.forms["pageProperties"];
 	var dataURI = "data/pageProperties.php?id=" + formPP.itemId.value;
-	var uri = "";
-	for(uri in dataDocCache){
-		if(uri.indexOf(dataURI) === 0) {
-			dataDoc = dataDocCache[uri];
-			break;
-		}
-	}
+	var dataDocInfo = getDataDocFromCache(dataURI);
+	var dataDoc = dataDocInfo.doc;
+	var uri = dataDocInfo.uri;
 	if(aOperation == "addComponent"){
-		params = [["","operation", aOperation],["","place","mainCol"],["","dataURI","data/article-new.xml"]];
+		var newDataURI = "article-new.xml";
+		if(aDataURI == undefined) newDataURI = aDataURI;
+		params = [["","operation", aOperation],["","place","maincol"],["","dataURI",newDataURI]];
 	} else if(aOperation == "removeComponent"){
 		if(aId != undefined){
 			params = [["","operation", aOperation],["","pos", aId]];
@@ -580,13 +605,59 @@ function modifyPP(aOperation, aId){
 		}
 	}
 	dataDoc = xslt(dataDoc,"component/pageProperties/controller-pageProperties.xsl", params,"DOM");
-	var serializer = new XMLSerializer();
+	//var serializer = new XMLSerializer();
 	dataDocCache[uri] = dataDoc;
 	//alert(serializer.serializeToString(dataDoc));
 	if(aOperation != "change"){
 		fragment = xsltTransform("data", dataDoc);
 		modifyData(fragment, stateShot["f-editProperties"][0], true);
 	}
+}
+function sendPP(){
+	var dataURI = "data/pageProperties.php?id=" + document.forms["pageProperties"].itemId.value;
+	var dataDoc = getDataDocFromCache(dataURI).doc;
+	var serializer = new XMLSerializer();
+	alert(serializer.serializeToString(dataDoc));
+	var json = xslt(dataDoc,"component/pageProperties/xml2json-pageProperties.xsl",[["","menuURI",currComponentInfo.dataURI]],"TEXT");
+	refreshData(currComponentInfo, json);
+}
+function addNewArticle(){
+	var formPP = document.forms["pageProperties"];
+	var dataURI = "data/pageProperties.php?id=" + formPP.itemId.value;
+	var dataDocInfo = getDataDocFromCache(dataURI);
+	var uri = dataDocInfo.uri;
+	var doc = dataDocInfo.doc;
+	var fileName = formPP.newArticle.value;
+	var dataList = doc.getElementsByTagNameNS("http://formax.cz/ns/pageProperties","data");
+	var isNew = true;
+	for(var i in dataList){
+		if(dataList[i].constructor == Element){
+			if(dataList[i].getAttribute("id") == fileName){
+				isNew = false;
+				break;
+			}
+		}
+	}
+	var firstData = dataList.item(0);
+	if(isNew){
+		var newData = doc.createElementNS("http://formax.cz/ns/pageProperties","data");
+		newData.setAttribute("id",fileName);
+		firstData.parentNode.insertBefore(newData, firstData);
+	}
+	//var serializer = new XMLSerializer();
+	//alert(serializer.serializeToString(doc));
+	getSource("component/article/new-article.php?fileName="+ fileName, null, "text");
+	dataDocCache[uri] = doc;
+	modifyPP("addComponent","", fileName);
+}
+function getDataDocFromCache(aStartURI){
+	var uri = "";
+	for(uri in dataDocCache){
+		if(uri.indexOf(aStartURI) === 0) {
+			return {"uri": uri, "doc": dataDocCache[uri]};
+		}
+	}
+	return null;
 }
 
 if (!window.getComputedStyle) {

@@ -21,20 +21,31 @@
         <pageProperties operation="{$operation}">
 			<xsl:attribute name="xml:id"><xsl:value-of select="$id"/></xsl:attribute>
             <xsl:value-of select="$itemName"/>
-            <xsl:apply-templates select="m:item | pp:onentry"/>
+            <xsl:apply-templates select="m:item | pp:onentry | pp:data"/>
             <place id="maincol">hlavní sloupec</place>
             <place id="leftcol">levý sloupec</place>
         </pageProperties>
     </xsl:template>
     
     <xsl:template match="pp:onentry">
-        <onentry><xsl:apply-templates select="*"/></onentry>
+        <onentry><xsl:apply-templates select="pp:change/*"/></onentry>
     </xsl:template>
     
-    <xsl:template match="*">
+    <xsl:template match="pp:data">
+        <data id="{@id}"/>
+    </xsl:template>
+    
+    <xsl:template match="*[parent::pp:change]">
         <xsl:copy>
             <xsl:attribute name="value">
-                <xsl:value-of select="normalize-space()"/>
+                <xsl:choose>
+                    <xsl:when test="starts-with(normalize-space(),'data/')">
+                        <xsl:value-of select="substring-after(normalize-space(),'data/')"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="normalize-space()"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:attribute>
         </xsl:copy>
     </xsl:template>

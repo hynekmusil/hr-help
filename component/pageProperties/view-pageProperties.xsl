@@ -5,48 +5,31 @@
     xmlns="http://www.w3.org/1999/xhtml"
 >
     <xsl:template match="pp:pageProperties">
-        <script type="text/javascript" src="component/pageProperties/jquery.tools.min.js">
-            <xsl:text> </xsl:text>
-        </script>
-        <script type="text/javascript">
-            $.tools.validator.localize("cz", {
-                '*': 'Prosím, zadejte správnou hodnotu.',
-	            ':url': 'Prosím, zadejte validní URI.',
-	            '[required]': 'Prosím, vyplňte povinnou položku.'
-            });
-            $("#pageProperties").validator({lang:"cz"}).submit(function(e){
-		        var form = $(this);
-		        var params = form.serialize();
-		        alert(params);
-				refreshData(currComponentInfo, null, params);
-				return false;
-		    });
-		    var ppModifier = {};
-        </script>
-        <form id="pageProperties" name="pageProperties">
-            <input name="itemName" value="{normalize-space(text()[1])}" type="hidden"/>
-            <input name="itemId" value="{@xml:id}" type="hidden"/>
-            <input name="operation" value="{@operation}" type="hidden"/>
-            <table>
-                <xsl:apply-templates select="pp:uri | pp:title"/>
-                <tr>
-                    <th colspan="2">zobrazí komponentu:</th>
-                </tr>
-                <tr>
-                    <th>místo</th><th>data</th>
-                </tr>
-                <xsl:apply-templates select="pp:onentry/*"/>
-                <tr id="f-addonentry">
-                    <td colspan="3">
-                        <button type="button" onclick="modifyPP('addComponent')">Přidat</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><button type="submit">Odeslat</button></td>
-                    <td><button type="reset">Reset</button></td>
-                </tr>
-            </table>
-        </form>
+        <div>
+            <form id="pageProperties" name="pageProperties">
+                <input name="itemName" value="{normalize-space(text()[1])}" type="hidden"/>
+                <input name="itemId" value="{@xml:id}" type="hidden"/>
+                <table>
+                    <xsl:apply-templates select="pp:uri | pp:title"/>
+                    <tr>
+                        <th colspan="3">zobrazí komponentu:</th>
+                    </tr>
+                    <tr>
+                        <th>místo</th><th>data</th>
+                    </tr>
+                    <xsl:apply-templates select="pp:onentry/*"/>
+                    <tr id="f-addonentry">
+                        <td colspan="3">
+                            <input type="text" name="newArticle" value="article-new.xml"/>
+                            <button type="button" onclick="addNewArticle()">vytvořit článek</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><button type="button" onclick="sendPP()">Odeslat</button></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
     </xsl:template>
     
     <xsl:template match="*[parent::pp:onentry]">
@@ -54,7 +37,7 @@
         <tr id="f-onentry{$order}">
             <td>
                 <select name="place{$order}" onblur="modifyPP('change','{$order}')">
-                    <xsl:apply-templates select="../../pp:place">
+                    <xsl:apply-templates select="../../pp:place" mode="option">
                         <xsl:with-param name="selected" select="local-name()"/>
                     </xsl:apply-templates>
                 </select> 
@@ -63,9 +46,20 @@
                 <xsl:if test="count(../*) = 1">
                     <xsl:attribute name="colspan">2</xsl:attribute>
                 </xsl:if>
-                <input type="text" name="dataURI{$order}" value="{@value}" onblur="modifyPP('change','{$order}')">
-                    <xsl:apply-templates select="." mode="pattern"/>
-                </input> 
+                <select name="dataURI{$order}" onblur="modifyPP('change','{$order}')">
+                    <xsl:apply-templates select="../../pp:data" mode="option">
+                        <xsl:with-param name="selected">
+                            <xsl:choose>
+                                <xsl:when test="../../pp:data[@id = current()/@value]">
+                                    <xsl:value-of select="@value"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:value-of select="../../pp:data[1]/@id"/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:with-param>
+                    </xsl:apply-templates>
+                </select>
             </td>
             <xsl:if test="count(../*) > 1">
                 <td><button type="button" onclick="modifyPP('removeComponent','{$order}')">Odebrat</button></td>
@@ -73,13 +67,16 @@
         </tr>
     </xsl:template>
     
-    <xsl:template match="pp:place">
+    <xsl:template match="*" mode="option">
         <xsl:param name="selected">maincol</xsl:param>
         <option value="{@id}">
             <xsl:if test="$selected = @id">
                 <xsl:attribute name="selected">selected</xsl:attribute>
             </xsl:if>
-            <xsl:value-of select="."/>
+            <xsl:choose>
+                <xsl:when test="normalize-space() != ''"><xsl:value-of select="."/></xsl:when>
+                <xsl:otherwise><xsl:value-of select="@id"/></xsl:otherwise>
+            </xsl:choose>
         </option>
     </xsl:template>
     
@@ -94,11 +91,5 @@
         </tr>
     </xsl:template>
     
-    <xsl:template match="pp:uri" mode="pattern">
-        <xsl:attribute name="pattern">^([a-zA-Z0-9\-_]+\/?)*(\.html)?$</xsl:attribute>
-    </xsl:template>
-    <xsl:template match="*[parent::pp:onentry]" mode="pattern">
-        <xsl:attribute name="pattern">^(data\/[a-zA-Z0-9\-_]+)(\.xml)?$</xsl:attribute>
-    </xsl:template>
     <xsl:template match="*" mode="pattern"/>
 </xsl:stylesheet>
