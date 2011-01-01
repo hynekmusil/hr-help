@@ -10,6 +10,7 @@
     <xsl:param name="id"/>
     <xsl:param name="itemName"/>
     <xsl:param name="operation"/>
+    <xsl:param name="stateId"/>
     
     <xsl:template match="/*">
         <xsl:processing-instruction name="xml-stylesheet">
@@ -18,7 +19,7 @@
         <xsl:processing-instruction name="setter">
             <xsl:text>href="javascript"</xsl:text>
         </xsl:processing-instruction>
-        <pageProperties operation="{$operation}">
+        <pageProperties operation="{$operation}" forState="{$stateId}">
 			<xsl:attribute name="xml:id"><xsl:value-of select="$id"/></xsl:attribute>
             <xsl:value-of select="$itemName"/>
             <xsl:apply-templates select="m:item | pp:onentry | pp:data"/>

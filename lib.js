@@ -321,7 +321,7 @@ function editMenu(){
 		var itemNode = editedNode;
 		while(itemNode.nodeName != "LI") itemNode = itemNode.parentNode;
 		if(itemNode.className.indexOf(id) > -1)
-			document.forms["pageProperties"].itemName.value = getEditedNode().innerHTML;
+			document.forms["pageProperties"].itemName.value = getEditedNode().textContent;
 	}
 }
 function changeMenuItemProperty(aField, aDataURI){
@@ -332,7 +332,7 @@ function changeMenuItemProperty(aField, aDataURI){
 		var change = new Array;
 		change[0] = new Object;
 		change[0][aField] = new Array;
-		change[0][aField][0] = aDataURI + "?id=" + nId + "&itemName=" + cNode.innerHTML + "&operation=change";
+		change[0][aField][0] = aDataURI + "?id=" + nId + "&itemName=" + cNode.textContent + "&operation=change";
 		changeContent(change, null, true);
 		document.forms["pageProperties"].itemName.value = cNode.textContent;
 		//document.forms["pageProperties"].itemId.value = nId;
@@ -615,11 +615,30 @@ function modifyPP(aOperation, aId, aDataURI){
 }
 function sendPP(){
 	var dataURI = "data/pageProperties.php?id=" + document.forms["pageProperties"].itemId.value;
-	var dataDoc = getDataDocFromCache(dataURI).doc;
-	var serializer = new XMLSerializer();
-	alert(serializer.serializeToString(dataDoc));
+	var dataDocInfo = getDataDocFromCache(dataURI);
+	var dataDoc = dataDocInfo.doc;
+	var oldStateId = forState;
+	//var serializer = new XMLSerializer();
+	//alert(serializer.serializeToString(dataDoc));
 	var json = xslt(dataDoc,"component/pageProperties/xml2json-pageProperties.xsl",[["","menuURI",currComponentInfo.dataURI]],"TEXT");
 	refreshData(currComponentInfo, json);
+	dataDoc =  getSource(dataURI + "&itemName=" + document.forms["pageProperties"].itemName.value);
+	dataDocCache[dataDocInfo.uri] = dataDoc;
+	fragment = xsltTransform("data", dataDoc);
+	modifyData(fragment, stateShot["f-editProperties"][0], true);
+	var newStateId = forState;
+	//alert(JSON.stringify);
+	//if(oldStateId != newStateId){
+		var state = document.statechart.getStateByName(oldStateId);
+		state.id = newStateId;
+		state.onentry =  createFunctionFromExecutionContext(["changeContent("+JSON.stringify(JSON.parse(json).onentry)+");"]);
+		for(var i=0; i < state.parent.transitions.length; i++){
+			if(state.parent.transitions[i].event == oldStateId){
+				state.parent.transitions[i].event = newStateId;
+				state.parent.transitions[i].regexp = new RegExp("^" + newStateId + "($|(\\.[A-Za-z0-9_]+)+$)");
+			}
+		}
+	//}
 }
 function addNewArticle(){
 	var formPP = document.forms["pageProperties"];

@@ -52,6 +52,7 @@
 		$xslDoc->load("../component/pageProperties/preparer-pageProperties.xsl");
 		$xslt->importStylesheet( $xslDoc); 
 		$xslt->setParameter("","id",$id);
+		$xslt->setParameter("","stateId",$stateId);
 		$xslt->setParameter("","itemName",$itemName);
 		$xslt->setParameter("","operation",$operation);
 		

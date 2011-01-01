@@ -9,11 +9,11 @@
     <onentry>
       <script>setLayout('data/page.xml'); _data.mainMenu = {"before-menu":["data/menu-hlavni.xml"]}; _data.editMenu = {"f-pageCmds":["data/menu-editor.xml"]};</script>
     </onentry>
-    <state id="site" initial="homepage">
+    <state id="site" initial="index">
       <onentry>
         <script>changeMenu(_data.mainMenu); changeContent([{"before-header":["data/header.xml"]},{"leftcol":["data/news.xml"]},{"before-footer":["data/footer.xml"]}]);</script>
       </onentry>
-      <state id="homepage">
+      <state id="index">
         <onentry>
           <script>changeContent([{"leftcol":["data\/article-aktualne.xml"]},{"maincol":["data\/article-jak_zacit.xml","data\/article-new.xml"]}]);</script>
         </onentry>
@@ -23,15 +23,23 @@
           <script>changeContent([{"maincol":["data\/article-jak_zacit.xml"]}]);</script>
         </onentry>
       </state>
-      <state id="newState0">
+      <state id="test3">
         <onentry>
-          <script>changeContent([{"maincol":["data\/article-new.xml"]}]);</script>
+          <script>changeContent([{"maincol":["data\/article-nabidka_sluzeb.xml"]}]);</script>
         </onentry>
       </state>
-      <transition event="newState0" target="newState0">
+      <state id="testBes">
+        <onentry>
+          <script>changeContent([{"maincol":["data\/article-new0.xml","data\/article-jak_zacit.xml"]}]);</script>
+        </onentry>
+      </state>
+      <transition event="testBes" target="testBes">
         <script>changeMenu(_data.mainMenu);</script>
       </transition>
-      <transition event="homepage" target="homepage">
+      <transition event="test3" target="test3">
+        <script>changeMenu(_data.mainMenu);</script>
+      </transition>
+      <transition event="index" target="index">
         <script>changeMenu(_data.mainMenu);</script>
       </transition>
       <transition event="nabidka_sluzeb" target="nabidka_sluzeb">

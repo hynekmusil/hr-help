@@ -101,6 +101,19 @@
         </xsl:attribute>
     </xsl:template>
     
+    <xsl:template match="@id" mode="edited">
+        <xsl:attribute name="id">
+            <xsl:choose>
+                <xsl:when test="$uri = ''"><xsl:value-of select="."/></xsl:when>
+                <xsl:otherwise><xsl:call-template name="id"/></xsl:otherwise>
+            </xsl:choose>
+        </xsl:attribute>
+    </xsl:template>
+    
+    <xsl:template match="@xml:id" mode="edited">
+        <xsl:copy/>
+    </xsl:template>
+    
     <xsl:template name="id">
         <xsl:variable name="smallcase" select="'abcdefghijklmnopqrstuvwxyz'" />
         <xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />

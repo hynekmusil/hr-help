@@ -5,7 +5,11 @@
     xmlns="http://www.w3.org/1999/xhtml"
 >
     <xsl:template match="pp:pageProperties">
+        <xsl:variable name="q">"</xsl:variable>
         <div>
+            <script type="text/javascript">
+                <xsl:value-of select="concat('var forState = ',$q,@forState,$q,';')"/>
+            </script>
             <form id="pageProperties" name="pageProperties">
                 <input name="itemName" value="{normalize-space(text()[1])}" type="hidden"/>
                 <input name="itemId" value="{@xml:id}" type="hidden"/>

@@ -32,12 +32,13 @@
 	fwrite($fp, $result);
 	fclose($fp);
 	
-	if(!isset($pageProperties->onentry)) exit;
+	if(!isset($pageProperties->onentry) and $pageProperties->operation == 'change' ) exit;
 	
 	$xslt = new XSLTProcessor();
 	$xslDoc->load("../page/setter-pageController.xsl");
 	$xslt->importStylesheet($xslDoc); 
 	$xslt->setParameter("","onentry", json_encode($pageProperties->onentry));
+	$xslt->setParameter("","newStateId", $pageProperties->uri);
 	
 	$xmlDoc->load($baseDir."data/controller-page.scxml");
 	if(strpos($pageProperties->operation,"insert") === 0){
@@ -54,11 +55,11 @@
 				}
 			}
 			$xslt->setParameter("", "stateId", $elements->item(0)->parentNode->getAttribute("id"));
-			$xslt->setParameter("","newStateId", $pageProperties->uri);
 			$xslt->setParameter("","operation","append");
 		}
 	}
 	else{
+		$xslt->setParameter("","operation",$pageProperties->operation);
 		$xslt->setParameter("","stateId", $stateId);
 	}
 	
