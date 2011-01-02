@@ -589,7 +589,17 @@ function modifyPP(aOperation, aId, aDataURI){
 	var uri = dataDocInfo.uri;
 	if(aOperation == "addComponent"){
 		var newDataURI = "article-new.xml";
-		if(aDataURI == undefined) newDataURI = aDataURI;
+		if(aDataURI != undefined) {
+			var ina = document.getElementById("f-invalidNewArticle");
+			if(ina) ina.parentNode.removeChild(ina);
+			var testDoc = document.implementation.createDocument("http://formax.cz/ns/pageProperties","newArticle", null);
+			testDoc.documentElement.setAttribute("value", aDataURI);
+			var fragment = xslt(testDoc, "component/pageProperties/validator-pageProperties.xsl");
+			document.getElementById("f-addonentry").appendChild(fragment);
+			ina = document.getElementById("f-invalidNewArticle");
+			if(ina) return false;
+			newDataURI = aDataURI;
+		}
 		params = [["","operation", aOperation],["","place","maincol"],["","dataURI",newDataURI]];
 	} else if(aOperation == "removeComponent"){
 		if(aId != undefined){
@@ -620,14 +630,21 @@ function sendPP(){
 	var oldStateId = forState;
 	//var serializer = new XMLSerializer();
 	//alert(serializer.serializeToString(dataDoc));
+	fragment = xsltTransform("data", dataDoc);
+	modifyData(fragment, stateShot["f-editProperties"][0], true);
+	var nl = document.getElementsByTagName("span");
+	for(var i= 0;  i< nl.length; i++){
+		if(nl.item(i).className == "f-invalid") {
+			return false;
+		}
+	}
+	var newStateId = forState;
+	
 	var json = xslt(dataDoc,"component/pageProperties/xml2json-pageProperties.xsl",[["","menuURI",currComponentInfo.dataURI]],"TEXT");
 	refreshData(currComponentInfo, json);
 	dataDoc =  getSource(dataURI + "&itemName=" + document.forms["pageProperties"].itemName.value);
 	dataDocCache[dataDocInfo.uri] = dataDoc;
-	fragment = xsltTransform("data", dataDoc);
-	modifyData(fragment, stateShot["f-editProperties"][0], true);
-	var newStateId = forState;
-	//alert(JSON.stringify);
+	
 	//if(oldStateId != newStateId){
 		var state = document.statechart.getStateByName(oldStateId);
 		state.id = newStateId;

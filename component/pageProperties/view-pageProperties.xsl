@@ -4,6 +4,8 @@
     xmlns:pp="http://formax.cz/ns/pageProperties"
     xmlns="http://www.w3.org/1999/xhtml"
 >
+    <xsl:include href="validator-pageProperties.xsl"/>
+    
     <xsl:template match="pp:pageProperties">
         <xsl:variable name="q">"</xsl:variable>
         <div>
@@ -22,8 +24,8 @@
                         <th>místo</th><th>data</th>
                     </tr>
                     <xsl:apply-templates select="pp:onentry/*"/>
-                    <tr id="f-addonentry">
-                        <td colspan="3">
+                    <tr>
+                        <td colspan="3" id="f-addonentry">
                             <input type="text" name="newArticle" value="article-new.xml"/>
                             <button type="button" onclick="addNewArticle()">vytvořit článek</button>
                         </td>
@@ -88,12 +90,10 @@
         <tr>
             <th><xsl:value-of select="local-name()"/></th>
             <td colspan="2">
-                <input type="text" name="{local-name()}" value="{@value}" onblur="modifyPP('change')">
-                    <xsl:apply-templates select="." mode="pattern"/>
-                </input>
+                <input type="text" name="{local-name()}" value="{@value}" onblur="modifyPP('change')"/>
+                <xsl:apply-templates select="." mode="validate"/>
             </td>
         </tr>
     </xsl:template>
     
-    <xsl:template match="*" mode="pattern"/>
 </xsl:stylesheet>
