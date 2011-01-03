@@ -8,7 +8,7 @@ var uid = (
   function(){
     var id=0; 
     return function(){
-      return id++ ;
+		return id++ ;
     };
   } 
 )();
@@ -147,7 +147,7 @@ function switchToEditMode(){
 				node.className += space+"f-component "+aC+"_"+aI+"_"+aJ;
 				if(stateShot[aC][aI].setterURI != "data/javascript"){
 					node.onclick = startEditing;
-					node.onkeyup = keyUpEditing;
+					//node.onkeyup = keyUpEditing;
 				}
 			}
 		}
@@ -196,6 +196,25 @@ function saveData(){
 		}
 	}
 	refreshData(ss, send);
+}
+function menuSaveData(){
+	var data = document.statechart.event.data;
+	var nId = getEditedNodeId(data.object.object.ids);
+	if(nId != ""){
+		var cNode = getEditedNode();
+		var dataURI = "data/pageProperties.php?id=" + nId;
+		var send={operation: "change", itemId: nId, itemName: cNode.textContent, menuURI: data.object.object.dataURI};
+		refreshData(data.object.object, JSON.stringify(send));
+	}
+}
+function newsSaveData(){
+	var data = document.statechart.event.data;
+	var nId = getEditedNodeId(data.object.object.ids);
+	if(nId != ""){
+		var cNode = getEditedNode();
+		while(cNode.className.indexOf("f-id-"+nId) == -1) cNode = cNode.parentNode;
+		refreshData(data.object.object, "<div>" + cNode.innerHTML + "</div>", "id="+nId);
+	}
 }
 function refreshData(aComponentInfo, aSend, aQueryString, aNoModify){
 	var queryString = "";
@@ -346,16 +365,6 @@ function changeMenuItemProperty(aField, aDataURI){
 		pNode.style.left = String(cCoo[1])+"px";
 		pNode.className = eb.className;
 		currComponentInfo = data.object.object;
-	}
-}
-function menuSaveData(){
-	var data = document.statechart.event.data;
-	var nId = getEditedNodeId(data.object.object.ids);
-	if(nId != ""){
-		var cNode = getEditedNode();
-		var dataURI = "data/pageProperties.php?id=" + nId;
-		var send={operation: "change", itemId: nId, itemName: cNode.textContent, menuURI: data.object.object.dataURI};
-		refreshData(data.object.object, JSON.stringify(send));
 	}
 }
 function createFunctionFromExecutionContext(args) {

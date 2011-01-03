@@ -15,7 +15,7 @@
       </onentry>
       <state id="index">
         <onentry>
-          <script>changeContent([{"leftcol":["data\/article-aktualne.xml"]},{"maincol":["data\/article-jak_zacit.xml","data\/article-new.xml"]}]);</script>
+          <script>changeContent([{"leftcol":["data\/news.xml"]},{"maincol":["data\/article-jak_zacit.xml","data\/article-new.xml"]}]);</script>
         </onentry>
       </state>
       <state id="nabidka_sluzeb">
@@ -98,8 +98,17 @@
             <script>changeMenuItemProperty("f-editProperties","data/pageProperties.php");</script>
           </transition>
         </state>
+        <state id="newsEdit">
+          <onentry>
+            <script>changeContent([{"f-editCmds":["data/newsCmds.xml"]}]);</script>
+          </onentry>
+          <transition event="edit.news.saveData">
+            <script>newsSaveData();</script>
+          </transition>
+        </state>
         <transition event="edit.article" target="articleEdit"/>
         <transition event="edit.menu" target="menuEdit"/>
+        <transition event="edit.news" target="newsEdit"/>
       </state>
       <state id="publish">
         <onentry>

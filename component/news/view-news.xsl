@@ -10,7 +10,7 @@
     </xsl:template>
     
     <xsl:template match="n:new">
-        <div class="box">
+        <div class="box f-id-{@xml:id}">
             <xsl:apply-templates select="n:h"/>
             <div class="content">
                 <xsl:apply-templates select="a:p | a:l"/>

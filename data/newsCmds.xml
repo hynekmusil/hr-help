@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../component/newsCmds/view-newsCmds.xsl"?>
+<newsCmds xmlns="http://formax.cz/ns/newsCmds">
+    <htmlCmds>
+        <undo/>
+        <redo/>
+        <bold/>
+        <italic/>
+		<insertunorderedlist/>
+        <indent/>
+        <outdent/>
+        <createLink>
+            <prompt>Zadejte odkaz.</prompt>
+        </createLink>
+    </htmlCmds>
+    <fxCmds>
+        <insertBefore>vložit před</insertBefore>
+        <insertAfter>vložit za</insertAfter>
+        <shiftRight>posun doprava</shiftRight>
+        <shiftLeft>posun doleva</shiftLeft>
+        <remove>odstraň</remove>
+        <saveData>ulož</saveData>
+    </fxCmds>
+</newsCmds>

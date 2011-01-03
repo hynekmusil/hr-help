@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="../component/article/view-article.xsl"?>
-<?setter href="../component/article/setter-article.php"?>
-<article xmlns="http://formax.cz/ns/article" 
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://formax.cz/ns/article ../component/article/model-article.xsd"
->
- <h>Jak začít</h>
- <p>Aplikace je připravena tak, aby veškeré ovládaní a nastavení mohli provádět sami za použití svého přihlašovacího jména a hesla.<br/><br/>
-  Tyto údaje si nastavíte při <a href="/account/">registraci</a>. V rámci registrace budete mít i přednastavené služby, které jsou v současné době aktivní a u některých možnost změnit jejich nastavení pod Vaším administrátorským účtem.<br/>
-   Kompletní příručka, jak zaregistrovat účet, zaktivovat služby a vytvořit první průzkum spokojenosti bude v krátké době k nalezení <a href="/sluzby/pruzkum-spokojenosti-zamestnancu/prirucka/">zde</a>.
- </p>
-</article>
+<?xml-stylesheet type="text/xsl" href="../component/article/view-article.xsl"?><?setter href="../component/article/setter-article.php"?><a:article xmlns:a="http://formax.cz/ns/article" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://formax.cz/ns/article ../component/article/model-article.xsd"><a:h level="1">Jak začít</a:h><a:p>Aplikace je připravena tak, aby kuky veškeré ovládaní a nastavení mohli provádět sami za použití svého přihlašovacího jména a hesla. Tyto údaje si nastavíte při <a:a href="/account/">registraci</a:a>.
+V rámci registrace budete mít i přednastavené služby, které jsou v současné době aktivní a u některých možnost změnit jejich nastavení pod Vaším administrátorským účtem. Kompletní příručka, jak
+zaregistrovat účet, zaktivovat služby a vytvořit první průzkum spokojenosti bude v krátké době k nalezení <a:a href="/sluzby/pruzkum-spokojenosti-zamestnancu/prirucka/">zde</a:a>.</a:p></a:article>
