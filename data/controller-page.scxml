@@ -102,6 +102,21 @@
           <onentry>
             <script>changeContent([{"f-editCmds":["data/newsCmds.xml"]}]);</script>
           </onentry>
+          <transition event="edit.news.insertBefore">
+            <script>modifyNews("insertBefore");</script>
+          </transition>
+          <transition event="edit.news.insertAfter">
+            <script>modifyNews("insertAfter");</script>
+          </transition>
+          <transition event="edit.news.remove">
+            <script>modifyNews("remove");</script>
+          </transition>
+          <transition event="edit.news.shiftLeft">
+            <script>modifyNews("shiftLeft");</script>
+          </transition>
+          <transition event="edit.news.shiftRight">
+            <script>modifyNews("shiftRight");</script>
+          </transition>
           <transition event="edit.news.saveData">
             <script>newsSaveData();</script>
           </transition>

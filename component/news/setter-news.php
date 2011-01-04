@@ -2,6 +2,10 @@
 header("Content-type: application/xml");
 if(isset($_REQUEST["id"])){
 	$id = $_REQUEST["id"];
+	if(isset($_REQUEST["operation"])){
+		$operation = $_REQUEST["operation"];
+	} else $operation = "change";
+	
 	$html = $GLOBALS["HTTP_RAW_POST_DATA"];
 
 	$dataURI = $_REQUEST["dataURI"];
@@ -21,7 +25,7 @@ if(isset($_REQUEST["id"])){
 	$newsDoc->load($baseDir.$dataURI);
 	
 	$xslDoc = new DOMDocument();
-	$xslDoc->load( 'setter-news.xsl');
+	$xslDoc->load("setter-news.xsl");
 	
 	$fragment = $xslDoc->createDocumentFragment();
 	$fragment->appendXML($newContent);
@@ -30,6 +34,7 @@ if(isset($_REQUEST["id"])){
 	$xslt = new XSLTProcessor();
 	$xslt->importStylesheet( $xslDoc);
 	$xslt->setParameter("","newId", $id);
+	$xslt->setParameter("","operation", $operation);
 	
 	$result = $xslt->transformToXML( $newsDoc );
 	print $result;

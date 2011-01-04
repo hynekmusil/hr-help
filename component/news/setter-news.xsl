@@ -47,6 +47,9 @@
                         <xsl:call-template name="new"/>
                         <xsl:call-template name="copy"/>
                     </xsl:when>
+                    <xsl:when test="($operation = 'remove') and (count(../n:new) = 1)">
+                        <xsl:call-template name="copy"/>
+                    </xsl:when>
                 </xsl:choose>
             </xsl:when>
             <xsl:otherwise>

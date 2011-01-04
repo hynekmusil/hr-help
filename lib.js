@@ -227,10 +227,22 @@ function refreshData(aComponentInfo, aSend, aQueryString, aNoModify){
 }
 function modifyData(aFragment, aComponentInfo, aNoScript){
 	var j = 0;
-	for(var i in aFragment.childNodes){
+	var contentElement = document.getElementById(aComponentInfo.ids[0]).parentNode;
+	for(var i=0; i < aComponentInfo.ids.length; i++){
+		var oldElement = document.getElementById(aComponentInfo.ids[i]);
+		contentElement.removeChild(oldElement);
+		if(aFragment.childNodes.item(i) == null) j++;
+	}
+	while(j>0){
+		aComponentInfo.ids.pop();
+		j--;
+	}
+	var j=0;
+	var i= 0;
+	for(i in aFragment.childNodes){
 		if(aFragment.childNodes.item(i)){
 			if(aFragment.childNodes.item(i).nodeType == 1){
-				var n = aFragment.childNodes.item(i);
+				var n = aFragment.childNodes.item(0);
 				if(n.nodeName != "SCRIPT"){
 					var space = "";
 					if(n.className) space = " ";
@@ -240,19 +252,16 @@ function modifyData(aFragment, aComponentInfo, aNoScript){
 				if(!(n.nodeName == "SCRIPT" && aNoScript != undefined)){
 					if(j < aComponentInfo.ids.length) {
 						if(!n.id) n.id = aComponentInfo.ids[j];
-						var oldElement = document.getElementById(aComponentInfo.ids[j]);
-						oldElement.parentNode.replaceChild(n, oldElement);
 					}
 					else{
 						if(!n.id) n.id = aComponentInfo.name+ "_" + j;
-						var targetElement = document.getElementById(aComponentInfo.ids[aComponentInfo.ids.length - 1]);
-						var parentElement = targetElement.parentNode;
-						if(parentElement.lastchild == targetElement)
-							parentElement.appendChild(n);
-						else {
-							parentElement.insertBefore(n, targetElement.nextSibling);
-						}
 						aComponentInfo.ids[j] = n.id;
+					}
+					var targetElement = document.getElementById(aComponentInfo.ids[aComponentInfo.ids.length - 1]);
+					if(contentElement.lastchild == targetElement)
+						contentElement.appendChild(n);
+					else {
+						contentElement.insertBefore(n, targetElement.nextSibling);
 					}
 				}
 				j++;
@@ -399,6 +408,15 @@ function modifyMenu(aOperation){
 		sourceState.transitions.push(newTransition);
 	}
 	refreshData(data.object.object, JSON.stringify(send));
+}
+function modifyNews(aOperation){
+	var data = document.statechart.event.data;
+	var nId = getEditedNodeId(data.object.object.ids);
+	if(nId != ""){
+		var cNode = getEditedNode();
+		while(cNode.className.indexOf("f-id-"+nId) == -1) cNode = cNode.parentNode;
+		refreshData(data.object.object, "<div>" + cNode.innerHTML + "</div>", "id="+nId+"&operation="+aOperation);
+	}
 }
 function getEditedNodeId(aIds){
 	var node = getEditedNode();
