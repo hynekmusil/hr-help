@@ -216,6 +216,14 @@ function newsSaveData(){
 		refreshData(data.object.object, "<div>" + cNode.innerHTML + "</div>", "id="+nId);
 	}
 }
+function headerSaveData(){
+	var data = document.statechart.event.data;
+	var nId = getEditedNodeId(data.object.object.ids);
+	if(nId != ""){
+		var cNode = document.getElementById("subheader");
+		refreshData(data.object.object, "<div>" + cNode.innerHTML + "</div>");
+	}
+}
 function refreshData(aComponentInfo, aSend, aQueryString, aNoModify){
 	var queryString = "";
 	if(aQueryString) queryString += "&" + aQueryString;
@@ -227,7 +235,10 @@ function refreshData(aComponentInfo, aSend, aQueryString, aNoModify){
 }
 function modifyData(aFragment, aComponentInfo, aNoScript){
 	var j = 0;
-	var contentElement = document.getElementById(aComponentInfo.ids[0]).parentNode;
+	var id = aComponentInfo.name.substring(0,aComponentInfo.name.indexOf("_"));
+	var contentElement = document.getElementById(id);
+	var insertMethod = "append";
+	if(componentElement.nodeName == "HR") insertMethod = "before";	
 	for(var i=0; i < aComponentInfo.ids.length; i++){
 		var oldElement = document.getElementById(aComponentInfo.ids[i]);
 		contentElement.removeChild(oldElement);
@@ -258,10 +269,10 @@ function modifyData(aFragment, aComponentInfo, aNoScript){
 						aComponentInfo.ids[j] = n.id;
 					}
 					var targetElement = document.getElementById(aComponentInfo.ids[aComponentInfo.ids.length - 1]);
-					if(contentElement.lastchild == targetElement)
+					if(insertMethod == append)
 						contentElement.appendChild(n);
 					else {
-						contentElement.insertBefore(n, targetElement.nextSibling);
+						contentElement.parentNode.insertBefore(n, contentElement);
 					}
 				}
 				j++;

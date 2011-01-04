@@ -121,9 +121,18 @@
             <script>newsSaveData();</script>
           </transition>
         </state>
+        <state id="headerEdit">
+          <onentry>
+            <script>changeContent([{"f-editCmds":["data/headerCmds.xml"]}]);</script>
+          </onentry>
+          <transition event="edit.header.saveData">
+            <script>headerSaveData();</script>
+          </transition>
+        </state>
         <transition event="edit.article" target="articleEdit"/>
         <transition event="edit.menu" target="menuEdit"/>
         <transition event="edit.news" target="newsEdit"/>
+        <transition event="edit.header" target="headerEdit"/>
       </state>
       <state id="publish">
         <onentry>

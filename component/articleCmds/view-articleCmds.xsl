@@ -38,7 +38,7 @@
     </xsl:template>
     
     <xsl:template match="*[parent::ac:fxCmds]">
-        <input type="button" value="{local-name()}" onclick="{local-name()}('{$data}');"/>
+        <input type="button" class="{local-name()}" value="{.}" onclick="fxEditCmd('{local-name()}','{$data}');"/>
     </xsl:template>
 
 </xsl:stylesheet>
