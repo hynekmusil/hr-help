@@ -237,14 +237,22 @@ function modifyData(aFragment, aComponentInfo, aNoScript){
 	var j = 0;
 	var id = aComponentInfo.name.substring(0,aComponentInfo.name.indexOf("_"));
 	var contentElement = document.getElementById(id);
+	var newContentElement = null;
 	var insertMethod = "append";
 	if(contentElement.nodeName == "HR") insertMethod = "before";	
 	for(var i=0; i < aComponentInfo.ids.length; i++){
 		var oldElement = document.getElementById(aComponentInfo.ids[i]);
-		if(insertMethod == "append") contentElement.removeChild(oldElement);
+		if(insertMethod == "append") {
+			if(i == (aComponentInfo.ids.length - 1) && oldElement.nextSibling != null){
+				insertMethod = "before";
+				newContentElement = oldElement.nextSibling;
+			}
+			contentElement.removeChild(oldElement);
+		}
 		else contentElement.parentNode.removeChild(oldElement);
 		if(aFragment.childNodes.item(i) == null) j++;
 	}
+	if(newContentElement != null) contentElement = newContentElement;
 	while(j>0){
 		aComponentInfo.ids.pop();
 		j--;
