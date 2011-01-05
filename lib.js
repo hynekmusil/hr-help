@@ -238,10 +238,11 @@ function modifyData(aFragment, aComponentInfo, aNoScript){
 	var id = aComponentInfo.name.substring(0,aComponentInfo.name.indexOf("_"));
 	var contentElement = document.getElementById(id);
 	var insertMethod = "append";
-	if(componentElement.nodeName == "HR") insertMethod = "before";	
+	if(contentElement.nodeName == "HR") insertMethod = "before";	
 	for(var i=0; i < aComponentInfo.ids.length; i++){
 		var oldElement = document.getElementById(aComponentInfo.ids[i]);
-		contentElement.removeChild(oldElement);
+		if(insertMethod == "append") contentElement.removeChild(oldElement);
+		else contentElement.parentNode.removeChild(oldElement);
 		if(aFragment.childNodes.item(i) == null) j++;
 	}
 	while(j>0){
@@ -269,7 +270,7 @@ function modifyData(aFragment, aComponentInfo, aNoScript){
 						aComponentInfo.ids[j] = n.id;
 					}
 					var targetElement = document.getElementById(aComponentInfo.ids[aComponentInfo.ids.length - 1]);
-					if(insertMethod == append)
+					if(insertMethod == "append")
 						contentElement.appendChild(n);
 					else {
 						contentElement.parentNode.insertBefore(n, contentElement);

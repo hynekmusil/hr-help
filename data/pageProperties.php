@@ -35,9 +35,10 @@
 		$ppNode = $ppDoc->createElementNS("http://formax.cz/ns/pageProperties","pageProperties");
 		$ppNode->appendChild($ppDoc->importNode($itemNode, true));
 		if($changeDoc != null) $ppNode->appendChild($ppDoc->importNode($changeDoc->documentElement, true));
+		$ignoreFiles = array("articleCmds.xml","editCommands.xml","footer.xml","headerCmds.xml","menuCmds.xml","menu-hlavni.xml","menu-editor.xml","newsCmds.xml","page.xml");
 		if ($handle = opendir('.')) {
 			while (false !== ($file = readdir($handle))) {
-				if ($file != "." && $file != "..") {
+				if ($file != "." && $file != ".." && strpos($file, ".xml") > 0  && array_search($file,$ignoreFiles) === false) {
 					$dataN = $ppDoc->createElementNS("http://formax.cz/ns/pageProperties","data");
 					$dataN->setAttribute("id",$file);
 					$ppNode->appendChild($dataN);

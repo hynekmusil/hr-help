@@ -46,9 +46,44 @@
             <xsl:value-of select="substring-before(
                 substring-after(.,concat('javascript:raise(',$apos)),$apos)"/>
         </xsl:variable>
-        <xsl:attribute name="href">
+        <xsl:variable name="href">
             <xsl:value-of select="concat($baseOutputDir,$linkList//*[@id = $event]/@href)"/>
+        </xsl:variable>
+        <xsl:attribute name="href">
+            <xsl:value-of select="$href"/>
+            <xsl:choose>
+                <xsl:when test="$href = index">.html</xsl:when>
+                <xsl:otherwise>
+                    <xsl:variable name="isIndex">
+                        <xsl:call-template name="ends-with">
+                            <xsl:with-param name="ends-with">/index</xsl:with-param>
+                            <xsl:with-param name="string" select="$href"/>
+                        </xsl:call-template>
+                    </xsl:variable>
+                    <xsl:if test="$isIndex = 'true'">.html</xsl:if>
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:attribute>
+    </xsl:template>
+    
+    <xsl:template name="ends-with">
+        <xsl:param name="string"/>
+        <xsl:param name="ends-with"/>
+        <xsl:choose>
+            <xsl:when test="contains($string, $ends-with)">
+                <xsl:variable name="new-string" select="substring-after($string, $ends-with)"/>
+                <xsl:choose>
+                    <xsl:when test="string-length($new-string) > 0">
+                        <xsl:call-template name="ends-with">
+                            <xsl:with-param name="string" select="$new-string"/>
+                            <xsl:with-param name="ends-with" select="$ends-with"/>                                 
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>true</xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>false</xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     
     <xsl:template match="@*">

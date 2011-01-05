@@ -9,24 +9,20 @@
 	$newFile = "/index.html";
 	$addNewDir = false;
 	for($i=0; $i< count($uriArr); $i++){
-		$baseOutputDir .= "../";
-		if($i == count($uriArr) - 1)
-		{
-			if(!endsWith($uriArr, ".html")) $addNewDir = true;
-			else 
-			{
-				$addNewDir = false;
+		echo $i." = ".(count($uriArr) - 1)."\n";
+		if($i == (count($uriArr) - 1)) {
+			if($uriArr[$i] == "index") $addNewDir = false;
+			elseif(!endsWith($uriArr[$i], ".html")) $addNewDir = true;
+			else {
 				$newFile = "/".$uriArr[$i];
+				$addNewDir = false;
 			}
 		}
 		else $addNewDir = true;
-		if($addNewDir)
-		{
+		if($addNewDir == true) {
+			$baseOutputDir .= "../";
 			$newDir .= "/".$uriArr[$i];
-			if(!is_dir($newDir))
-			{
-				mkdir($newDir);
-			}
+			if(!is_dir($newDir)) mkdir($newDir);
 		}
 	}
 	
@@ -44,9 +40,6 @@
 	$xslt->importStylesheet( $xslDoc); 
 	$xslt->setParameter("","title",$title);
 	$xslt->setParameter("","baseOutputDir", $baseOutputDir);
-	
-	echo $newDir.$newFile."\n";
-	echo $baseOutputDir;
 	
 	$xslt->transformToURI( $xmlDoc, $newDir.$newFile);
 	
